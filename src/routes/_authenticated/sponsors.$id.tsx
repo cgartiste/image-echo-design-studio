@@ -47,7 +47,7 @@ function SponsorPage() {
 
   async function run<T>(key: string, f: () => Promise<T>) {
     setBusy(key);
-    try { return await f(); } catch (e) { toast.error((e as Error).message); } finally { setBusy(""); refresh(); }
+    try { return await f(); } catch (e) { toast.error((e as Error).message); return undefined; } finally { setBusy(""); refresh(); }
   }
   async function openSponsor() {
     const w = window.open("about:blank", "_blank");

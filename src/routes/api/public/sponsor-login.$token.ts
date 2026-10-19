@@ -29,7 +29,7 @@ export const Route = createFileRoute("/api/public/sponsor-login/$token")({
         if (!sp?.login_url || !driver || sp.login_driver === "none" || !sp.credentials_encrypted) return page(400, "<p>Auto-login is not configured.</p>");
         const { decryptCreds } = await import("@/lib/providers.server");
         const c = (await decryptCreds(sp.credentials_encrypted)) as Record<string, string>;
-        const fields = driver.fields(c.username ?? "", c.password ?? "");
+        const fields = driver.fields(c["username"] ?? "", c["password"] ?? "");
         const action = sp.login_url + (driver.urlSuffix && !sp.login_url.includes("?") ? driver.urlSuffix : "");
         const inputs = Object.entries(fields).map(([k, v]) => `<input type="hidden" name="${esc(k)}" value="${esc(v)}">`).join("");
         return page(200, `<p>Signing you in…</p><form id="f" method="post" action="${esc(action)}">${inputs}<noscript><button>Continue</button></noscript></form><script>document.getElementById("f").submit()</script>`);

@@ -68,7 +68,7 @@ export const saveSponsor = createServerFn({ method: "POST" }).middleware([requir
     name: data.name, platform: data.platform, api_driver: p.apiDriver, login_driver: data.login_driver,
     affiliate_id: data.affiliate_id || null, api_url: data.api_url || null, report_url: data.report_url || null,
     login_url: data.login_url || null, home_url: data.home_url || null, tracking_template: data.tracking_template || p.trackingFormat,
-    credentials_encrypted: await encryptCreds(creds), has_password: !!creds.password, has_api_key: !!creds.api_key,
+    credentials_encrypted: await encryptCreds(creds), has_password: !!creds["password"], has_api_key: !!creds["api_key"],
   };
   let sid = data.id;
   if (sid) { const { error } = await admin.from("sponsors").update(row).eq("id", sid); if (error) throw new Error(error.message); }

@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { LOGIN_DRIVERS, PLATFORMS, SPONSOR_TEMPLATES } from "@/lib/sponsor-platforms";
 
 export type SponsorValues = {
-  id?: string; name: string; platform: string; login_driver: string; affiliate_id: string; api_url: string; report_url: string;
+  id?: string | undefined; name: string; platform: string; login_driver: string; affiliate_id: string; api_url: string; report_url: string;
   login_url: string; home_url: string; tracking_template: string; username?: string; password?: string; api_key?: string;
 };
 type Initial = Partial<SponsorValues> & { has_password?: boolean; has_api_key?: boolean };
