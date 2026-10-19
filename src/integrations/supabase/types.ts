@@ -1248,6 +1248,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      bump_campaign_stat: {
+        Args: { _cid: string; _field: string; _n: number }
+        Returns: undefined
+      }
       campaign_recipient_summary: {
         Args: {
           country_filter?: string

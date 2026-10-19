@@ -57,6 +57,13 @@
       "when": 1792416934940,
       "tag": "0007_kumomta_servers_queue_tracking",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1792416983429,
+      "tag": "0008_campaign_stat_bump",
+      "breakpoints": true
     }
   ]
 }
