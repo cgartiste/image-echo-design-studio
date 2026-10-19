@@ -1,204 +1,43 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useQuery,useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { useMemo,useState } from "react";
 import { toast } from "sonner";
-import { ArrowUpDown, Copy, MoreHorizontal, Plus, Archive, Trash2, Pencil } from "lucide-react";
+import { ArrowUpDown,Copy,MoreHorizontal,Plus,Archive,Trash2,Eye,Download,CalendarDays,RefreshCw } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { PageHeader, Panel, StatusBadge } from "@/components/page";
+import { PageHeader,StatusBadge } from "@/components/page";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { CAMPAIGN_STATUSES } from "@/lib/campaign-status";
-import { fmtDate, fmtNum, fmtPct, pct } from "@/lib/format";
-import { logActivity, useMe } from "@/lib/auth";
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from "@/components/ui/select";
+import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from "@/components/ui/table";
+import { DropdownMenu,DropdownMenuContent,DropdownMenuItem,DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { AlertDialog,AlertDialogAction,AlertDialogCancel,AlertDialogContent,AlertDialogDescription,AlertDialogFooter,AlertDialogHeader,AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { CAMPAIGN_STATUSES,availableActions,type CampaignStatus } from "@/lib/campaign-status";
+import { fmtDate,fmtNum,fmtMoney,fmtPct,pct } from "@/lib/format";
+import { cloneCampaign,commandCampaign } from "@/lib/campaigns.functions";
+import { download,toCsv } from "@/lib/csv";
+import { useMe } from "@/lib/auth";
 
-export const Route = createFileRoute("/_authenticated/campaigns/")({
-  head: () => ({ meta: [{ title: "Campaigns — Cortex" }, { name: "description", content: "Manage email campaigns." }] }),
-  component: Campaigns,
-});
-
-type SortKey = "name" | "status" | "sent" | "created_at" | "open_rate";
-const PAGE = 15;
-
-function Campaigns() {
-  const qc = useQueryClient();
-  const navigate = useNavigate();
-  const { data: me } = useMe();
-  const [q, setQ] = useState("");
-  const [status, setStatus] = useState("all");
-  const [listId, setListId] = useState("all");
-  const [from, setFrom] = useState("");
-  const [sort, setSort] = useState<{ k: SortKey; asc: boolean }>({ k: "created_at", asc: false });
-  const [page, setPage] = useState(0);
-  const [toDelete, setToDelete] = useState<{ id: string; name: string } | null>(null);
-
-  const { data = [], isLoading } = useQuery({
-    queryKey: ["campaigns", "list"],
-    queryFn: async () => (await supabase.from("campaigns").select("*, email_lists(name)").order("created_at", { ascending: false })).data ?? [],
-  });
-  const lists = useQuery({
-    queryKey: ["lists", "options"],
-    queryFn: async () => (await supabase.from("email_lists").select("id,name").order("name")).data ?? [],
-  });
-
-  const filtered = useMemo(() => {
-    const rows = data.filter(
-      (c) =>
-        (status === "all" || c.status === status) &&
-        (listId === "all" || c.list_id === listId) &&
-        (!from || c.created_at >= from) &&
-        (!q || `${c.name} ${c.subject} ${c.offer ?? ""}`.toLowerCase().includes(q.toLowerCase())),
-    );
-    const val = (c: (typeof rows)[number]) => (sort.k === "open_rate" ? pct(c.opens, c.delivered) : c[sort.k]);
-    return rows.sort((a, b) => {
-      const x = val(a), y = val(b);
-      const r = x! < y! ? -1 : x! > y! ? 1 : 0;
-      return sort.asc ? r : -r;
-    });
-  }, [data, q, status, listId, from, sort]);
-
-  const pages = Math.max(1, Math.ceil(filtered.length / PAGE));
-  const rows = filtered.slice(page * PAGE, page * PAGE + PAGE);
-  const refresh = () => qc.invalidateQueries({ queryKey: ["campaigns"] });
-
-  async function duplicate(id: string) {
-    const src = data.find((c) => c.id === id);
-    if (!src) return;
-    const { id: _i, created_at: _c, updated_at: _u, email_lists: _l, ...rest } = src;
-    const { data: row, error } = await supabase
-      .from("campaigns")
-      .insert({ ...rest, name: `${src.name} (copy)`, status: "draft", sent: 0, delivered: 0, opens: 0, clicks: 0, bounces: 0, unsubscribes: 0, complaints: 0, conversions: 0, revenue: 0, cost: 0, created_by: me?.user.id ?? null })
-      .select("id")
-      .single();
-    if (error) { toast.error(error.message); return; }
-    await logActivity("campaigns", "duplicate", src.name);
-    toast.success("Campaign duplicated");
-    refresh();
-    navigate({ to: "/campaigns/$id", params: { id: row.id } });
-  }
-  async function archive(id: string, name: string) {
-    const { error } = await supabase.from("campaigns").update({ status: "archived" }).eq("id", id);
-    if (error) { toast.error(error.message); return; }
-    await logActivity("campaigns", "archive", name);
-    toast.success("Archived");
-    refresh();
-  }
-  async function remove() {
-    if (!toDelete) return;
-    const { error } = await supabase.from("campaigns").delete().eq("id", toDelete.id);
-    if (error) { toast.error(error.message); return; }
-    await logActivity("campaigns", "delete", toDelete.name);
-    toast.success("Campaign deleted");
-    setToDelete(null);
-    refresh();
-  }
-
-  const SortHead = ({ k, children, className }: { k: SortKey; children: React.ReactNode; className?: string }) => (
-    <TableHead className={className}>
-      <button className="inline-flex items-center gap-1" onClick={() => setSort((s) => ({ k, asc: s.k === k ? !s.asc : false }))}>
-        {children} <ArrowUpDown className="h-3 w-3 opacity-50" />
-      </button>
-    </TableHead>
-  );
-
-  return (
-    <div>
-      <PageHeader
-        title="Campaigns"
-        subtitle={`${filtered.length} campaigns`}
-        actions={me?.can("campaigns", "create") && (
-          <Button asChild><Link to="/campaigns/new"><Plus className="h-4 w-4" /> New campaign</Link></Button>
-        )}
-      />
-      <Panel>
-        <div className="flex flex-wrap gap-2 border-b p-3">
-          <Input placeholder="Search name, subject, offer…" value={q} onChange={(e) => { setQ(e.target.value); setPage(0); }} className="h-9 w-full sm:w-64" />
-          <Select value={status} onValueChange={(v) => { setStatus(v); setPage(0); }}>
-            <SelectTrigger className="h-9 w-36"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All statuses</SelectItem>
-              {CAMPAIGN_STATUSES.map((s) => <SelectItem key={s} value={s} className="capitalize">{s}</SelectItem>)}
-            </SelectContent>
-          </Select>
-          <Select value={listId} onValueChange={(v) => { setListId(v); setPage(0); }}>
-            <SelectTrigger className="h-9 w-44"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All lists</SelectItem>
-              {(lists.data ?? []).map((l) => <SelectItem key={l.id} value={l.id}>{l.name}</SelectItem>)}
-            </SelectContent>
-          </Select>
-          <Input type="date" value={from} onChange={(e) => setFrom(e.target.value)} className="h-9 w-40" aria-label="Created after" />
-        </div>
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <SortHead k="name">Name</SortHead>
-                <SortHead k="status">Status</SortHead>
-                <TableHead className="hidden md:table-cell">List</TableHead>
-                <TableHead className="hidden lg:table-cell">Offer</TableHead>
-                <SortHead k="sent" className="text-right">Sent</SortHead>
-                <SortHead k="open_rate" className="text-right">Open</SortHead>
-                <TableHead className="hidden text-right sm:table-cell">Click</TableHead>
-                <SortHead k="created_at" className="hidden xl:table-cell">Created</SortHead>
-                <TableHead className="w-10" />
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading && <TableRow><TableCell colSpan={9} className="py-8 text-center text-muted-foreground">Loading…</TableCell></TableRow>}
-              {!isLoading && rows.length === 0 && <TableRow><TableCell colSpan={9} className="py-8 text-center text-muted-foreground">No campaigns match.</TableCell></TableRow>}
-              {rows.map((c) => (
-                <TableRow key={c.id}>
-                  <TableCell>
-                    <Link to="/campaigns/$id" params={{ id: c.id }} className="font-medium hover:text-primary">{c.name}</Link>
-                    <p className="max-w-xs truncate text-xs text-muted-foreground">{c.subject}</p>
-                  </TableCell>
-                  <TableCell><StatusBadge status={c.status} /></TableCell>
-                  <TableCell className="hidden text-sm md:table-cell">{c.email_lists?.name ?? "—"}</TableCell>
-                  <TableCell className="hidden text-sm lg:table-cell">{c.offer ?? "—"}</TableCell>
-                  <TableCell className="text-right font-mono text-sm">{fmtNum(c.sent)}</TableCell>
-                  <TableCell className="text-right font-mono text-sm">{fmtPct(pct(c.opens, c.delivered))}</TableCell>
-                  <TableCell className="hidden text-right font-mono text-sm sm:table-cell">{fmtPct(pct(c.clicks, c.delivered))}</TableCell>
-                  <TableCell className="hidden text-xs text-muted-foreground xl:table-cell">{fmtDate(c.created_at)}</TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild><Button variant="ghost" size="icon" className="h-8 w-8"><MoreHorizontal className="h-4 w-4" /></Button></DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => navigate({ to: "/campaigns/$id", params: { id: c.id } })}><Pencil className="h-4 w-4" /> Open</DropdownMenuItem>
-                        {me?.can("campaigns", "create") && <DropdownMenuItem onClick={() => duplicate(c.id)}><Copy className="h-4 w-4" /> Duplicate</DropdownMenuItem>}
-                        {me?.can("campaigns", "edit") && c.status !== "archived" && <DropdownMenuItem onClick={() => archive(c.id, c.name)}><Archive className="h-4 w-4" /> Archive</DropdownMenuItem>}
-                        {me?.can("campaigns", "delete") && <DropdownMenuItem className="text-destructive" onClick={() => setToDelete({ id: c.id, name: c.name })}><Trash2 className="h-4 w-4" /> Delete</DropdownMenuItem>}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-        <div className="flex items-center justify-between border-t px-3 py-2 text-xs text-muted-foreground">
-          <span>Page {page + 1} of {pages}</span>
-          <div className="flex gap-1">
-            <Button variant="outline" size="sm" disabled={page === 0} onClick={() => setPage(page - 1)}>Previous</Button>
-            <Button variant="outline" size="sm" disabled={page >= pages - 1} onClick={() => setPage(page + 1)}>Next</Button>
-          </div>
-        </div>
-      </Panel>
-      <AlertDialog open={!!toDelete} onOpenChange={(o) => !o && setToDelete(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete “{toDelete?.name}”?</AlertDialogTitle>
-            <AlertDialogDescription>This permanently removes the campaign, its stats and its logs.</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={remove}>Delete</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
-  );
+export const Route=createFileRoute("/_authenticated/campaigns/")({head:()=>({meta:[{title:"Campaigns — Cortex"},{name:"description",content:"Manage, filter and track Cortex email campaigns."},{property:"og:title",content:"Campaigns — Cortex"},{property:"og:description",content:"Campaign operations, metrics and lifecycle controls."},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary_large_image"}]}),component:Campaigns});
+type SortKey="name"|"status"|"sent"|"delivered"|"opens"|"clicks"|"bounces"|"unsubscribes"|"conversions"|"revenue"|"created_at"|"scheduled_at"|"recipient_count";
+const PAGE=15;
+function Campaigns(){
+ const qc=useQueryClient();const navigate=useNavigate();const {data:me}=useMe();const cloneFn=useServerFn(cloneCampaign);const commandFn=useServerFn(commandCampaign);
+ const [q,setQ]=useState("");const [status,setStatus]=useState("all");const [user,setUser]=useState("all");const [from,setFrom]=useState("");const [to,setTo]=useState("");const [today,setToday]=useState(false);const [page,setPage]=useState(0);const [sort,setSort]=useState<{k:SortKey;asc:boolean}>({k:"created_at",asc:false});const [toDelete,setToDelete]=useState<{id:string;name:string}|null>(null);
+ const {data=[],isLoading,isError}=useQuery({queryKey:["campaigns","list"],queryFn:async()=>{const {data,error}=await supabase.from("campaigns").select("*,email_lists(name)").order("created_at",{ascending:false});if(error)throw error;return data;}});
+ const profiles=useQuery({queryKey:["campaign-profiles"],queryFn:async()=>{const {data,error}=await supabase.from("profiles").select("id,full_name");if(error)throw error;return data;}});
+ const nameFor=(id:string|null)=>profiles.data?.find(p=>p.id===id)?.full_name||id?.slice(0,8)||"—";
+ const filtered=useMemo(()=>data.filter(c=>(status==="all"?c.status!=="archived":c.status===status)&&(user==="all"||c.created_by===user)&&(!from||c.created_at.slice(0,10)>=from)&&(!to||c.created_at.slice(0,10)<=to)&&(!today||new Date(c.created_at).toDateString()===new Date().toDateString())&&(!q||`${c.id} ${c.name} ${c.subject} ${c.offer??""}`.toLowerCase().includes(q.toLowerCase()))).sort((a,b)=>{const x=a[sort.k]??"",y=b[sort.k]??"";const r=x<y?-1:x>y?1:0;return sort.asc?r:-r;}),[data,q,status,user,from,to,today,sort]);
+ const pages=Math.max(1,Math.ceil(filtered.length/PAGE));const currentPage=Math.min(page,pages-1);const rows=filtered.slice(currentPage*PAGE,(currentPage+1)*PAGE);
+ const refresh=()=>qc.invalidateQueries({queryKey:["campaigns"]});
+ async function clone(id:string){try{const result=await cloneFn({data:{id}});refresh();toast.success("Draft cloned without delivery data");navigate({to:"/campaigns/$id",params:{id:result.id}});}catch(e){toast.error(e instanceof Error?e.message:"Clone failed");}}
+ async function archive(id:string){try{await commandFn({data:{id,action:"archive"}});refresh();toast.success("Archived");}catch(e){toast.error(e instanceof Error?e.message:"Archive failed");}}
+ async function remove(){if(!toDelete)return;const {error}=await supabase.from("campaigns").delete().eq("id",toDelete.id);if(error){toast.error(error.message);return;}setToDelete(null);refresh();toast.success("Campaign deleted");}
+ const SortHead=({k,children}:{k:SortKey;children:React.ReactNode})=><TableHead><Button variant="ghost" size="sm" className="h-7 px-0 text-xs" onClick={()=>setSort(s=>({k,asc:s.k===k?!s.asc:true}))}>{children}<ArrowUpDown className="h-3 w-3 opacity-50"/></Button></TableHead>;
+ return <div><PageHeader title="Campaigns" subtitle={`${filtered.length} campaigns · ${fmtNum(filtered.reduce((s,c)=>s+c.sent,0))} sent`} actions={<><Button size="icon" variant="outline" aria-label="Refresh campaigns" onClick={()=>refresh()}><RefreshCw className="h-4 w-4"/></Button>{me?.can("campaigns","export")&&<Button variant="outline" onClick={()=>download("campaign-results.csv",toCsv(filtered,["id","name","status","created_by","created_at","scheduled_at","started_at","ended_at","recipient_count","sent","delivered","opens","clicks","bounces","unsubscribes","conversions","revenue","offer","server_pool"]))}><Download className="h-4 w-4"/>Export</Button>}{me?.can("campaigns","create")&&<Button asChild><Link to="/campaigns/new"><Plus className="h-4 w-4"/>New campaign</Link></Button>}</>}/>
+ <div className="mb-4 flex flex-wrap items-center gap-2"><Input placeholder="Search ID, name, subject, offer…" aria-label="Search campaigns" value={q} onChange={e=>{setQ(e.target.value);setPage(0);}} className="w-full sm:w-64"/><Select value={status} onValueChange={v=>{setStatus(v);setPage(0);}}><SelectTrigger className="w-44" aria-label="Campaign status filter"><SelectValue/></SelectTrigger><SelectContent><SelectItem value="all">All except archived</SelectItem>{CAMPAIGN_STATUSES.map(s=><SelectItem key={s} value={s}>{s.replaceAll("_"," ")}</SelectItem>)}</SelectContent></Select><Select value={user} onValueChange={v=>{setUser(v);setPage(0);}}><SelectTrigger className="w-40" aria-label="Creator filter"><SelectValue/></SelectTrigger><SelectContent><SelectItem value="all">All creators</SelectItem>{[...new Set(data.map(c=>c.created_by).filter((id):id is string=>!!id))].map(id=><SelectItem key={id} value={id}>{nameFor(id)}</SelectItem>)}</SelectContent></Select><Input type="date" value={from} onChange={e=>{setFrom(e.target.value);setPage(0);}} aria-label="Created after" className="w-40"/><Input type="date" value={to} onChange={e=>{setTo(e.target.value);setPage(0);}} aria-label="Created before" className="w-40"/><Button variant={today?"secondary":"outline"} aria-pressed={today} onClick={()=>{setToday(!today);setPage(0);}}><CalendarDays className="h-4 w-4"/>Today</Button></div>
+ <div className="overflow-x-auto border-y"><Table className="min-w-[1800px]"><TableHeader><TableRow><TableHead>ID</TableHead><SortHead k="name">Campaign</SortHead><SortHead k="status">Status</SortHead><TableHead>Creator</TableHead><SortHead k="created_at">Created</SortHead><SortHead k="scheduled_at">Scheduled</SortHead><TableHead>Started / Ended</TableHead><SortHead k="recipient_count">Recipients</SortHead><SortHead k="sent">Sent</SortHead><SortHead k="delivered">Delivered</SortHead><SortHead k="opens">Opens</SortHead><SortHead k="clicks">Clicks</SortHead><SortHead k="bounces">Bounces</SortHead><SortHead k="unsubscribes">Unsub.</SortHead><SortHead k="conversions">Conversions</SortHead><SortHead k="revenue">Revenue</SortHead><TableHead>List / Offer</TableHead><TableHead>Requested pool</TableHead><TableHead>Actions</TableHead></TableRow></TableHeader><TableBody>{isLoading&&<TableRow><TableCell colSpan={19} className="py-8">Loading…</TableCell></TableRow>}{isError&&<TableRow><TableCell colSpan={19} className="py-8 text-destructive">Campaigns could not be loaded.</TableCell></TableRow>}{!isLoading&&!rows.length&&!isError&&<TableRow><TableCell colSpan={19} className="py-8 text-muted-foreground">No campaigns match.</TableCell></TableRow>}{rows.map(c=><TableRow key={c.id}><TableCell className="font-mono text-xs" title={c.id}>{c.id.slice(0,8)}</TableCell><TableCell><Link to="/campaigns/$id" params={{id:c.id}} className="font-medium hover:text-primary">{c.name}</Link><p className="max-w-56 truncate text-xs text-muted-foreground">{c.subject}</p></TableCell><TableCell><StatusBadge status={c.status}/></TableCell><TableCell className="text-xs">{nameFor(c.created_by)}</TableCell><TableCell className="whitespace-nowrap text-xs">{fmtDate(c.created_at)}</TableCell><TableCell className="whitespace-nowrap text-xs">{fmtDate(c.scheduled_at)}</TableCell><TableCell className="text-xs">{fmtDate(c.started_at)}<br/>{fmtDate(c.ended_at)}</TableCell>{[c.recipient_count,c.sent,c.delivered].map((n,i)=><TableCell key={i} className="text-right font-mono text-xs">{fmtNum(n)}</TableCell>)}<TableCell className="text-right font-mono text-xs">{fmtNum(c.opens)}<p className="text-muted-foreground">{fmtPct(pct(c.opens,c.delivered))}</p></TableCell><TableCell className="text-right font-mono text-xs">{fmtNum(c.clicks)}<p className="text-muted-foreground">{fmtPct(pct(c.clicks,c.delivered))}</p></TableCell>{[c.bounces,c.unsubscribes,c.conversions].map((n,i)=><TableCell key={i} className="text-right font-mono text-xs">{fmtNum(n)}</TableCell>)}<TableCell className="text-right font-mono text-xs">{fmtMoney(Number(c.revenue))}</TableCell><TableCell className="max-w-48 truncate text-xs">{c.email_lists?.name??"—"}<p className="truncate text-muted-foreground">{c.offer??"—"}</p></TableCell><TableCell className="text-xs">{c.server_pool??"—"}</TableCell><TableCell><DropdownMenu><DropdownMenuTrigger asChild><Button size="icon" variant="ghost" aria-label={`Actions for ${c.name}`}><MoreHorizontal className="h-4 w-4"/></Button></DropdownMenuTrigger><DropdownMenuContent align="end"><DropdownMenuItem onClick={()=>navigate({to:"/campaigns/$id",params:{id:c.id}})}><Eye className="h-4 w-4"/>Open campaign</DropdownMenuItem>{me?.can("campaigns","clone")&&<DropdownMenuItem onClick={()=>clone(c.id)}><Copy className="h-4 w-4"/>Clone as draft</DropdownMenuItem>}{me?.can("campaigns","archive")&&availableActions(c.status as CampaignStatus).includes("archive")&&<DropdownMenuItem onClick={()=>archive(c.id)}><Archive className="h-4 w-4"/>Archive</DropdownMenuItem>}{me?.can("campaigns","delete")&&!["running","publishing","paused","stopping"].includes(c.status)&&<DropdownMenuItem className="text-destructive" onClick={()=>setToDelete({id:c.id,name:c.name})}><Trash2 className="h-4 w-4"/>Delete</DropdownMenuItem>}</DropdownMenuContent></DropdownMenu></TableCell></TableRow>)}</TableBody></Table></div>
+ <div className="flex justify-between py-3 text-xs text-muted-foreground"><span>Page {currentPage+1} of {pages}</span><div className="flex gap-2"><Button variant="outline" size="sm" disabled={currentPage===0} onClick={()=>setPage(currentPage-1)}>Previous</Button><Button variant="outline" size="sm" disabled={currentPage>=pages-1} onClick={()=>setPage(currentPage+1)}>Next</Button></div></div>
+ <AlertDialog open={!!toDelete} onOpenChange={o=>!o&&setToDelete(null)}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete “{toDelete?.name}”?</AlertDialogTitle><AlertDialogDescription>This permanently removes this campaign and its records. Delivered messages cannot be recalled.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={remove}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
+ </div>;
 }

@@ -14,8 +14,10 @@
 - Signed-in pages live under `src/routes/_authenticated/`; why: the layout gates auth and renders the app shell.
 - Campaign status changes go through `src/lib/campaign-status.ts`; why: one tested transition table.
 - Sponsor networks: API adapters in `src/lib/sponsors.server.ts`, platform/login-driver metadata in `src/lib/sponsor-platforms.ts`; credentials only via `src/lib/sponsors.functions.ts`; auto-login uses single-use 2-minute tokens served by `/api/public/sponsor-login/$token`; why: passwords never in URLs, lists or browser state.
-- External senders (SMTP/SSH/PowerMTA) are not wired yet; campaign actions run in labelled demo mode.
+- External senders are not connected; publication, test sending and queue operations stay blocked rather than simulated, so the UI cannot imply delivery.
 - UI strings go through `src/lib/i18n.ts`; why: French will be added as a second dictionary.
 - Provider credentials (DNS + rDNS hosts) live encrypted in `provider_accounts`, readable only by server functions in `src/lib/dns.functions.ts`; why: keys must never reach the browser.
 - New DNS/rDNS providers are added as adapters in `src/lib/providers.server.ts` plus field metadata in `src/lib/provider-meta.ts`.
 - A DB trigger blocks scheduling/starting campaigns whose sender domain is not verified or that lack an unsubscribe link; why: compliance must hold regardless of UI.
+- Campaign settings and validation live in `src/lib/campaign-model.ts`, with guarded commands and recipient/clone RPC wrappers in `src/lib/campaigns.functions.ts`; why: client previews and backend safety share one contract.
+- Campaign lifecycle, immutable content, administrator delivery changes and audit entries are enforced by database triggers; why: browser permissions alone are not a security boundary.

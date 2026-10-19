@@ -46,25 +46,37 @@ export type Database = {
       }
       campaign_logs: {
         Row: {
+          action: string | null
+          actor_id: string | null
           campaign_id: string
           created_at: string
+          from_status: string | null
           id: string
           level: string
           message: string
+          to_status: string | null
         }
         Insert: {
+          action?: string | null
+          actor_id?: string | null
           campaign_id: string
           created_at?: string
+          from_status?: string | null
           id?: string
           level?: string
           message: string
+          to_status?: string | null
         }
         Update: {
+          action?: string | null
+          actor_id?: string | null
           campaign_id?: string
           created_at?: string
+          from_status?: string | null
           id?: string
           level?: string
           message?: string
+          to_status?: string | null
         }
         Relationships: [
           {
@@ -87,6 +99,7 @@ export type Database = {
           created_by: string | null
           daily_limit: number | null
           delivered: number
+          ended_at: string | null
           from_email: string | null
           from_name: string | null
           handle_bounces: boolean
@@ -98,12 +111,15 @@ export type Database = {
           offer: string | null
           opens: number
           preheader: string | null
+          recipient_count: number
           reply_to: string | null
           revenue: number
           scheduled_at: string | null
           send_speed: number
           sent: number
           server_pool: string | null
+          settings: Json
+          started_at: string | null
           status: Database["public"]["Enums"]["campaign_status"]
           subject: string
           text_content: string | null
@@ -125,6 +141,7 @@ export type Database = {
           created_by?: string | null
           daily_limit?: number | null
           delivered?: number
+          ended_at?: string | null
           from_email?: string | null
           from_name?: string | null
           handle_bounces?: boolean
@@ -136,12 +153,15 @@ export type Database = {
           offer?: string | null
           opens?: number
           preheader?: string | null
+          recipient_count?: number
           reply_to?: string | null
           revenue?: number
           scheduled_at?: string | null
           send_speed?: number
           sent?: number
           server_pool?: string | null
+          settings?: Json
+          started_at?: string | null
           status?: Database["public"]["Enums"]["campaign_status"]
           subject?: string
           text_content?: string | null
@@ -163,6 +183,7 @@ export type Database = {
           created_by?: string | null
           daily_limit?: number | null
           delivered?: number
+          ended_at?: string | null
           from_email?: string | null
           from_name?: string | null
           handle_bounces?: boolean
@@ -174,12 +195,15 @@ export type Database = {
           offer?: string | null
           opens?: number
           preheader?: string | null
+          recipient_count?: number
           reply_to?: string | null
           revenue?: number
           scheduled_at?: string | null
           send_speed?: number
           sent?: number
           server_pool?: string | null
+          settings?: Json
+          started_at?: string | null
           status?: Database["public"]["Enums"]["campaign_status"]
           subject?: string
           text_content?: string | null
@@ -579,6 +603,33 @@ export type Database = {
         }
         Relationships: []
       }
+      saved_message_configs: {
+        Row: {
+          configuration: Json
+          created_at: string
+          id: string
+          name: string
+          owner_id: string
+          updated_at: string
+        }
+        Insert: {
+          configuration: Json
+          created_at?: string
+          id?: string
+          name: string
+          owner_id?: string
+          updated_at?: string
+        }
+        Update: {
+          configuration?: Json
+          created_at?: string
+          id?: string
+          name?: string
+          owner_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       sending_ips: {
         Row: {
           account_id: string | null
@@ -940,6 +991,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      campaign_recipient_summary: {
+        Args: {
+          country_filter?: string
+          engagement_min?: number
+          excluded?: string[]
+          included: string[]
+        }
+        Returns: Json
+      }
+      clone_campaign: { Args: { source_id: string }; Returns: string }
       has_permission: {
         Args: { _action: string; _module: string }
         Returns: boolean
@@ -969,6 +1030,12 @@ export type Database = {
         | "failed"
         | "cancelled"
         | "archived"
+        | "ready"
+        | "publishing"
+        | "stopping"
+        | "stopped"
+        | "test"
+        | "waiting_approval"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1113,6 +1180,12 @@ export const Constants = {
         "failed",
         "cancelled",
         "archived",
+        "ready",
+        "publishing",
+        "stopping",
+        "stopped",
+        "test",
+        "waiting_approval",
       ],
     },
   },

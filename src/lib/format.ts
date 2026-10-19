@@ -11,15 +11,15 @@ export const fmtDate = (d?: string | null) =>
 export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 /** Validate campaign HTML: unsubscribe link present and only known variables used. */
-export const KNOWN_VARS = ["first_name", "last_name", "email", "unsubscribe_url", "country", "city"];
+export const KNOWN_VARS = ["first_name", "last_name", "email", "unsubscribe_url", "country", "city", "list_name", "offer_name", "webview_url", "campaign_id", "from_name", "from_email", "subject"];
 export function validateHtml(html: string) {
   const issues: string[] = [];
-  if (!html.includes("{{unsubscribe_url}}")) issues.push("Missing mandatory {{unsubscribe_url}} link");
-  const vars = [...html.matchAll(/\{\{\s*([^}]+?)\s*\}\}/g)].map((m) => m[1] ?? "");
+  if (!/\{\{unsubscribe_url\}\}|\[unsubscribe_url\]/.test(html)) issues.push("Missing mandatory {{unsubscribe_url}} link");
+  const vars = [...html.matchAll(/\{\{\s*([^}]+?)\s*\}\}|\[([a-z_]+)\]/g)].map((m) => m[1] ?? m[2] ?? "");
   for (const v of new Set(vars)) if (v) if (!KNOWN_VARS.includes(v)) issues.push(`Unknown variable {{${v}}}`);
   const links = [...html.matchAll(/href="([^"]*)"/g)].map((m) => m[1] ?? "");
   for (const l of links)
-    if (!l || (!/^https?:\/\//.test(l) && !l.startsWith("{{") && !l.startsWith("mailto:")))
+    if (!l || (!/^https?:\/\//.test(l) && !l.startsWith("{{") && !l.startsWith("[") && !l.startsWith("mailto:")))
       issues.push(`Invalid link: "${l || "(empty)"}"`);
   return issues;
 }

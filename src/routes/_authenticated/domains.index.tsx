@@ -25,7 +25,7 @@ import { fmtDate, fmtNum } from "@/lib/format";
 import { useMe } from "@/lib/auth";
 
 export const Route = createFileRoute("/_authenticated/domains/")({
-  head: () => ({ meta: [{ title: "Domains & DNS — Cortex" }, { name: "description", content: "SPF, DKIM, DMARC, rDNS and DNS records across providers." }] }),
+  head: () => ({ meta: [{ title: "Domains & DNS — Cortex" }, { name: "description", content: "SPF, DKIM, DMARC, rDNS and DNS records across providers." }, { property: "og:title", content: "Domains & DNS — Cortex" }, { property: "og:description", content: "SPF, DKIM, DMARC, rDNS and DNS records across providers." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
   component: DomainsPage,
 });
 

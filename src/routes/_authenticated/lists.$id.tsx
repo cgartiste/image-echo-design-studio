@@ -17,7 +17,7 @@ import { fmtDate, fmtNum } from "@/lib/format";
 import { logActivity, useMe } from "@/lib/auth";
 
 export const Route = createFileRoute("/_authenticated/lists/$id")({
-  head: () => ({ meta: [{ title: "List subscribers — Cortex" }, { name: "description", content: "Subscribers in this list." }] }),
+  head: () => ({ meta: [{ title: "List subscribers — Cortex" }, { name: "description", content: "Subscribers in this list." }, { property: "og:title", content: "List subscribers — Cortex" }, { property: "og:description", content: "Subscribers in this list." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
   component: ListPage,
 });
 

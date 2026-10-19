@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { fmtDate } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/activity")({
-  head: () => ({ meta: [{ title: "Activity log — Cortex" }, { name: "description", content: "Audit trail of sensitive actions." }] }),
+  head: () => ({ meta: [{ title: "Activity log — Cortex" }, { name: "description", content: "Audit trail of sensitive actions." }, { property: "og:title", content: "Activity log — Cortex" }, { property: "og:description", content: "Audit trail of sensitive actions." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
   component: ActivityPage,
 });
 

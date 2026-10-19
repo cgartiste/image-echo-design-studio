@@ -19,7 +19,7 @@ import { PROVIDERS } from "@/lib/provider-meta";
 import { fmtDate } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/domains/$id")({
-  head: () => ({ meta: [{ title: "Domain — Cortex" }, { name: "description", content: "DNS records and email authentication for a domain." }] }),
+  head: () => ({ meta: [{ title: "Domain — Cortex" }, { name: "description", content: "DNS records and email authentication for a domain." }, { property: "og:title", content: "Domain — Cortex" }, { property: "og:description", content: "DNS records and email authentication for a domain." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
   component: DomainPage,
 });
 

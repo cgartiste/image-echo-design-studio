@@ -13,7 +13,7 @@ const DESC: Record<string, string> = {
 };
 
 export const Route = createFileRoute("/_authenticated/soon/$module")({
-  head: () => ({ meta: [{ title: "Coming soon — Cortex" }, { name: "description", content: "Upcoming Cortex module." }] }),
+  head: () => ({ meta: [{ title: "Coming soon — Cortex" }, { name: "description", content: "Upcoming Cortex module." }, { property: "og:title", content: "Coming soon — Cortex" }, { property: "og:description", content: "Upcoming Cortex module." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
   component: Soon,
 });
 

@@ -29,6 +29,27 @@
       "when": 1792401388973,
       "tag": "0003_sponsors_networks",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792402800262,
+      "tag": "0004_campaign_lifecycle_statuses",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792402866899,
+      "tag": "0005_campaign_builder_and_guards",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792403227573,
+      "tag": "0006_campaign_recipient_count",
+      "breakpoints": true
     }
   ]
 }
