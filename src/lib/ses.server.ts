@@ -8,7 +8,9 @@ export function sesClient(c: SesCreds) {
   const aws = new AwsClient({ accessKeyId: c.access_key_id, secretAccessKey: c.secret_access_key, region, service: "ses" });
   const base = `https://email.${region}.amazonaws.com`;
   return async function call<T = any>(method: string, path: string, body?: unknown): Promise<T> { // eslint-disable-line @typescript-eslint/no-explicit-any
-    const res = await aws.fetch(base + path, { method, headers: body ? { "Content-Type": "application/json" } : undefined, body: body ? JSON.stringify(body) : undefined });
+    const init: RequestInit = { method };
+    if (body) { init.headers = { "Content-Type": "application/json" }; init.body = JSON.stringify(body); }
+    const res = await aws.fetch(base + path, init);
     const text = await res.text();
     if (!res.ok) {
       let msg = text.slice(0, 300);
@@ -19,8 +21,8 @@ export function sesClient(c: SesCreds) {
   };
 }
 
-async function hmac(key: ArrayBuffer | Uint8Array, msg: string) {
-  const k = await crypto.subtle.importKey("raw", key, { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+async function hmac(key: Uint8Array, msg: string) {
+  const k = await crypto.subtle.importKey("raw", key as Uint8Array<ArrayBuffer>, { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
   return new Uint8Array(await crypto.subtle.sign("HMAC", k, new TextEncoder().encode(msg)));
 }
 /** AWS-documented algorithm converting an IAM secret key into an SES SMTP password. */

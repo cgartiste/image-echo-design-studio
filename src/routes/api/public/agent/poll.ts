@@ -9,7 +9,8 @@ export const Route = createFileRoute("/api/public/agent/poll")({
         const a = await agentFromRequest(request);
         if (!a) return json({ error: "unauthorized" }, 401);
         const body = (await request.json().catch(() => ({}))) as { info?: Record<string, unknown>; ports?: Record<string, unknown> };
-        const patch: Record<string, unknown> = { last_seen_at: new Date().toISOString(), status: "online" };
+        const patch: Record<string, any> = // eslint-disable-line @typescript-eslint/no-explicit-any
+          { last_seen_at: new Date().toISOString(), status: "online" };
         if (body.info && typeof body.info === "object") {
           patch["system"] = body.info;
           patch["kumo_installed"] = !!body.info["kumo_installed"];

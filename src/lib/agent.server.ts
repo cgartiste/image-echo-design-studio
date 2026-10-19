@@ -53,7 +53,7 @@ export async function verifyToken(token: string): Promise<{ j: string; u?: strin
 const hashSeed = (s: string) => { let h = 2166136261; for (const c of s) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return h >>> 0; };
 const lines = (s: string) => s.split(/\r?\n/).map((x) => x.trim()).filter(Boolean);
 
-type Campaign = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+type Campaign = { id: string; settings: unknown; subject: string; from_name: string | null; from_email: string | null; reply_to: string | null; html_content: string; text_content: string | null; offer: string | null; track_clicks: boolean; track_opens: boolean; handle_unsubscribes: boolean };
 type Sub = { first_name?: string | null; last_name?: string | null; country?: string | null; city?: string | null } | null;
 
 export async function renderJob(o: { job: { id: string; email: string; is_test: boolean }; campaign: Campaign; sub: Sub; listName: string; origin: string }) {
@@ -65,7 +65,7 @@ export async function renderJob(o: { job: { id: string; email: string; is_test: 
   const unsub = `${base}/api/public/u/${tok}`;
   const webview = `${base}/api/public/w/${tok}`;
 
-  let subject = c.subject as string, fromName = (c.from_name ?? "") as string, html = c.html_content as string, variant: string | null = null;
+  let subject = c.subject, fromName = c.from_name ?? "", html = c.html_content, variant: string | null = null;
   if (s.ab.enabled && s.ab.variants.length >= 2) {
     const i = seed % s.ab.variants.length; const v = s.ab.variants[i]!;
     variant = v.name || `Variant ${i + 1}`;
@@ -104,8 +104,8 @@ export async function renderJob(o: { job: { id: string; email: string; is_test: 
   return {
     job_id: job.id,
     to: job.email,
-    envelope_sender: s.bounce_email || (c.from_email as string),
-    from: { email: c.from_email as string, name: fromName },
+    envelope_sender: s.bounce_email || (c.from_email ?? ""),
+    from: { email: c.from_email ?? "", name: fromName },
     reply_to: c.reply_to || undefined,
     subject: job.is_test ? `[TEST] ${subject}` : subject,
     html, text, headers, variant,
