@@ -15,3 +15,6 @@
 - Campaign status changes go through `src/lib/campaign-status.ts`; why: one tested transition table.
 - External senders (SMTP/SSH/PowerMTA) are not wired yet; campaign actions run in labelled demo mode.
 - UI strings go through `src/lib/i18n.ts`; why: French will be added as a second dictionary.
+- Provider credentials (DNS + rDNS hosts) live encrypted in `provider_accounts`, readable only by server functions in `src/lib/dns.functions.ts`; why: keys must never reach the browser.
+- New DNS/rDNS providers are added as adapters in `src/lib/providers.server.ts` plus field metadata in `src/lib/provider-meta.ts`.
+- A DB trigger blocks scheduling/starting campaigns whose sender domain is not verified or that lack an unsubscribe link; why: compliance must hold regardless of UI.
