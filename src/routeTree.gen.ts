@@ -14,6 +14,9 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedCampaignsIndexRouteImport } from './routes/_authenticated/campaigns.index'
+import { Route as AuthenticatedCampaignsIdRouteImport } from './routes/_authenticated/campaigns.$id'
+import { Route as AuthenticatedCampaignsNewRouteImport } from './routes/_authenticated/campaigns.new'
 import { Route as AuthenticatedSoonModuleRouteImport } from './routes/_authenticated/soon.$module'
 
 const IndexRoute = IndexRouteImport.update({
@@ -40,6 +43,24 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedCampaignsIndexRoute =
+  AuthenticatedCampaignsIndexRouteImport.update({
+    id: '/campaigns/',
+    path: '/campaigns/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCampaignsIdRoute =
+  AuthenticatedCampaignsIdRouteImport.update({
+    id: '/campaigns/$id',
+    path: '/campaigns/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCampaignsNewRoute =
+  AuthenticatedCampaignsNewRouteImport.update({
+    id: '/campaigns/new',
+    path: '/campaigns/new',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSoonModuleRoute = AuthenticatedSoonModuleRouteImport.update({
   id: '/soon/$module',
   path: '/soon/$module',
@@ -51,14 +72,20 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
+  '/campaigns/new': typeof AuthenticatedCampaignsNewRoute
   '/soon/$module': typeof AuthenticatedSoonModuleRoute
+  '/campaigns/': typeof AuthenticatedCampaignsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
+  '/campaigns/new': typeof AuthenticatedCampaignsNewRoute
   '/soon/$module': typeof AuthenticatedSoonModuleRoute
+  '/campaigns': typeof AuthenticatedCampaignsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -67,13 +94,32 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
+  '/_authenticated/campaigns/new': typeof AuthenticatedCampaignsNewRoute
   '/_authenticated/soon/$module': typeof AuthenticatedSoonModuleRoute
+  '/_authenticated/campaigns/': typeof AuthenticatedCampaignsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/reset-password' | '/dashboard' | '/soon/$module'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/dashboard'
+    | '/campaigns/$id'
+    | '/campaigns/new'
+    | '/soon/$module'
+    | '/campaigns/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/reset-password' | '/dashboard' | '/soon/$module'
+  to:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/dashboard'
+    | '/campaigns/$id'
+    | '/campaigns/new'
+    | '/soon/$module'
+    | '/campaigns'
   id:
     | '__root__'
     | '/'
@@ -81,7 +127,10 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/_authenticated/dashboard'
+    | '/_authenticated/campaigns/$id'
+    | '/_authenticated/campaigns/new'
     | '/_authenticated/soon/$module'
+    | '/_authenticated/campaigns/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -128,6 +177,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/campaigns/': {
+      id: '/_authenticated/campaigns/'
+      path: '/campaigns'
+      fullPath: '/campaigns/'
+      preLoaderRoute: typeof AuthenticatedCampaignsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/campaigns/$id': {
+      id: '/_authenticated/campaigns/$id'
+      path: '/campaigns/$id'
+      fullPath: '/campaigns/$id'
+      preLoaderRoute: typeof AuthenticatedCampaignsIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/campaigns/new': {
+      id: '/_authenticated/campaigns/new'
+      path: '/campaigns/new'
+      fullPath: '/campaigns/new'
+      preLoaderRoute: typeof AuthenticatedCampaignsNewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/soon/$module': {
       id: '/_authenticated/soon/$module'
       path: '/soon/$module'
@@ -140,12 +210,18 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedCampaignsIdRoute: typeof AuthenticatedCampaignsIdRoute
+  AuthenticatedCampaignsNewRoute: typeof AuthenticatedCampaignsNewRoute
   AuthenticatedSoonModuleRoute: typeof AuthenticatedSoonModuleRoute
+  AuthenticatedCampaignsIndexRoute: typeof AuthenticatedCampaignsIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedCampaignsIdRoute: AuthenticatedCampaignsIdRoute,
+  AuthenticatedCampaignsNewRoute: AuthenticatedCampaignsNewRoute,
   AuthenticatedSoonModuleRoute: AuthenticatedSoonModuleRoute,
+  AuthenticatedCampaignsIndexRoute: AuthenticatedCampaignsIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
