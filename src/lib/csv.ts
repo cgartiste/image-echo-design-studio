@@ -1,5 +1,6 @@
 import { EMAIL_RE } from "./format";
 
+export type SubRow = { email: string; [k: string]: string };
 export const SUB_FIELDS = ["email", "first_name", "last_name", "phone", "country", "region", "city", "language", "ip", "source"] as const;
 
 function splitLine(line: string, sep: string) {
@@ -18,19 +19,20 @@ function splitLine(line: string, sep: string) {
 /** Parse CSV or TXT (one email per line). Returns valid unique rows plus counts of invalid and duplicate lines. */
 export function parseSubscribers(text: string) {
   const lines = text.split(/\r?\n/).filter((l) => l.trim());
-  if (!lines.length) return { rows: [], invalid: 0, duplicates: 0 };
-  const sep = lines[0].includes(";") ? ";" : lines[0].includes(",") ? "," : lines[0].includes("\t") ? "\t" : ",";
-  const head = splitLine(lines[0], sep).map((h) => h.toLowerCase().replace(/\s+/g, "_"));
+  if (!lines.length) return { rows: [] as SubRow[], invalid: 0, duplicates: 0 };
+  const first = lines[0]!;
+  const sep = first.includes(";") ? ";" : first.includes(",") ? "," : first.includes("\t") ? "\t" : ",";
+  const head = splitLine(first, sep).map((h) => h.toLowerCase().replace(/\s+/g, "_"));
   const hasHeader = head.includes("email");
   const cols = hasHeader ? head : ["email"];
   const seen = new Set<string>();
   let invalid = 0, duplicates = 0;
-  const rows: Record<string, string>[] = [];
+  const rows: SubRow[] = [];
   for (const line of hasHeader ? lines.slice(1) : lines) {
     const vals = splitLine(line, sep);
     const r: Record<string, string> = {};
     cols.forEach((c, i) => { if ((SUB_FIELDS as readonly string[]).includes(c) && vals[i]) r[c] = vals[i]; });
-    const email = (r.email ?? "").toLowerCase();
+    const email = (r["email"] ?? "").toLowerCase();
     if (!EMAIL_RE.test(email)) { invalid++; continue; }
     if (seen.has(email)) { duplicates++; continue; }
     seen.add(email);

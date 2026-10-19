@@ -74,7 +74,7 @@ function ListPage() {
     setProgress(0);
     const size = 500;
     for (let i = 0; i < fresh.length; i += size) {
-      const batch = fresh.slice(i, i + size).map((r) => ({ ...r, email: r.email, list_id: id, source: r.source ?? `import:${f.name}` }));
+      const batch = fresh.slice(i, i + size).map((r) => ({ ...r, email: r.email, list_id: id, source: r["source"] ?? `import:${f.name}` }));
       const { error } = await supabase.from("subscribers").upsert(batch, { onConflict: "list_id,email", ignoreDuplicates: true });
       if (error) { setProgress(null); { toast.error(error.message); return; } }
       setProgress(Math.round(((i + batch.length) / fresh.length) * 100));
@@ -93,7 +93,7 @@ function ListPage() {
   }
 
   const ids = [...sel];
-  async function bulkUpdate(patch: Record<string, unknown>, label: string) {
+  async function bulkUpdate(patch: { unsubscribed?: boolean; blocked?: boolean }, label: string) {
     const { error } = await supabase.from("subscribers").update(patch).in("id", ids);
     if (error) { toast.error(error.message); return; }
     await logActivity("lists", `bulk_${label}`, `${ids.length} subscribers`);
