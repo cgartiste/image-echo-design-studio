@@ -1,3 +1,4 @@
+import type { TablesUpdate } from "@/integrations/supabase/types";
 import { createFileRoute } from "@tanstack/react-router";
 
 // Agent heartbeat: stores system/port info, hands out queued commands, says whether there is mail to send.
@@ -9,15 +10,14 @@ export const Route = createFileRoute("/api/public/agent/poll")({
         const a = await agentFromRequest(request);
         if (!a) return json({ error: "unauthorized" }, 401);
         const body = (await request.json().catch(() => ({}))) as { info?: Record<string, unknown>; ports?: Record<string, unknown> };
-        const patch: Record<string, any> = // eslint-disable-line @typescript-eslint/no-explicit-any
-          { last_seen_at: new Date().toISOString(), status: "online" };
+        const patch: TablesUpdate<"mta_servers"> = { last_seen_at: new Date().toISOString(), status: "online" };
         if (body.info && typeof body.info === "object") {
-          patch["system"] = body.info;
-          patch["kumo_installed"] = !!body.info["kumo_installed"];
-          patch["kumo_active"] = !!body.info["kumo_active"];
-          patch["kumo_version"] = String(body.info["kumo_version"] ?? "").slice(0, 80) || null;
+          patch.system = body.info as never;
+          patch.kumo_installed = !!body.info["kumo_installed"];
+          patch.kumo_active = !!body.info["kumo_active"];
+          patch.kumo_version = String(body.info["kumo_version"] ?? "").slice(0, 80) || null;
         }
-        if (body.ports && typeof body.ports === "object") patch["ports"] = body.ports;
+        if (body.ports && typeof body.ports === "object") patch.ports = body.ports as never;
         await a.db.from("mta_servers").update(patch).eq("id", a.server.id);
 
         const { data: cmds } = await a.db.from("server_commands").select("id,kind,payload").eq("server_id", a.server.id).eq("status", "queued").order("created_at").limit(5);
