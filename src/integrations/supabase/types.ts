@@ -201,6 +201,74 @@ export type Database = {
           },
         ]
       }
+      conversions: {
+        Row: {
+          campaign_ref: string | null
+          converted_at: string
+          created_at: string
+          external_id: string
+          id: string
+          interface_ref: string | null
+          list_ref: string | null
+          offer_external_id: string | null
+          offer_name: string | null
+          offer_ref: string | null
+          payout: number
+          sponsor_id: string
+          sub1: string | null
+          sub2: string | null
+          sub3: string | null
+          subscriber_ref: string | null
+          user_ref: string | null
+        }
+        Insert: {
+          campaign_ref?: string | null
+          converted_at?: string
+          created_at?: string
+          external_id: string
+          id?: string
+          interface_ref?: string | null
+          list_ref?: string | null
+          offer_external_id?: string | null
+          offer_name?: string | null
+          offer_ref?: string | null
+          payout?: number
+          sponsor_id: string
+          sub1?: string | null
+          sub2?: string | null
+          sub3?: string | null
+          subscriber_ref?: string | null
+          user_ref?: string | null
+        }
+        Update: {
+          campaign_ref?: string | null
+          converted_at?: string
+          created_at?: string
+          external_id?: string
+          id?: string
+          interface_ref?: string | null
+          list_ref?: string | null
+          offer_external_id?: string | null
+          offer_name?: string | null
+          offer_ref?: string | null
+          payout?: number
+          sponsor_id?: string
+          sub1?: string | null
+          sub2?: string | null
+          sub3?: string | null
+          subscriber_ref?: string | null
+          user_ref?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversions_sponsor_id_fkey"
+            columns: ["sponsor_id"]
+            isOneToOne: false
+            referencedRelation: "sponsors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       daily_stats: {
         Row: {
           bounces: number
@@ -359,6 +427,77 @@ export type Database = {
         }
         Relationships: []
       }
+      offers: {
+        Row: {
+          assigned_to: string | null
+          countries: string[]
+          created_at: string
+          currency: string | null
+          description: string | null
+          external_id: string
+          id: string
+          image_url: string | null
+          imported: boolean
+          name: string
+          payout: number
+          payout_type: string | null
+          preview_url: string | null
+          sponsor_id: string
+          status: string
+          tracking_url: string | null
+          updated_at: string
+          vertical: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          countries?: string[]
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          external_id: string
+          id?: string
+          image_url?: string | null
+          imported?: boolean
+          name: string
+          payout?: number
+          payout_type?: string | null
+          preview_url?: string | null
+          sponsor_id: string
+          status?: string
+          tracking_url?: string | null
+          updated_at?: string
+          vertical?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          countries?: string[]
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          external_id?: string
+          id?: string
+          image_url?: string | null
+          imported?: boolean
+          name?: string
+          payout?: number
+          payout_type?: string | null
+          preview_url?: string | null
+          sponsor_id?: string
+          status?: string
+          tracking_url?: string | null
+          updated_at?: string
+          vertical?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "offers_sponsor_id_fkey"
+            columns: ["sponsor_id"]
+            isOneToOne: false
+            referencedRelation: "sponsors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -487,6 +626,160 @@ export type Database = {
           },
         ]
       }
+      sponsor_events: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          level: string
+          message: string
+          sponsor_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind: string
+          level?: string
+          message: string
+          sponsor_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          level?: string
+          message?: string
+          sponsor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sponsor_events_sponsor_id_fkey"
+            columns: ["sponsor_id"]
+            isOneToOne: false
+            referencedRelation: "sponsors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sponsor_login_sessions: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          ip: string | null
+          result: string
+          sponsor_id: string
+          token_hash: string
+          used_at: string | null
+          user_email: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at: string
+          id?: string
+          ip?: string | null
+          result?: string
+          sponsor_id: string
+          token_hash: string
+          used_at?: string | null
+          user_email?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          ip?: string | null
+          result?: string
+          sponsor_id?: string
+          token_hash?: string
+          used_at?: string | null
+          user_email?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sponsor_login_sessions_sponsor_id_fkey"
+            columns: ["sponsor_id"]
+            isOneToOne: false
+            referencedRelation: "sponsors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sponsors: {
+        Row: {
+          affiliate_id: string | null
+          api_driver: string
+          api_url: string | null
+          created_at: string
+          created_by: string | null
+          credentials_encrypted: string | null
+          has_api_key: boolean
+          has_password: boolean
+          home_url: string | null
+          id: string
+          last_conversion_sync_at: string | null
+          last_error: string | null
+          last_offer_sync_at: string | null
+          last_test_at: string | null
+          login_driver: string
+          login_url: string | null
+          name: string
+          platform: string
+          report_url: string | null
+          status: string
+          tracking_template: string | null
+        }
+        Insert: {
+          affiliate_id?: string | null
+          api_driver?: string
+          api_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          credentials_encrypted?: string | null
+          has_api_key?: boolean
+          has_password?: boolean
+          home_url?: string | null
+          id?: string
+          last_conversion_sync_at?: string | null
+          last_error?: string | null
+          last_offer_sync_at?: string | null
+          last_test_at?: string | null
+          login_driver?: string
+          login_url?: string | null
+          name: string
+          platform: string
+          report_url?: string | null
+          status?: string
+          tracking_template?: string | null
+        }
+        Update: {
+          affiliate_id?: string | null
+          api_driver?: string
+          api_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          credentials_encrypted?: string | null
+          has_api_key?: boolean
+          has_password?: boolean
+          home_url?: string | null
+          id?: string
+          last_conversion_sync_at?: string | null
+          last_error?: string | null
+          last_offer_sync_at?: string | null
+          last_test_at?: string | null
+          login_driver?: string
+          login_url?: string | null
+          name?: string
+          platform?: string
+          report_url?: string | null
+          status?: string
+          tracking_template?: string | null
+        }
+        Relationships: []
+      }
       subscribers: {
         Row: {
           blocked: boolean
@@ -572,6 +865,54 @@ export type Database = {
             columns: ["list_id"]
             isOneToOne: false
             referencedRelation: "email_lists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      suppression_files: {
+        Row: {
+          created_at: string
+          download_url: string | null
+          id: string
+          offer_id: string | null
+          source_type: string
+          source_url: string
+          sponsor_id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          download_url?: string | null
+          id?: string
+          offer_id?: string | null
+          source_type?: string
+          source_url: string
+          sponsor_id: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          download_url?: string | null
+          id?: string
+          offer_id?: string | null
+          source_type?: string
+          source_url?: string
+          sponsor_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "suppression_files_offer_id_fkey"
+            columns: ["offer_id"]
+            isOneToOne: false
+            referencedRelation: "offers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "suppression_files_sponsor_id_fkey"
+            columns: ["sponsor_id"]
+            isOneToOne: false
+            referencedRelation: "sponsors"
             referencedColumns: ["id"]
           },
         ]
