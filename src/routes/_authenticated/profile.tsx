@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { ROLE_LABELS, logActivity, useMe } from "@/lib/auth";
 
 export const Route = createFileRoute("/_authenticated/profile")({
-  head: () => ({ meta: [{ title: "Profile — Cortex" }, { name: "description", content: "Your account settings." }] }),
+  head: () => ({ meta: [{ title: "Profile — Cortex" }, { name: "description", content: "Your account settings." }, { property: "og:title", content: "Profile — Cortex" }, { property: "og:description", content: "Your account settings." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
   component: Profile,
 });
 

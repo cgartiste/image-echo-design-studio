@@ -16,7 +16,7 @@ import { fmtDate, fmtMoney } from "@/lib/format";
 import { useMe } from "@/lib/auth";
 
 export const Route = createFileRoute("/_authenticated/sponsors/")({
-  head: () => ({ meta: [{ title: "Sponsors & Offers — Cortex" }, { name: "description", content: "Affiliate networks, offers, conversions and secure auto-login." }] }),
+  head: () => ({ meta: [{ title: "Sponsors & Offers — Cortex" }, { name: "description", content: "Affiliate networks, offers, conversions and secure auto-login." }, { property: "og:title", content: "Sponsors & Offers — Cortex" }, { property: "og:description", content: "Affiliate networks, offers, conversions and secure auto-login." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
   component: SponsorsPage,
 });
 

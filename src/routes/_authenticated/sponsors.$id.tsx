@@ -22,7 +22,7 @@ import { fmtDate, fmtMoney } from "@/lib/format";
 import { useMe } from "@/lib/auth";
 
 export const Route = createFileRoute("/_authenticated/sponsors/$id")({
-  head: () => ({ meta: [{ title: "Sponsor — Cortex" }, { name: "description", content: "Sponsor integration, offers, conversions and tracking." }] }),
+  head: () => ({ meta: [{ title: "Sponsor — Cortex" }, { name: "description", content: "Sponsor integration, offers, conversions and tracking." }, { property: "og:title", content: "Sponsor — Cortex" }, { property: "og:description", content: "Sponsor integration, offers, conversions and tracking." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
   component: SponsorPage,
 });
 

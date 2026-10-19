@@ -9,7 +9,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { fmtCompact, fmtDate, fmtMoney, fmtNum, fmtPct, pct } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  head: () => ({ meta: [{ title: "Dashboard — Cortex" }, { name: "description", content: "Campaign and deliverability overview." }] }),
+  head: () => ({ meta: [{ title: "Dashboard — Cortex" }, { name: "description", content: "Campaign and deliverability overview." }, { property: "og:title", content: "Dashboard — Cortex" }, { property: "og:description", content: "Campaign and deliverability overview." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
   component: Dashboard,
 });
 
