@@ -48,7 +48,7 @@ export const saveAccount = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => z.object({ name: z.string().trim().min(1).max(80), provider: z.enum(Object.keys(PROVIDERS) as [string, ...string[]]), creds: z.record(z.string().max(4000)) }).parse(d))
   .handler(async ({ data, context }) => {
     const admin = await requirePerm(context as Ctx, "settings");
-    const needed = PROVIDERS[data.provider]!.fields.filter((f) => f.id !== "region").map((f) => f.id);
+    const needed = PROVIDERS[data.provider]!.fields.filter((f) => f.id !== "region" && f.id !== "email").map((f) => f.id);
     for (const f of needed) if (!data.creds[f]?.trim()) throw new Error(`Missing ${f}`);
     const { encryptCreds } = await import("./providers.server");
     const { data: row, error } = await admin.from("provider_accounts").insert({
