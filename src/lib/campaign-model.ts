@@ -32,6 +32,23 @@ export const settingsSchema = z.object({
   redirect_url: z.string().max(2000).default(""),
   redirect_fallback: z.string().max(2000).default(""),
   delivery: z.object({ interface_every: z.coerce.number().int().min(1).default(100), message_delay: z.coerce.number().min(0).default(0), minute_limit: z.coerce.number().int().min(1).default(100), batch_size: z.coerce.number().int().min(1).default(100), batch_pause: z.coerce.number().min(0).default(60) }).default({}),
+  ab: z.object({
+    enabled: z.boolean().default(false),
+    test_on: z.enum(["subject", "from_name", "content", "full"]).default("subject"),
+    split_mode: z.enum(["equal", "sample"]).default("sample"),
+    test_percent: z.coerce.number().min(1).max(100).default(20),
+    winner_metric: z.enum(["open", "click", "conversion"]).default("open"),
+    wait_hours: z.coerce.number().min(1).max(168).default(4),
+    variants: z.array(z.object({ name: z.string().max(40), subject: z.string().max(200), from_name: z.string().max(100), html: z.string().max(500000) })).max(4).default([]),
+  }).default({}),
+  random: z.object({
+    spintax: z.boolean().default(true),
+    from_names: z.string().max(5000).default(""),
+    subjects: z.string().max(10000).default(""),
+    shuffle_recipients: z.boolean().default(true),
+    jitter_min: z.coerce.number().min(0).max(3600).default(0),
+    jitter_max: z.coerce.number().min(0).max(3600).default(0),
+  }).default({}),
 });
 export type CampaignSettings = z.infer<typeof settingsSchema>;
 export function parseSettings(value: unknown): CampaignSettings {
