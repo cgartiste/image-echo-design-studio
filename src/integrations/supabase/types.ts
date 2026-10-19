@@ -424,6 +424,86 @@ export type Database = {
         }
         Relationships: []
       }
+      mta_servers: {
+        Row: {
+          agent_token_enc: string
+          agent_token_hash: string
+          config: Json
+          created_at: string
+          created_by: string | null
+          hostname: string | null
+          id: string
+          ip: string
+          kumo_active: boolean
+          kumo_installed: boolean
+          kumo_version: string | null
+          last_error: string | null
+          last_seen_at: string | null
+          name: string
+          paused: boolean
+          pool: string
+          ports: Json
+          provider: string | null
+          ses_account_id: string | null
+          status: string
+          system: Json
+        }
+        Insert: {
+          agent_token_enc: string
+          agent_token_hash: string
+          config?: Json
+          created_at?: string
+          created_by?: string | null
+          hostname?: string | null
+          id?: string
+          ip: string
+          kumo_active?: boolean
+          kumo_installed?: boolean
+          kumo_version?: string | null
+          last_error?: string | null
+          last_seen_at?: string | null
+          name: string
+          paused?: boolean
+          pool?: string
+          ports?: Json
+          provider?: string | null
+          ses_account_id?: string | null
+          status?: string
+          system?: Json
+        }
+        Update: {
+          agent_token_enc?: string
+          agent_token_hash?: string
+          config?: Json
+          created_at?: string
+          created_by?: string | null
+          hostname?: string | null
+          id?: string
+          ip?: string
+          kumo_active?: boolean
+          kumo_installed?: boolean
+          kumo_version?: string | null
+          last_error?: string | null
+          last_seen_at?: string | null
+          name?: string
+          paused?: boolean
+          pool?: string
+          ports?: Json
+          provider?: string | null
+          ses_account_id?: string | null
+          status?: string
+          system?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mta_servers_ses_account_id_fkey"
+            columns: ["ses_account_id"]
+            isOneToOne: false
+            referencedRelation: "provider_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           body: string | null
@@ -630,6 +710,136 @@ export type Database = {
         }
         Relationships: []
       }
+      send_events: {
+        Row: {
+          campaign_id: string | null
+          created_at: string
+          detail: string | null
+          id: string
+          ip: string | null
+          job_id: string | null
+          kind: string
+          url: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          campaign_id?: string | null
+          created_at?: string
+          detail?: string | null
+          id?: string
+          ip?: string | null
+          job_id?: string | null
+          kind: string
+          url?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          campaign_id?: string | null
+          created_at?: string
+          detail?: string | null
+          id?: string
+          ip?: string | null
+          job_id?: string | null
+          kind?: string
+          url?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "send_events_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "send_events_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "send_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      send_jobs: {
+        Row: {
+          attempts: number
+          campaign_id: string
+          claimed_at: string | null
+          clicked_at: string | null
+          created_at: string
+          delivered_at: string | null
+          email: string
+          error: string | null
+          id: string
+          is_test: boolean
+          opened_at: string | null
+          sent_at: string | null
+          server_id: string | null
+          status: string
+          subscriber_id: string | null
+          variant: string | null
+        }
+        Insert: {
+          attempts?: number
+          campaign_id: string
+          claimed_at?: string | null
+          clicked_at?: string | null
+          created_at?: string
+          delivered_at?: string | null
+          email: string
+          error?: string | null
+          id?: string
+          is_test?: boolean
+          opened_at?: string | null
+          sent_at?: string | null
+          server_id?: string | null
+          status?: string
+          subscriber_id?: string | null
+          variant?: string | null
+        }
+        Update: {
+          attempts?: number
+          campaign_id?: string
+          claimed_at?: string | null
+          clicked_at?: string | null
+          created_at?: string
+          delivered_at?: string | null
+          email?: string
+          error?: string | null
+          id?: string
+          is_test?: boolean
+          opened_at?: string | null
+          sent_at?: string | null
+          server_id?: string | null
+          status?: string
+          subscriber_id?: string | null
+          variant?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "send_jobs_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "send_jobs_server_id_fkey"
+            columns: ["server_id"]
+            isOneToOne: false
+            referencedRelation: "mta_servers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "send_jobs_subscriber_id_fkey"
+            columns: ["subscriber_id"]
+            isOneToOne: false
+            referencedRelation: "subscribers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sending_ips: {
         Row: {
           account_id: string | null
@@ -673,6 +883,53 @@ export type Database = {
             columns: ["account_id"]
             isOneToOne: false
             referencedRelation: "provider_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      server_commands: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          finished_at: string | null
+          id: string
+          kind: string
+          output: string | null
+          payload: Json
+          server_id: string
+          started_at: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          finished_at?: string | null
+          id?: string
+          kind: string
+          output?: string | null
+          payload?: Json
+          server_id: string
+          started_at?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          finished_at?: string | null
+          id?: string
+          kind?: string
+          output?: string | null
+          payload?: Json
+          server_id?: string
+          started_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "server_commands_server_id_fkey"
+            columns: ["server_id"]
+            isOneToOne: false
+            referencedRelation: "mta_servers"
             referencedColumns: ["id"]
           },
         ]
@@ -1000,7 +1257,35 @@ export type Database = {
         }
         Returns: Json
       }
+      claim_send_jobs: {
+        Args: { _limit: number; _server: string }
+        Returns: {
+          attempts: number
+          campaign_id: string
+          claimed_at: string | null
+          clicked_at: string | null
+          created_at: string
+          delivered_at: string | null
+          email: string
+          error: string | null
+          id: string
+          is_test: boolean
+          opened_at: string | null
+          sent_at: string | null
+          server_id: string | null
+          status: string
+          subscriber_id: string | null
+          variant: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "send_jobs"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       clone_campaign: { Args: { source_id: string }; Returns: string }
+      enqueue_campaign: { Args: { cid: string }; Returns: number }
       has_permission: {
         Args: { _action: string; _module: string }
         Returns: boolean

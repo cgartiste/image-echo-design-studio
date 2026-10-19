@@ -50,6 +50,13 @@
       "when": 1792403227573,
       "tag": "0006_campaign_recipient_count",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792416934940,
+      "tag": "0007_kumomta_servers_queue_tracking",
+      "breakpoints": true
     }
   ]
 }
