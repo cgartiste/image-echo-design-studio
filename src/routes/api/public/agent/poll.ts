@@ -22,12 +22,7 @@ export const Route = createFileRoute("/api/public/agent/poll")({
         const { data: cmds } = await a.db.from("server_commands").select("id,kind,payload").eq("server_id", a.server.id).eq("status", "queued").order("created_at").limit(5);
         if (cmds?.length) await a.db.from("server_commands").update({ status: "sent", started_at: new Date().toISOString() }).in("id", cmds.map((c) => c.id));
 
-        let send = false;
-        if (!a.server.paused) {
-          const { count } = await a.db.from("send_jobs").select("id,campaigns!inner(status,server_pool)", { count: "exact", head: true })
-            .eq("status", "queued").or("is_test.eq.true,status.eq.running", { referencedTable: "campaigns" });
-          send = (count ?? 0) > 0;
-        }
+        const send = !a.server.paused && (a.server.config as { sending?: boolean })?.sending !== false;
         return json({ commands: cmds ?? [], send });
       },
     },
