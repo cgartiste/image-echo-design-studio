@@ -70,12 +70,12 @@ export function renderCampaignPreview(html: string, values: Record<string,string
     return value === undefined ? match : value.replaceAll("&","&amp;").replaceAll('"',"&quot;").replaceAll("<","&lt;").replaceAll(">","&gt;");
   });
 }
-export function publicationChecks(v: { name:string; subject:string; from_email:string; html_content:string; handle_unsubscribes:boolean; settings: CampaignSettings }, count:number, verified:boolean) {
+export function publicationChecks(v: { name:string; subject:string; from_email:string; html_content:string; handle_unsubscribes:boolean; settings: CampaignSettings }, count:number, verified:boolean, onlineServers = 0) {
   return [
     { key:"name", ok:!!v.name.trim() }, { key:"recipients", ok:count>0 },
     { key:"subject", ok:!!v.subject.trim() }, { key:"sender", ok:EMAIL_RE.test(v.from_email) },
     { key:"domain", ok:verified }, { key:"bounce", ok:EMAIL_RE.test(v.settings.bounce_email) },
     { key:"content", ok:!!v.html_content.trim() }, { key:"unsubscribe", ok:v.handle_unsubscribes && /\{\{unsubscribe_url\}\}|\[unsubscribe_url\]/.test(v.html_content) },
-    { key:"server", ok:false }, { key:"interface", ok:false }, { key:"queue", ok:false },
+    { key:"server", ok:onlineServers>0 }, { key:"interface", ok:onlineServers>0 }, { key:"queue", ok:onlineServers>0 },
   ];
 }
