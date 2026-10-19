@@ -76,7 +76,7 @@ function ListPage() {
     for (let i = 0; i < fresh.length; i += size) {
       const batch = fresh.slice(i, i + size).map((r) => ({ ...r, email: r.email, list_id: id, source: r.source ?? `import:${f.name}` }));
       const { error } = await supabase.from("subscribers").upsert(batch, { onConflict: "list_id,email", ignoreDuplicates: true });
-      if (error) { setProgress(null); return toast.error(error.message); }
+      if (error) { setProgress(null); { toast.error(error.message); return; } }
       setProgress(Math.round(((i + batch.length) / fresh.length) * 100));
     }
     setProgress(null);
@@ -95,7 +95,7 @@ function ListPage() {
   const ids = [...sel];
   async function bulkUpdate(patch: Record<string, unknown>, label: string) {
     const { error } = await supabase.from("subscribers").update(patch).in("id", ids);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await logActivity("lists", `bulk_${label}`, `${ids.length} subscribers`);
     toast.success(`${ids.length} subscribers updated`);
     refresh();
@@ -103,7 +103,7 @@ function ListPage() {
   async function bulkDelete() {
     if (!confirm(`Delete ${ids.length} subscribers?`)) return;
     const { error } = await supabase.from("subscribers").delete().in("id", ids);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await logActivity("lists", "bulk_delete", `${ids.length} subscribers`);
     refresh();
   }
@@ -111,17 +111,17 @@ function ListPage() {
     const chosen = (subs.data ?? []).filter((s) => sel.has(s.id));
     if (bulk === "add_tag" || bulk === "remove_tag") {
       const tag = bulkVal.trim().slice(0, 40);
-      if (!tag) return toast.error("Enter a tag");
+      if (!tag) { toast.error("Enter a tag"); return; }
       for (const s of chosen) {
         const tags = bulk === "add_tag" ? [...new Set([...s.tags, tag])] : s.tags.filter((t) => t !== tag);
         await supabase.from("subscribers").update({ tags }).eq("id", s.id);
       }
       await logActivity("lists", `bulk_${bulk}`, `${tag} on ${chosen.length}`);
     } else if (bulk === "move" || bulk === "copy") {
-      if (!bulkVal) return toast.error("Choose a list");
+      if (!bulkVal) { toast.error("Choose a list"); return; }
       const copies = chosen.map(({ id: _i, created_at: _c, list_id: _l, ...r }) => ({ ...r, list_id: bulkVal }));
       const { error } = await supabase.from("subscribers").upsert(copies, { onConflict: "list_id,email", ignoreDuplicates: true });
-      if (error) return toast.error(error.message);
+      if (error) { toast.error(error.message); return; }
       if (bulk === "move") await supabase.from("subscribers").delete().in("id", ids);
       await logActivity("lists", `bulk_${bulk}`, `${chosen.length} subscribers`);
     }

@@ -49,10 +49,10 @@ function CampaignPage() {
 
   async function run(action: CampaignAction) {
     if (!c) return;
-    if (action === "schedule" && !c.scheduled_at) return toast.error("Set a start date in Delivery & tracking first.");
+    if (action === "schedule" && !c.scheduled_at) { toast.error("Set a start date in Delivery & tracking first."); return; }
     const status = nextStatus(c.status as CampaignStatus, action);
     const { error } = await supabase.from("campaigns").update({ status }).eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await supabase.from("campaign_logs").insert({ campaign_id: id, message: `${ACTION_LABEL[action]} → ${status} (demo sender)` });
     await logActivity("campaigns", action, c.name);
     toast.success(`Campaign ${status}`);
@@ -60,7 +60,7 @@ function CampaignPage() {
   }
 
   async function sendTest() {
-    if (!EMAIL_RE.test(testEmail)) return toast.error("Enter a valid email");
+    if (!EMAIL_RE.test(testEmail)) { toast.error("Enter a valid email"); return; }
     await supabase.from("campaign_logs").insert({ campaign_id: id, message: `Test email queued to ${testEmail} (demo mode — no real send)` });
     await logActivity("campaigns", "send_test", `${c?.name} → ${testEmail}`);
     toast.success("Test email logged (demo mode)");
@@ -130,7 +130,7 @@ function CampaignPage() {
               submitLabel="Save changes"
               onSubmit={async (v) => {
                 const { error } = await supabase.from("campaigns").update({ ...toRow(v), updated_at: new Date().toISOString() }).eq("id", id);
-                if (error) return void toast.error(error.message);
+                if (error) { toast.error(error.message); return; }
                 await supabase.from("campaign_logs").insert({ campaign_id: id, message: "Campaign edited" });
                 await logActivity("campaigns", "edit", v.name);
                 toast.success("Saved");

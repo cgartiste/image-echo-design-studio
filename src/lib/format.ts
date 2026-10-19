@@ -15,9 +15,9 @@ export const KNOWN_VARS = ["first_name", "last_name", "email", "unsubscribe_url"
 export function validateHtml(html: string) {
   const issues: string[] = [];
   if (!html.includes("{{unsubscribe_url}}")) issues.push("Missing mandatory {{unsubscribe_url}} link");
-  const vars = [...html.matchAll(/\{\{\s*([^}]+?)\s*\}\}/g)].map((m) => m[1]);
-  for (const v of new Set(vars)) if (!KNOWN_VARS.includes(v)) issues.push(`Unknown variable {{${v}}}`);
-  const links = [...html.matchAll(/href="([^"]*)"/g)].map((m) => m[1]);
+  const vars = [...html.matchAll(/\{\{\s*([^}]+?)\s*\}\}/g)].map((m) => m[1] ?? "");
+  for (const v of new Set(vars)) if (v) if (!KNOWN_VARS.includes(v)) issues.push(`Unknown variable {{${v}}}`);
+  const links = [...html.matchAll(/href="([^"]*)"/g)].map((m) => m[1] ?? "");
   for (const l of links)
     if (!l || (!/^https?:\/\//.test(l) && !l.startsWith("{{") && !l.startsWith("mailto:")))
       issues.push(`Invalid link: "${l || "(empty)"}"`);

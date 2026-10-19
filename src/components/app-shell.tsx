@@ -143,7 +143,7 @@ export function AppShell() {
   );
 }
 
-function Notifications({ userId }: { userId?: string }) {
+function Notifications({ userId }: { userId: string | undefined }) {
   const qc = useQueryClient();
   const { data = [] } = useQuery({
     queryKey: ["notifications", userId],

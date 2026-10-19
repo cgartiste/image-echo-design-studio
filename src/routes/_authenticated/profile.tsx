@@ -34,10 +34,10 @@ function Profile() {
 
   async function saveProfile() {
     const { error } = await supabase.from("profiles").update({ full_name: name.trim().slice(0, 100), timezone: tz, updated_at: new Date().toISOString() }).eq("id", me!.user.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     if (email !== me!.user.email) {
       const { error: e2 } = await supabase.auth.updateUser({ email });
-      if (e2) return toast.error(e2.message);
+      if (e2) { toast.error(e2.message); return; }
       toast.info("Confirm the change from your new inbox.");
     }
     await logActivity("users", "update_profile", "Profile updated");
@@ -45,9 +45,9 @@ function Profile() {
     toast.success("Profile saved");
   }
   async function changePw() {
-    if (pw.length < 8) return toast.error("Password must be at least 8 characters");
+    if (pw.length < 8) { toast.error("Password must be at least 8 characters"); return; }
     const { error } = await supabase.auth.updateUser({ password: pw, current_password: cur } as never);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await logActivity("users", "change_password", "Password changed");
     setPw(""); setCur("");
     toast.success("Password updated");

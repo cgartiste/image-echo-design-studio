@@ -70,10 +70,10 @@ function Campaigns() {
     const { id: _i, created_at: _c, updated_at: _u, email_lists: _l, ...rest } = src;
     const { data: row, error } = await supabase
       .from("campaigns")
-      .insert({ ...rest, name: `${src.name} (copy)`, status: "draft", sent: 0, delivered: 0, opens: 0, clicks: 0, bounces: 0, unsubscribes: 0, complaints: 0, conversions: 0, revenue: 0, cost: 0, created_by: me?.user.id })
+      .insert({ ...rest, name: `${src.name} (copy)`, status: "draft", sent: 0, delivered: 0, opens: 0, clicks: 0, bounces: 0, unsubscribes: 0, complaints: 0, conversions: 0, revenue: 0, cost: 0, created_by: me?.user.id ?? null })
       .select("id")
       .single();
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await logActivity("campaigns", "duplicate", src.name);
     toast.success("Campaign duplicated");
     refresh();
@@ -81,7 +81,7 @@ function Campaigns() {
   }
   async function archive(id: string, name: string) {
     const { error } = await supabase.from("campaigns").update({ status: "archived" }).eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await logActivity("campaigns", "archive", name);
     toast.success("Archived");
     refresh();
@@ -89,7 +89,7 @@ function Campaigns() {
   async function remove() {
     if (!toDelete) return;
     const { error } = await supabase.from("campaigns").delete().eq("id", toDelete.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await logActivity("campaigns", "delete", toDelete.name);
     toast.success("Campaign deleted");
     setToDelete(null);

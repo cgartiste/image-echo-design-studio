@@ -22,8 +22,8 @@ function NewCampaign() {
         defaultValues={emptyCampaign}
         submitLabel="Create draft"
         onSubmit={async (v) => {
-          const { data, error } = await supabase.from("campaigns").insert({ ...toRow(v), created_by: me?.user.id }).select("id").single();
-          if (error) return void toast.error(error.message);
+          const { data, error } = await supabase.from("campaigns").insert({ ...toRow(v), created_by: me?.user.id ?? null }).select("id").single();
+          if (error) { toast.error(error.message); return; }
           await supabase.from("campaign_logs").insert({ campaign_id: data.id, message: "Campaign created" });
           await logActivity("campaigns", "create", v.name);
           qc.invalidateQueries({ queryKey: ["campaigns"] });

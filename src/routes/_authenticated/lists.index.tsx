@@ -40,12 +40,12 @@ function Lists() {
   const refresh = () => qc.invalidateQueries({ queryKey: ["lists"] });
 
   async function save() {
-    if (!edit || !edit.name.trim()) return toast.error("Name is required");
+    if (!edit || !edit.name.trim()) { toast.error("Name is required"); return; }
     const payload = { name: edit.name.trim().slice(0, 120), description: edit.description.slice(0, 500) || null, is_active: edit.is_active, updated_at: new Date().toISOString() };
     const { error } = edit.id
       ? await supabase.from("email_lists").update(payload).eq("id", edit.id)
-      : await supabase.from("email_lists").insert({ ...payload, created_by: me?.user.id });
-    if (error) return toast.error(error.message);
+      : await supabase.from("email_lists").insert({ ...payload, created_by: me?.user.id ?? null });
+    if (error) { toast.error(error.message); return; }
     await logActivity("lists", edit.id ? "edit" : "create", edit.name);
     toast.success(edit.id ? "List updated" : "List created");
     setEdit(null);
@@ -53,14 +53,14 @@ function Lists() {
   }
   async function archive(id: string, name: string, v: boolean) {
     const { error } = await supabase.from("email_lists").update({ is_archived: v }).eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await logActivity("lists", v ? "archive" : "unarchive", name);
     refresh();
   }
   async function remove() {
     if (!del) return;
     const { error } = await supabase.from("email_lists").delete().eq("id", del.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await logActivity("lists", "delete", del.name);
     toast.success("List deleted");
     setDel(null);

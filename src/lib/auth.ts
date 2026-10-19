@@ -56,9 +56,9 @@ export async function logActivity(module: string, action: string, details?: stri
   if (!data.user) return;
   await supabase.from("activity_logs").insert({
     user_id: data.user.id,
-    user_email: data.user.email,
+    user_email: data.user.email ?? null,
     module,
     action,
-    details,
+    details: details ?? null,
   });
 }
