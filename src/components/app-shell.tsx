@@ -20,6 +20,7 @@ const live: { to: string; key: TKey; icon: typeof Mail }[] = [
   { to: "/dashboard", key: "nav.dashboard", icon: LayoutDashboard },
   { to: "/campaigns", key: "nav.campaigns", icon: Mail },
   { to: "/lists", key: "nav.lists", icon: Users },
+  { to: "/domains", key: "nav.domains", icon: Globe },
   { to: "/activity", key: "nav.activity", icon: Activity },
 ];
 const soon: { slug: string; key: TKey; icon: typeof Mail }[] = [
@@ -28,7 +29,6 @@ const soon: { slug: string; key: TKey; icon: typeof Mail }[] = [
   { slug: "taxonomy", key: "nav.taxonomy", icon: Tags },
   { slug: "offers", key: "nav.offers", icon: Handshake },
   { slug: "suppression", key: "nav.suppression", icon: ShieldBan },
-  { slug: "domains", key: "nav.domains", icon: Globe },
   { slug: "servers", key: "nav.servers", icon: Server },
   { slug: "powermta", key: "nav.powermta", icon: Terminal },
 ];

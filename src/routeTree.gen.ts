@@ -19,6 +19,8 @@ import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedCampaignsIndexRouteImport } from './routes/_authenticated/campaigns.index'
 import { Route as AuthenticatedCampaignsIdRouteImport } from './routes/_authenticated/campaigns.$id'
 import { Route as AuthenticatedCampaignsNewRouteImport } from './routes/_authenticated/campaigns.new'
+import { Route as AuthenticatedDomainsIndexRouteImport } from './routes/_authenticated/domains.index'
+import { Route as AuthenticatedDomainsIdRouteImport } from './routes/_authenticated/domains.$id'
 import { Route as AuthenticatedListsIndexRouteImport } from './routes/_authenticated/lists.index'
 import { Route as AuthenticatedListsIdRouteImport } from './routes/_authenticated/lists.$id'
 import { Route as AuthenticatedSoonModuleRouteImport } from './routes/_authenticated/soon.$module'
@@ -75,6 +77,17 @@ const AuthenticatedCampaignsNewRoute =
     path: '/campaigns/new',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDomainsIndexRoute =
+  AuthenticatedDomainsIndexRouteImport.update({
+    id: '/domains/',
+    path: '/domains/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDomainsIdRoute = AuthenticatedDomainsIdRouteImport.update({
+  id: '/domains/$id',
+  path: '/domains/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedListsIndexRoute = AuthenticatedListsIndexRouteImport.update({
   id: '/lists/',
   path: '/lists/',
@@ -100,9 +113,11 @@ export interface FileRoutesByFullPath {
   '/profile': typeof AuthenticatedProfileRoute
   '/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
   '/campaigns/new': typeof AuthenticatedCampaignsNewRoute
+  '/domains/$id': typeof AuthenticatedDomainsIdRoute
   '/lists/$id': typeof AuthenticatedListsIdRoute
   '/soon/$module': typeof AuthenticatedSoonModuleRoute
   '/campaigns/': typeof AuthenticatedCampaignsIndexRoute
+  '/domains/': typeof AuthenticatedDomainsIndexRoute
   '/lists/': typeof AuthenticatedListsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -114,9 +129,11 @@ export interface FileRoutesByTo {
   '/profile': typeof AuthenticatedProfileRoute
   '/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
   '/campaigns/new': typeof AuthenticatedCampaignsNewRoute
+  '/domains/$id': typeof AuthenticatedDomainsIdRoute
   '/lists/$id': typeof AuthenticatedListsIdRoute
   '/soon/$module': typeof AuthenticatedSoonModuleRoute
   '/campaigns': typeof AuthenticatedCampaignsIndexRoute
+  '/domains': typeof AuthenticatedDomainsIndexRoute
   '/lists': typeof AuthenticatedListsIndexRoute
 }
 export interface FileRoutesById {
@@ -130,9 +147,11 @@ export interface FileRoutesById {
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
   '/_authenticated/campaigns/new': typeof AuthenticatedCampaignsNewRoute
+  '/_authenticated/domains/$id': typeof AuthenticatedDomainsIdRoute
   '/_authenticated/lists/$id': typeof AuthenticatedListsIdRoute
   '/_authenticated/soon/$module': typeof AuthenticatedSoonModuleRoute
   '/_authenticated/campaigns/': typeof AuthenticatedCampaignsIndexRoute
+  '/_authenticated/domains/': typeof AuthenticatedDomainsIndexRoute
   '/_authenticated/lists/': typeof AuthenticatedListsIndexRoute
 }
 export interface FileRouteTypes {
@@ -146,9 +165,11 @@ export interface FileRouteTypes {
     | '/profile'
     | '/campaigns/$id'
     | '/campaigns/new'
+    | '/domains/$id'
     | '/lists/$id'
     | '/soon/$module'
     | '/campaigns/'
+    | '/domains/'
     | '/lists/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -160,9 +181,11 @@ export interface FileRouteTypes {
     | '/profile'
     | '/campaigns/$id'
     | '/campaigns/new'
+    | '/domains/$id'
     | '/lists/$id'
     | '/soon/$module'
     | '/campaigns'
+    | '/domains'
     | '/lists'
   id:
     | '__root__'
@@ -175,9 +198,11 @@ export interface FileRouteTypes {
     | '/_authenticated/profile'
     | '/_authenticated/campaigns/$id'
     | '/_authenticated/campaigns/new'
+    | '/_authenticated/domains/$id'
     | '/_authenticated/lists/$id'
     | '/_authenticated/soon/$module'
     | '/_authenticated/campaigns/'
+    | '/_authenticated/domains/'
     | '/_authenticated/lists/'
   fileRoutesById: FileRoutesById
 }
@@ -260,6 +285,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCampaignsNewRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/domains/': {
+      id: '/_authenticated/domains/'
+      path: '/domains'
+      fullPath: '/domains/'
+      preLoaderRoute: typeof AuthenticatedDomainsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/domains/$id': {
+      id: '/_authenticated/domains/$id'
+      path: '/domains/$id'
+      fullPath: '/domains/$id'
+      preLoaderRoute: typeof AuthenticatedDomainsIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/lists/': {
       id: '/_authenticated/lists/'
       path: '/lists'
@@ -290,9 +329,11 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedCampaignsIdRoute: typeof AuthenticatedCampaignsIdRoute
   AuthenticatedCampaignsNewRoute: typeof AuthenticatedCampaignsNewRoute
+  AuthenticatedDomainsIdRoute: typeof AuthenticatedDomainsIdRoute
   AuthenticatedListsIdRoute: typeof AuthenticatedListsIdRoute
   AuthenticatedSoonModuleRoute: typeof AuthenticatedSoonModuleRoute
   AuthenticatedCampaignsIndexRoute: typeof AuthenticatedCampaignsIndexRoute
+  AuthenticatedDomainsIndexRoute: typeof AuthenticatedDomainsIndexRoute
   AuthenticatedListsIndexRoute: typeof AuthenticatedListsIndexRoute
 }
 
@@ -302,9 +343,11 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedCampaignsIdRoute: AuthenticatedCampaignsIdRoute,
   AuthenticatedCampaignsNewRoute: AuthenticatedCampaignsNewRoute,
+  AuthenticatedDomainsIdRoute: AuthenticatedDomainsIdRoute,
   AuthenticatedListsIdRoute: AuthenticatedListsIdRoute,
   AuthenticatedSoonModuleRoute: AuthenticatedSoonModuleRoute,
   AuthenticatedCampaignsIndexRoute: AuthenticatedCampaignsIndexRoute,
+  AuthenticatedDomainsIndexRoute: AuthenticatedDomainsIndexRoute,
   AuthenticatedListsIndexRoute: AuthenticatedListsIndexRoute,
 }
 

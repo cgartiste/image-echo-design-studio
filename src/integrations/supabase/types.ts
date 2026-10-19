@@ -243,6 +243,62 @@ export type Database = {
         }
         Relationships: []
       }
+      domains: {
+        Row: {
+          account_id: string | null
+          checks: Json
+          created_at: string
+          dkim_selector: string
+          id: string
+          last_checked_at: string | null
+          name: string
+          nameservers: string[]
+          notes: string | null
+          provider: string | null
+          score: number
+          status: string
+          zone_ref: string | null
+        }
+        Insert: {
+          account_id?: string | null
+          checks?: Json
+          created_at?: string
+          dkim_selector?: string
+          id?: string
+          last_checked_at?: string | null
+          name: string
+          nameservers?: string[]
+          notes?: string | null
+          provider?: string | null
+          score?: number
+          status?: string
+          zone_ref?: string | null
+        }
+        Update: {
+          account_id?: string | null
+          checks?: Json
+          created_at?: string
+          dkim_selector?: string
+          id?: string
+          last_checked_at?: string | null
+          name?: string
+          nameservers?: string[]
+          notes?: string | null
+          provider?: string | null
+          score?: number
+          status?: string
+          zone_ref?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "domains_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "provider_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_lists: {
         Row: {
           created_at: string
@@ -330,6 +386,42 @@ export type Database = {
         }
         Relationships: []
       }
+      provider_accounts: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          credentials_encrypted: string
+          id: string
+          last_error: string | null
+          last_sync_at: string | null
+          name: string
+          provider: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          credentials_encrypted: string
+          id?: string
+          last_error?: string | null
+          last_sync_at?: string | null
+          name: string
+          provider: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          credentials_encrypted?: string
+          id?: string
+          last_error?: string | null
+          last_sync_at?: string | null
+          name?: string
+          provider?: string
+          status?: string
+        }
+        Relationships: []
+      }
       role_permissions: {
         Row: {
           action: string
@@ -347,6 +439,53 @@ export type Database = {
           role?: Database["public"]["Enums"]["app_role"]
         }
         Relationships: []
+      }
+      sending_ips: {
+        Row: {
+          account_id: string | null
+          created_at: string
+          hostname: string | null
+          id: string
+          ip: string
+          last_checked_at: string | null
+          provider: string | null
+          ptr_current: string | null
+          rdns_ok: boolean | null
+          server_ref: string | null
+        }
+        Insert: {
+          account_id?: string | null
+          created_at?: string
+          hostname?: string | null
+          id?: string
+          ip: string
+          last_checked_at?: string | null
+          provider?: string | null
+          ptr_current?: string | null
+          rdns_ok?: boolean | null
+          server_ref?: string | null
+        }
+        Update: {
+          account_id?: string | null
+          created_at?: string
+          hostname?: string | null
+          id?: string
+          ip?: string
+          last_checked_at?: string | null
+          provider?: string | null
+          ptr_current?: string | null
+          rdns_ok?: boolean | null
+          server_ref?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sending_ips_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "provider_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       subscribers: {
         Row: {
