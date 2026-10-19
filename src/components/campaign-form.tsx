@@ -21,7 +21,11 @@ import { recipientSummary } from "@/lib/campaigns.functions";
 import { download } from "@/lib/csv";
 import { useMe } from "@/lib/auth";
 import { t } from "@/lib/i18n";
-import { AlertTriangle, CheckCircle2, Monitor, Smartphone, Upload, Save, Send, FolderOpen, Download, Search, Plus, Trash2, RefreshCw, Server, Unplug } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Monitor, Smartphone, Upload, Save, Send, FolderOpen, Download, Search, Plus, Trash2, RefreshCw, Server, Unplug, Shuffle, ChevronLeft, ChevronRight } from "lucide-react";
+import { spin, spinCount, spamScore, abSplit } from "@/lib/spintax";
+
+const STEPS = [["audience","Audience & offre"],["sender","Expéditeur & objet"],["content","Contenu"],["random","Randomisation"],["ab","A/B Test"],["delivery","Envoi & suivi"]] as const;
+const TAGS = ["[first_name]","[last_name]","[email]","[city]","[country]","[unsubscribe_url]","[webview_url]","{{random_number:6}}","{{random_string:8}}","{Bonjour|Salut|Hello}"];
 
 export const campaignSchema = z.object({
   name:z.string().trim().min(1,"Required").max(120), subject:z.string().trim().min(1,"Required").max(200),
@@ -65,6 +69,18 @@ export function CampaignForm({defaultValues,onSubmit,submitLabel}:{defaultValues
   const issues=validateHtml(v.html_content);
   const checks=publicationChecks(v,summary.data?.final??0,verified);
   const admin=me?.roles.some(r=>["admin","super_admin"].includes(r));
+  const [step,setStep]=useState("audience"); const stepIndex=STEPS.findIndex(s=>s[0]===step);
+  const [seed,setSeed]=useState(1); const [variant,setVariant]=useState(0);
+  const ab=settings.ab; const total=summary.data?.final??0;
+  const split=abSplit(total,ab.enabled?ab.variants.length+1:1,ab.test_percent,ab.split_mode);
+  const spam=spamScore(v.subject,v.html_content);
+  const cur=variant>0&&ab.enabled?ab.variants[variant-1]:undefined;
+  const sp=(s:string)=>settings.random.spintax?spin(s,seed):s;
+  const lines=(s:string)=>s.split("\n").map(x=>x.trim()).filter(Boolean);
+  const pickLine=(arr:string[],fb:string)=>arr.length?arr[seed%arr.length]:fb;
+  const vars={subject:v.subject,from_name:v.from_name,from_email:v.from_email,offer_name:v.offer??""};
+  const sample={from:renderCampaignPreview(sp(cur&&(ab.test_on==="from_name"||ab.test_on==="full")?cur.from_name:pickLine(lines(settings.random.from_names),v.from_name)),vars),subject:renderCampaignPreview(sp(cur&&(ab.test_on==="subject"||ab.test_on==="full")?cur.subject:pickLine(lines(settings.random.subjects),v.subject)),vars),preheader:renderCampaignPreview(sp(v.preheader??""),vars)};
+  const previewHtml=renderCampaignPreview(sp(cur&&(ab.test_on==="content"||ab.test_on==="full")?cur.html:v.html_content),vars);
   const field=(name:keyof CampaignValues,label:string,props:React.ComponentProps<typeof Input>={})=><div className="space-y-1"><Label htmlFor={name} className="text-xs">{label}</Label><Input id={name} {...register(name)} {...props}/>{formState.errors[name]&&<p className="text-xs text-destructive">{String(formState.errors[name]?.message)}</p>}</div>;
   const sf=(name: keyof CampaignValues["settings"],label:string,props:React.ComponentProps<typeof Input>={})=><div className="space-y-1"><Label htmlFor={`settings.${name}`} className="text-xs">{label}</Label><Input id={`settings.${name}`} {...register(`settings.${name}` as never)} {...props}/></div>;
   const select=(name:keyof CampaignValues["settings"],label:string,options:string[])=><div className="space-y-1"><Label className="text-xs">{label}</Label><Select value={String(settings[name])} onValueChange={value=>setValue(`settings.${name}` as never,value as never,{shouldDirty:true})}><SelectTrigger aria-label={label}><SelectValue/></SelectTrigger><SelectContent>{options.map(x=><SelectItem key={x} value={x}>{x.replaceAll("_"," ")}</SelectItem>)}</SelectContent></Select></div>;
