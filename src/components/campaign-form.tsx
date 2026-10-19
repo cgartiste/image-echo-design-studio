@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { KNOWN_VARS, validateHtml } from "@/lib/format";
+import { isOnline } from "@/lib/kumo-config";
 import { settingsSchema, parseSettings, renderCampaignPreview, publicationChecks, type RecipientSummary } from "@/lib/campaign-model";
 import { recipientSummary } from "@/lib/campaigns.functions";
 import { download } from "@/lib/csv";
@@ -67,7 +68,11 @@ export function CampaignForm({defaultValues,onSubmit,submitLabel}:{defaultValues
   const summary=useQuery({queryKey:["recipient-summary",included,settings.excluded_lists,settings.country,settings.engagement_min],enabled:included.length>0,queryFn:async()=>await countFn({data:{included,excluded:settings.excluded_lists,country:settings.country,engagement:settings.engagement_min}}) as RecipientSummary});
   const verified=(domains.data??[]).some(d=>d.name.toLowerCase()===v.from_email.split("@")[1]?.toLowerCase() && d.status==="verified");
   const issues=validateHtml(v.html_content);
-  const checks=publicationChecks(v,summary.data?.final??0,verified);
+  const poolName=v.server_pool||"default";
+  const poolServers=useQuery({queryKey:["pool-servers",poolName],queryFn:async()=>{const {data,error}=await supabase.from("mta_servers").select("id,name,ip,pool,last_seen_at,kumo_active,paused");if(error)throw error;return data;}});
+  const inPool=(poolServers.data??[]).filter(s=>s.pool===poolName);const onlineInPool=inPool.filter(s=>s.kumo_active&&!s.paused&&isOnline(s.last_seen_at));
+  const pools=[...new Set((poolServers.data??[]).map(s=>s.pool))];
+  const checks=publicationChecks(v,summary.data?.final??0,verified,onlineInPool.length);
   const admin=me?.roles.some(r=>["admin","super_admin"].includes(r));
   const [step,setStep]=useState("audience"); const stepIndex=STEPS.findIndex(s=>s[0]===step);
   const [seed,setSeed]=useState(1); const [variant,setVariant]=useState(0);
@@ -182,7 +187,7 @@ export function CampaignForm({defaultValues,onSubmit,submitLabel}:{defaultValues
           </TabsContent>
           <TabsContent value="delivery" className="mt-0 space-y-5">
         <Section title={t("campaign.delivery")}><div className="flex items-center gap-2 border border-warning/30 bg-warning/10 p-3 text-xs text-warning-foreground dark:text-warning"><Unplug className="h-4 w-4 shrink-0"/>{t("campaign.disconnected")}</div>
-          <h3 className="text-xs font-semibold">{t("campaign.servers")}</h3><div className="grid grid-cols-2 gap-3"><div className="min-h-24 border p-2"><p className="text-xs text-muted-foreground">Available · 0</p></div><div className="min-h-24 border p-2"><p className="text-xs text-muted-foreground">Selected · 0</p></div></div><h3 className="text-xs font-semibold">{t("campaign.interfaces")}</h3><div className="flex min-h-20 items-center justify-center border text-xs text-muted-foreground"><Server className="mr-2 h-4 w-4"/>No connected interface</div>
+          <h3 className="text-xs font-semibold">{t("campaign.servers")}</h3><div className="border p-2 text-xs"><p className="mb-1 text-muted-foreground">Pool “{poolName}” · {onlineInPool.length}/{inPool.length} online{pools.length>0&&<> · pools: {pools.join(", ")}</>}</p>{inPool.length===0?<p className="flex items-center py-3 text-muted-foreground"><Server className="mr-2 h-4 w-4"/>No KumoMTA server in this pool</p>:<ul className="space-y-1">{inPool.map(s=><li key={s.id} className="flex justify-between"><span>{s.name} · {s.ip}</span><span className={onlineInPool.includes(s)?"text-success":"text-muted-foreground"}>{s.paused?"paused":onlineInPool.includes(s)?"online":"offline"}</span></li>)}</ul>}</div>
           {field("server_pool","Requested pool",{disabled:!admin})}
         </Section>
         <Section title="Schedule"><div className="space-y-3">{field("scheduled_at","Start at",{type:"datetime-local"})}{sf("scheduled_end","End at",{type:"datetime-local"})}<p className="text-xs text-muted-foreground">Timezone · {v.timezone}</p>{v.scheduled_at&&<p className="break-words font-mono text-xs text-muted-foreground">UTC · {new Date(v.scheduled_at).toISOString()}</p>}</div></Section>

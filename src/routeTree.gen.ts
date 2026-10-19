@@ -23,10 +23,24 @@ import { Route as AuthenticatedDomainsIndexRouteImport } from './routes/_authent
 import { Route as AuthenticatedDomainsIdRouteImport } from './routes/_authenticated/domains.$id'
 import { Route as AuthenticatedListsIndexRouteImport } from './routes/_authenticated/lists.index'
 import { Route as AuthenticatedListsIdRouteImport } from './routes/_authenticated/lists.$id'
+import { Route as AuthenticatedServersIndexRouteImport } from './routes/_authenticated/servers.index'
+import { Route as AuthenticatedServersIdRouteImport } from './routes/_authenticated/servers.$id'
 import { Route as AuthenticatedSoonModuleRouteImport } from './routes/_authenticated/soon.$module'
 import { Route as AuthenticatedSponsorsIndexRouteImport } from './routes/_authenticated/sponsors.index'
 import { Route as AuthenticatedSponsorsIdRouteImport } from './routes/_authenticated/sponsors.$id'
+import { Route as ApiPublicAgentConfigRouteImport } from './routes/api/public/agent/config'
+import { Route as ApiPublicAgentEventsRouteImport } from './routes/api/public/agent/events'
+import { Route as ApiPublicAgentInstallRouteImport } from './routes/api/public/agent/install'
+import { Route as ApiPublicAgentJobsRouteImport } from './routes/api/public/agent/jobs'
+import { Route as ApiPublicAgentJobsResultRouteImport } from './routes/api/public/agent/jobs-result'
+import { Route as ApiPublicAgentPollRouteImport } from './routes/api/public/agent/poll'
+import { Route as ApiPublicAgentResultRouteImport } from './routes/api/public/agent/result'
+import { Route as ApiPublicAgentScriptDotpyRouteImport } from './routes/api/public/agent/script[.]py'
+import { Route as ApiPublicCTokenRouteImport } from './routes/api/public/c.$token'
+import { Route as ApiPublicOTokenRouteImport } from './routes/api/public/o.$token'
 import { Route as ApiPublicSponsorLoginTokenRouteImport } from './routes/api/public/sponsor-login.$token'
+import { Route as ApiPublicUTokenRouteImport } from './routes/api/public/u.$token'
+import { Route as ApiPublicWTokenRouteImport } from './routes/api/public/w.$token'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -101,6 +115,17 @@ const AuthenticatedListsIdRoute = AuthenticatedListsIdRouteImport.update({
   path: '/lists/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedServersIndexRoute =
+  AuthenticatedServersIndexRouteImport.update({
+    id: '/servers/',
+    path: '/servers/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedServersIdRoute = AuthenticatedServersIdRouteImport.update({
+  id: '/servers/$id',
+  path: '/servers/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSoonModuleRoute = AuthenticatedSoonModuleRouteImport.update({
   id: '/soon/$module',
   path: '/soon/$module',
@@ -117,12 +142,74 @@ const AuthenticatedSponsorsIdRoute = AuthenticatedSponsorsIdRouteImport.update({
   path: '/sponsors/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiPublicAgentConfigRoute = ApiPublicAgentConfigRouteImport.update({
+  id: '/api/public/agent/config',
+  path: '/api/public/agent/config',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicAgentEventsRoute = ApiPublicAgentEventsRouteImport.update({
+  id: '/api/public/agent/events',
+  path: '/api/public/agent/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicAgentInstallRoute = ApiPublicAgentInstallRouteImport.update({
+  id: '/api/public/agent/install',
+  path: '/api/public/agent/install',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicAgentJobsRoute = ApiPublicAgentJobsRouteImport.update({
+  id: '/api/public/agent/jobs',
+  path: '/api/public/agent/jobs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicAgentJobsResultRoute =
+  ApiPublicAgentJobsResultRouteImport.update({
+    id: '/api/public/agent/jobs-result',
+    path: '/api/public/agent/jobs-result',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicAgentPollRoute = ApiPublicAgentPollRouteImport.update({
+  id: '/api/public/agent/poll',
+  path: '/api/public/agent/poll',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicAgentResultRoute = ApiPublicAgentResultRouteImport.update({
+  id: '/api/public/agent/result',
+  path: '/api/public/agent/result',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicAgentScriptDotpyRoute =
+  ApiPublicAgentScriptDotpyRouteImport.update({
+    id: '/api/public/agent/script.py',
+    path: '/api/public/agent/script.py',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicCTokenRoute = ApiPublicCTokenRouteImport.update({
+  id: '/api/public/c/$token',
+  path: '/api/public/c/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicOTokenRoute = ApiPublicOTokenRouteImport.update({
+  id: '/api/public/o/$token',
+  path: '/api/public/o/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicSponsorLoginTokenRoute =
   ApiPublicSponsorLoginTokenRouteImport.update({
     id: '/api/public/sponsor-login/$token',
     path: '/api/public/sponsor-login/$token',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicUTokenRoute = ApiPublicUTokenRouteImport.update({
+  id: '/api/public/u/$token',
+  path: '/api/public/u/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicWTokenRoute = ApiPublicWTokenRouteImport.update({
+  id: '/api/public/w/$token',
+  path: '/api/public/w/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -135,13 +222,27 @@ export interface FileRoutesByFullPath {
   '/campaigns/new': typeof AuthenticatedCampaignsNewRoute
   '/domains/$id': typeof AuthenticatedDomainsIdRoute
   '/lists/$id': typeof AuthenticatedListsIdRoute
+  '/servers/$id': typeof AuthenticatedServersIdRoute
   '/soon/$module': typeof AuthenticatedSoonModuleRoute
   '/sponsors/$id': typeof AuthenticatedSponsorsIdRoute
   '/campaigns/': typeof AuthenticatedCampaignsIndexRoute
   '/domains/': typeof AuthenticatedDomainsIndexRoute
   '/lists/': typeof AuthenticatedListsIndexRoute
+  '/servers/': typeof AuthenticatedServersIndexRoute
   '/sponsors/': typeof AuthenticatedSponsorsIndexRoute
+  '/api/public/agent/config': typeof ApiPublicAgentConfigRoute
+  '/api/public/agent/events': typeof ApiPublicAgentEventsRoute
+  '/api/public/agent/install': typeof ApiPublicAgentInstallRoute
+  '/api/public/agent/jobs': typeof ApiPublicAgentJobsRoute
+  '/api/public/agent/jobs-result': typeof ApiPublicAgentJobsResultRoute
+  '/api/public/agent/poll': typeof ApiPublicAgentPollRoute
+  '/api/public/agent/result': typeof ApiPublicAgentResultRoute
+  '/api/public/agent/script.py': typeof ApiPublicAgentScriptDotpyRoute
+  '/api/public/c/$token': typeof ApiPublicCTokenRoute
+  '/api/public/o/$token': typeof ApiPublicOTokenRoute
   '/api/public/sponsor-login/$token': typeof ApiPublicSponsorLoginTokenRoute
+  '/api/public/u/$token': typeof ApiPublicUTokenRoute
+  '/api/public/w/$token': typeof ApiPublicWTokenRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -154,13 +255,27 @@ export interface FileRoutesByTo {
   '/campaigns/new': typeof AuthenticatedCampaignsNewRoute
   '/domains/$id': typeof AuthenticatedDomainsIdRoute
   '/lists/$id': typeof AuthenticatedListsIdRoute
+  '/servers/$id': typeof AuthenticatedServersIdRoute
   '/soon/$module': typeof AuthenticatedSoonModuleRoute
   '/sponsors/$id': typeof AuthenticatedSponsorsIdRoute
   '/campaigns': typeof AuthenticatedCampaignsIndexRoute
   '/domains': typeof AuthenticatedDomainsIndexRoute
   '/lists': typeof AuthenticatedListsIndexRoute
+  '/servers': typeof AuthenticatedServersIndexRoute
   '/sponsors': typeof AuthenticatedSponsorsIndexRoute
+  '/api/public/agent/config': typeof ApiPublicAgentConfigRoute
+  '/api/public/agent/events': typeof ApiPublicAgentEventsRoute
+  '/api/public/agent/install': typeof ApiPublicAgentInstallRoute
+  '/api/public/agent/jobs': typeof ApiPublicAgentJobsRoute
+  '/api/public/agent/jobs-result': typeof ApiPublicAgentJobsResultRoute
+  '/api/public/agent/poll': typeof ApiPublicAgentPollRoute
+  '/api/public/agent/result': typeof ApiPublicAgentResultRoute
+  '/api/public/agent/script.py': typeof ApiPublicAgentScriptDotpyRoute
+  '/api/public/c/$token': typeof ApiPublicCTokenRoute
+  '/api/public/o/$token': typeof ApiPublicOTokenRoute
   '/api/public/sponsor-login/$token': typeof ApiPublicSponsorLoginTokenRoute
+  '/api/public/u/$token': typeof ApiPublicUTokenRoute
+  '/api/public/w/$token': typeof ApiPublicWTokenRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -175,13 +290,27 @@ export interface FileRoutesById {
   '/_authenticated/campaigns/new': typeof AuthenticatedCampaignsNewRoute
   '/_authenticated/domains/$id': typeof AuthenticatedDomainsIdRoute
   '/_authenticated/lists/$id': typeof AuthenticatedListsIdRoute
+  '/_authenticated/servers/$id': typeof AuthenticatedServersIdRoute
   '/_authenticated/soon/$module': typeof AuthenticatedSoonModuleRoute
   '/_authenticated/sponsors/$id': typeof AuthenticatedSponsorsIdRoute
   '/_authenticated/campaigns/': typeof AuthenticatedCampaignsIndexRoute
   '/_authenticated/domains/': typeof AuthenticatedDomainsIndexRoute
   '/_authenticated/lists/': typeof AuthenticatedListsIndexRoute
+  '/_authenticated/servers/': typeof AuthenticatedServersIndexRoute
   '/_authenticated/sponsors/': typeof AuthenticatedSponsorsIndexRoute
+  '/api/public/agent/config': typeof ApiPublicAgentConfigRoute
+  '/api/public/agent/events': typeof ApiPublicAgentEventsRoute
+  '/api/public/agent/install': typeof ApiPublicAgentInstallRoute
+  '/api/public/agent/jobs': typeof ApiPublicAgentJobsRoute
+  '/api/public/agent/jobs-result': typeof ApiPublicAgentJobsResultRoute
+  '/api/public/agent/poll': typeof ApiPublicAgentPollRoute
+  '/api/public/agent/result': typeof ApiPublicAgentResultRoute
+  '/api/public/agent/script.py': typeof ApiPublicAgentScriptDotpyRoute
+  '/api/public/c/$token': typeof ApiPublicCTokenRoute
+  '/api/public/o/$token': typeof ApiPublicOTokenRoute
   '/api/public/sponsor-login/$token': typeof ApiPublicSponsorLoginTokenRoute
+  '/api/public/u/$token': typeof ApiPublicUTokenRoute
+  '/api/public/w/$token': typeof ApiPublicWTokenRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -196,13 +325,27 @@ export interface FileRouteTypes {
     | '/campaigns/new'
     | '/domains/$id'
     | '/lists/$id'
+    | '/servers/$id'
     | '/soon/$module'
     | '/sponsors/$id'
     | '/campaigns/'
     | '/domains/'
     | '/lists/'
+    | '/servers/'
     | '/sponsors/'
+    | '/api/public/agent/config'
+    | '/api/public/agent/events'
+    | '/api/public/agent/install'
+    | '/api/public/agent/jobs'
+    | '/api/public/agent/jobs-result'
+    | '/api/public/agent/poll'
+    | '/api/public/agent/result'
+    | '/api/public/agent/script.py'
+    | '/api/public/c/$token'
+    | '/api/public/o/$token'
     | '/api/public/sponsor-login/$token'
+    | '/api/public/u/$token'
+    | '/api/public/w/$token'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -215,13 +358,27 @@ export interface FileRouteTypes {
     | '/campaigns/new'
     | '/domains/$id'
     | '/lists/$id'
+    | '/servers/$id'
     | '/soon/$module'
     | '/sponsors/$id'
     | '/campaigns'
     | '/domains'
     | '/lists'
+    | '/servers'
     | '/sponsors'
+    | '/api/public/agent/config'
+    | '/api/public/agent/events'
+    | '/api/public/agent/install'
+    | '/api/public/agent/jobs'
+    | '/api/public/agent/jobs-result'
+    | '/api/public/agent/poll'
+    | '/api/public/agent/result'
+    | '/api/public/agent/script.py'
+    | '/api/public/c/$token'
+    | '/api/public/o/$token'
     | '/api/public/sponsor-login/$token'
+    | '/api/public/u/$token'
+    | '/api/public/w/$token'
   id:
     | '__root__'
     | '/'
@@ -235,13 +392,27 @@ export interface FileRouteTypes {
     | '/_authenticated/campaigns/new'
     | '/_authenticated/domains/$id'
     | '/_authenticated/lists/$id'
+    | '/_authenticated/servers/$id'
     | '/_authenticated/soon/$module'
     | '/_authenticated/sponsors/$id'
     | '/_authenticated/campaigns/'
     | '/_authenticated/domains/'
     | '/_authenticated/lists/'
+    | '/_authenticated/servers/'
     | '/_authenticated/sponsors/'
+    | '/api/public/agent/config'
+    | '/api/public/agent/events'
+    | '/api/public/agent/install'
+    | '/api/public/agent/jobs'
+    | '/api/public/agent/jobs-result'
+    | '/api/public/agent/poll'
+    | '/api/public/agent/result'
+    | '/api/public/agent/script.py'
+    | '/api/public/c/$token'
+    | '/api/public/o/$token'
     | '/api/public/sponsor-login/$token'
+    | '/api/public/u/$token'
+    | '/api/public/w/$token'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -249,7 +420,19 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ApiPublicAgentConfigRoute: typeof ApiPublicAgentConfigRoute
+  ApiPublicAgentEventsRoute: typeof ApiPublicAgentEventsRoute
+  ApiPublicAgentInstallRoute: typeof ApiPublicAgentInstallRoute
+  ApiPublicAgentJobsRoute: typeof ApiPublicAgentJobsRoute
+  ApiPublicAgentJobsResultRoute: typeof ApiPublicAgentJobsResultRoute
+  ApiPublicAgentPollRoute: typeof ApiPublicAgentPollRoute
+  ApiPublicAgentResultRoute: typeof ApiPublicAgentResultRoute
+  ApiPublicAgentScriptDotpyRoute: typeof ApiPublicAgentScriptDotpyRoute
+  ApiPublicCTokenRoute: typeof ApiPublicCTokenRoute
+  ApiPublicOTokenRoute: typeof ApiPublicOTokenRoute
   ApiPublicSponsorLoginTokenRoute: typeof ApiPublicSponsorLoginTokenRoute
+  ApiPublicUTokenRoute: typeof ApiPublicUTokenRoute
+  ApiPublicWTokenRoute: typeof ApiPublicWTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -352,6 +535,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedListsIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/servers/': {
+      id: '/_authenticated/servers/'
+      path: '/servers'
+      fullPath: '/servers/'
+      preLoaderRoute: typeof AuthenticatedServersIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/servers/$id': {
+      id: '/_authenticated/servers/$id'
+      path: '/servers/$id'
+      fullPath: '/servers/$id'
+      preLoaderRoute: typeof AuthenticatedServersIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/soon/$module': {
       id: '/_authenticated/soon/$module'
       path: '/soon/$module'
@@ -373,11 +570,95 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSponsorsIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/agent/config': {
+      id: '/api/public/agent/config'
+      path: '/api/public/agent/config'
+      fullPath: '/api/public/agent/config'
+      preLoaderRoute: typeof ApiPublicAgentConfigRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/agent/events': {
+      id: '/api/public/agent/events'
+      path: '/api/public/agent/events'
+      fullPath: '/api/public/agent/events'
+      preLoaderRoute: typeof ApiPublicAgentEventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/agent/install': {
+      id: '/api/public/agent/install'
+      path: '/api/public/agent/install'
+      fullPath: '/api/public/agent/install'
+      preLoaderRoute: typeof ApiPublicAgentInstallRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/agent/jobs': {
+      id: '/api/public/agent/jobs'
+      path: '/api/public/agent/jobs'
+      fullPath: '/api/public/agent/jobs'
+      preLoaderRoute: typeof ApiPublicAgentJobsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/agent/jobs-result': {
+      id: '/api/public/agent/jobs-result'
+      path: '/api/public/agent/jobs-result'
+      fullPath: '/api/public/agent/jobs-result'
+      preLoaderRoute: typeof ApiPublicAgentJobsResultRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/agent/poll': {
+      id: '/api/public/agent/poll'
+      path: '/api/public/agent/poll'
+      fullPath: '/api/public/agent/poll'
+      preLoaderRoute: typeof ApiPublicAgentPollRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/agent/result': {
+      id: '/api/public/agent/result'
+      path: '/api/public/agent/result'
+      fullPath: '/api/public/agent/result'
+      preLoaderRoute: typeof ApiPublicAgentResultRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/agent/script.py': {
+      id: '/api/public/agent/script.py'
+      path: '/api/public/agent/script.py'
+      fullPath: '/api/public/agent/script.py'
+      preLoaderRoute: typeof ApiPublicAgentScriptDotpyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/c/$token': {
+      id: '/api/public/c/$token'
+      path: '/api/public/c/$token'
+      fullPath: '/api/public/c/$token'
+      preLoaderRoute: typeof ApiPublicCTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/o/$token': {
+      id: '/api/public/o/$token'
+      path: '/api/public/o/$token'
+      fullPath: '/api/public/o/$token'
+      preLoaderRoute: typeof ApiPublicOTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/sponsor-login/$token': {
       id: '/api/public/sponsor-login/$token'
       path: '/api/public/sponsor-login/$token'
       fullPath: '/api/public/sponsor-login/$token'
       preLoaderRoute: typeof ApiPublicSponsorLoginTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/u/$token': {
+      id: '/api/public/u/$token'
+      path: '/api/public/u/$token'
+      fullPath: '/api/public/u/$token'
+      preLoaderRoute: typeof ApiPublicUTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/w/$token': {
+      id: '/api/public/w/$token'
+      path: '/api/public/w/$token'
+      fullPath: '/api/public/w/$token'
+      preLoaderRoute: typeof ApiPublicWTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -391,11 +672,13 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCampaignsNewRoute: typeof AuthenticatedCampaignsNewRoute
   AuthenticatedDomainsIdRoute: typeof AuthenticatedDomainsIdRoute
   AuthenticatedListsIdRoute: typeof AuthenticatedListsIdRoute
+  AuthenticatedServersIdRoute: typeof AuthenticatedServersIdRoute
   AuthenticatedSoonModuleRoute: typeof AuthenticatedSoonModuleRoute
   AuthenticatedSponsorsIdRoute: typeof AuthenticatedSponsorsIdRoute
   AuthenticatedCampaignsIndexRoute: typeof AuthenticatedCampaignsIndexRoute
   AuthenticatedDomainsIndexRoute: typeof AuthenticatedDomainsIndexRoute
   AuthenticatedListsIndexRoute: typeof AuthenticatedListsIndexRoute
+  AuthenticatedServersIndexRoute: typeof AuthenticatedServersIndexRoute
   AuthenticatedSponsorsIndexRoute: typeof AuthenticatedSponsorsIndexRoute
 }
 
@@ -407,11 +690,13 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCampaignsNewRoute: AuthenticatedCampaignsNewRoute,
   AuthenticatedDomainsIdRoute: AuthenticatedDomainsIdRoute,
   AuthenticatedListsIdRoute: AuthenticatedListsIdRoute,
+  AuthenticatedServersIdRoute: AuthenticatedServersIdRoute,
   AuthenticatedSoonModuleRoute: AuthenticatedSoonModuleRoute,
   AuthenticatedSponsorsIdRoute: AuthenticatedSponsorsIdRoute,
   AuthenticatedCampaignsIndexRoute: AuthenticatedCampaignsIndexRoute,
   AuthenticatedDomainsIndexRoute: AuthenticatedDomainsIndexRoute,
   AuthenticatedListsIndexRoute: AuthenticatedListsIndexRoute,
+  AuthenticatedServersIndexRoute: AuthenticatedServersIndexRoute,
   AuthenticatedSponsorsIndexRoute: AuthenticatedSponsorsIndexRoute,
 }
 
@@ -423,7 +708,19 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  ApiPublicAgentConfigRoute: ApiPublicAgentConfigRoute,
+  ApiPublicAgentEventsRoute: ApiPublicAgentEventsRoute,
+  ApiPublicAgentInstallRoute: ApiPublicAgentInstallRoute,
+  ApiPublicAgentJobsRoute: ApiPublicAgentJobsRoute,
+  ApiPublicAgentJobsResultRoute: ApiPublicAgentJobsResultRoute,
+  ApiPublicAgentPollRoute: ApiPublicAgentPollRoute,
+  ApiPublicAgentResultRoute: ApiPublicAgentResultRoute,
+  ApiPublicAgentScriptDotpyRoute: ApiPublicAgentScriptDotpyRoute,
+  ApiPublicCTokenRoute: ApiPublicCTokenRoute,
+  ApiPublicOTokenRoute: ApiPublicOTokenRoute,
   ApiPublicSponsorLoginTokenRoute: ApiPublicSponsorLoginTokenRoute,
+  ApiPublicUTokenRoute: ApiPublicUTokenRoute,
+  ApiPublicWTokenRoute: ApiPublicWTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

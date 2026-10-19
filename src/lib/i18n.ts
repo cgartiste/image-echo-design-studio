@@ -22,7 +22,7 @@ const en = {
   "campaign.publish": "Save & Publish",
   "campaign.configs": "Saved configs",
   "campaign.test": "Test mode",
-  "campaign.disconnected": "No sending service connected",
+  "campaign.disconnected": "No online KumoMTA server for this campaign",
   "campaign.recipients": "Recipient count",
   "campaign.preview": "Preview",
   "campaign.checklist": "Publication checklist",

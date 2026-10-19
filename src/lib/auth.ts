@@ -1,7 +1,7 @@
 import { useQuery, queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
-export type Module = "dashboard" | "campaigns" | "lists" | "activity" | "users" | "domains" | "offers";
+export type Module = "dashboard" | "campaigns" | "lists" | "activity" | "users" | "domains" | "offers" | "servers";
 export type Action =
   | "view"
   | "create"
