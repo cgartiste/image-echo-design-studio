@@ -23,7 +23,7 @@ export function spin(text: string, seed = Date.now()): string {
 /** Number of distinct combinations from top-level spintax groups (capped). */
 export function spinCount(text: string): number {
   let n = 1;
-  for (const m of text.matchAll(/(?<!\{)\{([^{}]*\|[^{}]*)\}(?!\})|\{\{\s*spin:([^}]*)\}\}/g)) n = Math.min(n * (m[1] ?? m[2]).split("|").length, 1e9);
+  for (const m of text.matchAll(/(?<!\{)\{([^{}]*\|[^{}]*)\}(?!\})|\{\{\s*spin:([^}]*)\}\}/g)) n = Math.min(n * (m[1] ?? m[2] ?? "").split("|").length, 1e9);
   return n;
 }
 
