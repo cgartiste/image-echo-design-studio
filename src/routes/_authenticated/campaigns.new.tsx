@@ -7,7 +7,7 @@ import { CampaignForm, emptyCampaign, toRow } from "@/components/campaign-form";
 import { logActivity, useMe } from "@/lib/auth";
 
 export const Route = createFileRoute("/_authenticated/campaigns/new")({
-  head: () => ({ meta: [{ title: "New campaign — Cortex" }, { name: "description", content: "Create an email campaign." }] }),
+  head: () => ({ meta: [{ title: "New campaign — Cortex" }, { name: "description", content: "Create an email campaign with recipients, content and delivery settings." }, { property: "og:title", content: "New campaign — Cortex" }, { property: "og:description", content: "Prepare a new Cortex campaign draft." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
   component: NewCampaign,
 });
 
@@ -17,14 +17,14 @@ function NewCampaign() {
   const { data: me } = useMe();
   return (
     <div>
-      <PageHeader title="New campaign" subtitle="Saved as a draft. Start or schedule it from the campaign page." />
+      <PageHeader title="New campaign" subtitle="Campaign builder" />
       <CampaignForm
         defaultValues={emptyCampaign}
         submitLabel="Create draft"
         onSubmit={async (v) => {
           const { data, error } = await supabase.from("campaigns").insert({ ...toRow(v), created_by: me?.user.id ?? null }).select("id").single();
           if (error) { toast.error(error.message); return; }
-          await supabase.from("campaign_logs").insert({ campaign_id: data.id, message: "Campaign created" });
+          
           await logActivity("campaigns", "create", v.name);
           qc.invalidateQueries({ queryKey: ["campaigns"] });
           toast.success("Campaign created");

@@ -1,167 +1,49 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { createFileRoute,Link,useNavigate } from "@tanstack/react-router";
+import { useQuery,useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { toast } from "sonner";
-import { ArrowLeft, Send } from "lucide-react";
+import { ArrowLeft,Send,Copy,Download,RefreshCw,Unplug } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { DemoBadge, PageHeader, Panel, StatusBadge } from "@/components/page";
+import { PageHeader,StatusBadge } from "@/components/page";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { CampaignForm, emptyCampaign, toRow, type CampaignValues } from "@/components/campaign-form";
-import { availableActions, nextStatus, type CampaignAction, type CampaignStatus } from "@/lib/campaign-status";
-import { EMAIL_RE, fmtDate, fmtMoney, fmtNum, fmtPct, pct } from "@/lib/format";
-import { logActivity, useMe } from "@/lib/auth";
-
-export const Route = createFileRoute("/_authenticated/campaigns/$id")({
-  head: () => ({ meta: [{ title: "Campaign — Cortex" }, { name: "description", content: "Campaign details and controls." }] }),
-  component: CampaignPage,
-});
-
-const ACTION_LABEL: Record<CampaignAction, string> = {
-  schedule: "Schedule", start: "Start now", pause: "Pause", resume: "Resume", stop: "Stop", cancel: "Cancel", archive: "Archive",
-};
-
-function CampaignPage() {
-  const { id } = Route.useParams();
-  const qc = useQueryClient();
-  const { data: me } = useMe();
-  const [testOpen, setTestOpen] = useState(false);
-  const [testEmail, setTestEmail] = useState("");
-
-  const { data: c, isLoading } = useQuery({
-    queryKey: ["campaigns", id],
-    queryFn: async () => (await supabase.from("campaigns").select("*, email_lists(name)").eq("id", id).maybeSingle()).data,
-  });
-  const logs = useQuery({
-    queryKey: ["campaign_logs", id],
-    queryFn: async () => (await supabase.from("campaign_logs").select("*").eq("campaign_id", id).order("created_at", { ascending: false })).data ?? [],
-  });
-
-  if (isLoading) return <p className="text-muted-foreground">Loading…</p>;
-  if (!c) return <p className="text-muted-foreground">Campaign not found.</p>;
-
-  const refresh = () => {
-    qc.invalidateQueries({ queryKey: ["campaigns"] });
-    qc.invalidateQueries({ queryKey: ["campaign_logs", id] });
-  };
-
-  async function run(action: CampaignAction) {
-    if (!c) return;
-    if (action === "schedule" && !c.scheduled_at) { toast.error("Set a start date in Delivery & tracking first."); return; }
-    const status = nextStatus(c.status as CampaignStatus, action);
-    const { error } = await supabase.from("campaigns").update({ status }).eq("id", id);
-    if (error) { toast.error(error.message); return; }
-    await supabase.from("campaign_logs").insert({ campaign_id: id, message: `${ACTION_LABEL[action]} → ${status} (demo sender)` });
-    await logActivity("campaigns", action, c.name);
-    toast.success(`Campaign ${status}`);
-    refresh();
-  }
-
-  async function sendTest() {
-    if (!EMAIL_RE.test(testEmail)) { toast.error("Enter a valid email"); return; }
-    await supabase.from("campaign_logs").insert({ campaign_id: id, message: `Test email queued to ${testEmail} (demo mode — no real send)` });
-    await logActivity("campaigns", "send_test", `${c?.name} → ${testEmail}`);
-    toast.success("Test email logged (demo mode)");
-    setTestOpen(false);
-    refresh();
-  }
-
-  const values: CampaignValues = {
-    ...emptyCampaign,
-    ...Object.fromEntries(Object.entries(c).filter(([, v]) => v !== null)),
-    daily_limit: c.daily_limit ?? 0,
-    scheduled_at: c.scheduled_at ? new Date(c.scheduled_at).toISOString().slice(0, 16) : "",
-  } as CampaignValues;
-
-  const canExec = me?.can("campaigns", "execute");
-  const metrics = [
-    ["Sent", fmtNum(c.sent)], ["Delivered", fmtNum(c.delivered)], ["Delivery rate", fmtPct(pct(c.delivered, c.sent))],
-    ["Opens", fmtNum(c.opens)], ["Open rate", fmtPct(pct(c.opens, c.delivered))], ["Clicks", fmtNum(c.clicks)],
-    ["Click rate", fmtPct(pct(c.clicks, c.delivered))], ["Bounces", fmtNum(c.bounces)], ["Unsubscribes", fmtNum(c.unsubscribes)],
-    ["Complaints", fmtNum(c.complaints)], ["Conversions", fmtNum(c.conversions)], ["Revenue", fmtMoney(Number(c.revenue))],
-    ["Cost", fmtMoney(Number(c.cost))], ["Profit", fmtMoney(Number(c.revenue) - Number(c.cost))],
-  ];
-
-  return (
-    <div>
-      <Link to="/campaigns" className="mb-3 inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="h-3 w-3" /> Campaigns
-      </Link>
-      <PageHeader
-        title={c.name}
-        subtitle={`${c.email_lists?.name ?? "No list"} · ${c.subject}`}
-        actions={
-          <div className="flex flex-wrap items-center gap-2">
-            <StatusBadge status={c.status} />
-            <DemoBadge />
-            <Button variant="outline" size="sm" onClick={() => setTestOpen(true)}><Send className="h-3.5 w-3.5" /> Send test</Button>
-            {canExec && availableActions(c.status as CampaignStatus).map((a) => (
-              <Button key={a} size="sm" variant={a === "start" || a === "resume" ? "default" : a === "cancel" ? "destructive" : "secondary"} onClick={() => run(a)}>
-                {ACTION_LABEL[a]}
-              </Button>
-            ))}
-          </div>
-        }
-      />
-      <Tabs defaultValue="stats">
-        <TabsList>
-          <TabsTrigger value="stats">Statistics</TabsTrigger>
-          <TabsTrigger value="edit">Edit</TabsTrigger>
-          <TabsTrigger value="log">Execution log</TabsTrigger>
-        </TabsList>
-        <TabsContent value="stats">
-          <div className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border bg-border sm:grid-cols-4 lg:grid-cols-7">
-            {metrics.map(([l, v]) => (
-              <div key={l} className="bg-card p-3">
-                <p className="text-[11px] uppercase tracking-wide text-muted-foreground">{l}</p>
-                <p className="kpi-value mt-1 text-lg font-semibold">{v}</p>
-              </div>
-            ))}
-          </div>
-          <p className="mt-3 text-xs text-muted-foreground">Scheduled: {fmtDate(c.scheduled_at)} · Speed {fmtNum(c.send_speed)}/h · Pool {c.server_pool ?? "—"}</p>
-        </TabsContent>
-        <TabsContent value="edit">
-          {me?.can("campaigns", "edit") ? (
-            <CampaignForm
-              key={c.updated_at}
-              defaultValues={values}
-              submitLabel="Save changes"
-              onSubmit={async (v) => {
-                const { error } = await supabase.from("campaigns").update({ ...toRow(v), updated_at: new Date().toISOString() }).eq("id", id);
-                if (error) { toast.error(error.message); return; }
-                await supabase.from("campaign_logs").insert({ campaign_id: id, message: "Campaign edited" });
-                await logActivity("campaigns", "edit", v.name);
-                toast.success("Saved");
-                refresh();
-              }}
-            />
-          ) : <p className="text-sm text-muted-foreground">You don't have permission to edit campaigns.</p>}
-        </TabsContent>
-        <TabsContent value="log">
-          <Panel>
-            <ul className="divide-y font-mono text-xs">
-              {(logs.data ?? []).length === 0 && <li className="p-4 text-muted-foreground">No log entries.</li>}
-              {(logs.data ?? []).map((l) => (
-                <li key={l.id} className="flex gap-3 px-4 py-2">
-                  <span className="shrink-0 text-muted-foreground">{fmtDate(l.created_at)}</span>
-                  <span className="uppercase text-primary">{l.level}</span>
-                  <span>{l.message}</span>
-                </li>
-              ))}
-            </ul>
-          </Panel>
-        </TabsContent>
-      </Tabs>
-      <Dialog open={testOpen} onOpenChange={setTestOpen}>
-        <DialogContent>
-          <DialogHeader><DialogTitle>Send a test email</DialogTitle></DialogHeader>
-          <Input type="email" placeholder="you@example.com" value={testEmail} onChange={(e) => setTestEmail(e.target.value)} />
-          <p className="text-xs text-muted-foreground">Demo mode: the test is logged but not delivered until a sending server is connected.</p>
-          <DialogFooter><Button onClick={sendTest}>Send test</Button></DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
+import { Textarea } from "@/components/ui/textarea";
+import { Tabs,TabsContent,TabsList,TabsTrigger } from "@/components/ui/tabs";
+import { Dialog,DialogContent,DialogFooter,DialogHeader,DialogTitle } from "@/components/ui/dialog";
+import { CampaignForm,emptyCampaign,toRow,type CampaignValues } from "@/components/campaign-form";
+import { availableActions,canEditCampaign,type CampaignAction,type CampaignStatus } from "@/lib/campaign-status";
+import { campaignRates,parseSettings,maskEmails,renderCampaignPreview } from "@/lib/campaign-model";
+import { commandCampaign,cloneCampaign } from "@/lib/campaigns.functions";
+import { fmtDate,fmtMoney,fmtNum,fmtPct } from "@/lib/format";
+import { download,toCsv } from "@/lib/csv";
+import { useMe } from "@/lib/auth";
+import { t } from "@/lib/i18n";
+export const Route=createFileRoute("/_authenticated/campaigns/$id")({head:()=>({meta:[{title:"Campaign workspace — Cortex"},{name:"description",content:"Prepare campaign content, check readiness and review performance."},{property:"og:title",content:"Campaign workspace — Cortex"},{property:"og:description",content:"Campaign editor, preview, statistics and audit history."},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary_large_image"}]}),component:CampaignPage});
+const LABEL:Record<CampaignAction,string>={schedule:"Schedule",start:"Start",pause:"Pause",resume:"Resume",stop:"Stop",cancel:"Cancel",archive:"Archive"};
+function CampaignPage(){
+ const {id}=Route.useParams();const qc=useQueryClient();const {data:me}=useMe();const navigate=useNavigate();const commandFn=useServerFn(commandCampaign);const cloneFn=useServerFn(cloneCampaign);
+ const [testOpen,setTestOpen]=useState(false);const [emails,setEmails]=useState("");const [testSubject,setTestSubject]=useState("");const [logSearch,setLogSearch]=useState("");const [tab,setTab]=useState("stats");const [device,setDevice]=useState("desktop");
+ const {data:c,isLoading,isError}=useQuery({queryKey:["campaigns",id],queryFn:async()=>{const {data,error}=await supabase.from("campaigns").select("*,email_lists(name)").eq("id",id).maybeSingle();if(error)throw error;return data;}});
+ const logs=useQuery({queryKey:["campaign_logs",id],enabled:!!me?.can("campaigns","view_logs"),queryFn:async()=>{const {data,error}=await supabase.from("campaign_logs").select("*").eq("campaign_id",id).order("created_at",{ascending:false});if(error)throw error;return data;}});
+ const conversions=useQuery({queryKey:["campaign-conversions",id],enabled:!!me?.can("offers","view"),queryFn:async()=>{const {data,error}=await supabase.from("conversions").select("id,offer_name,payout,converted_at,sponsor_id").eq("campaign_ref",id).order("converted_at",{ascending:false});if(error)throw error;return data;}});
+ if(isLoading)return <p className="text-muted-foreground">Loading…</p>;if(isError)return <p className="text-destructive">Campaign could not be loaded.</p>;if(!c)return <p className="text-muted-foreground">Campaign not found.</p>;
+ const settings=parseSettings(c.settings);const values:CampaignValues={...emptyCampaign,...Object.fromEntries(Object.entries(c).filter(([,v])=>v!==null)),settings,daily_limit:c.daily_limit??0,scheduled_at:c.scheduled_at?new Date(c.scheduled_at).toISOString().slice(0,16):""} as CampaignValues;
+ const refresh=()=>{qc.invalidateQueries({queryKey:["campaigns"]});qc.invalidateQueries({queryKey:["campaign_logs",id]});};
+ async function command(action:CampaignAction){try{await commandFn({data:{id,action}});refresh();toast.success("Campaign updated");}catch(e){toast.error(e instanceof Error?e.message:"Action failed");}}
+ async function clone(){try{const result=await cloneFn({data:{id}});navigate({to:"/campaigns/$id",params:{id:result.id}});qc.invalidateQueries({queryKey:["campaigns"]});}catch(e){toast.error(e instanceof Error?e.message:"Clone failed");}}
+ const rates=campaignRates(c);
+ const metrics=[["Sent",fmtNum(c.sent)],["Delivered",fmtNum(c.delivered)],["Opens",fmtNum(c.opens)],["Clicks",fmtNum(c.clicks)],["Bounces",fmtNum(c.bounces)],["Unsubscribes",fmtNum(c.unsubscribes)],["Complaints",fmtNum(c.complaints)],["Conversions",fmtNum(c.conversions)],["Revenue",fmtMoney(Number(c.revenue))],["Cost",fmtMoney(Number(c.cost))],["Profit",fmtMoney(Number(c.revenue)-Number(c.cost))]];
+ return <div><Link to="/campaigns" className="mb-3 inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"><ArrowLeft className="h-3 w-3"/>Campaigns</Link><PageHeader title={c.name} subtitle={`${c.email_lists?.name??"No list"} · ${c.subject}`} actions={<><StatusBadge status={c.status}/><Button size="icon" variant="outline" aria-label="Refresh campaign" onClick={refresh}><RefreshCw className="h-4 w-4"/></Button>{me?.can("campaigns","clone")&&<Button variant="outline" size="sm" onClick={clone}><Copy className="h-4 w-4"/>Clone</Button>}{me?.can("campaigns","send_test")&&<Button variant="outline" size="sm" onClick={()=>setTestOpen(true)}><Send className="h-4 w-4"/>Send test</Button>}{availableActions(c.status as CampaignStatus).filter(a=>me?.can("campaigns",a==="schedule"?"publish":a)).map(a=><Button key={a} size="sm" variant={a==="cancel"?"destructive":"secondary"} disabled={["start","schedule","pause","resume","stop"].includes(a)} title={["start","schedule","pause","resume","stop"].includes(a)?t("campaign.disconnected"):LABEL[a]} onClick={()=>command(a)}>{LABEL[a]}</Button>)}</>}/>
+ <div className="mb-5 flex items-center gap-2 border-y py-2 text-xs text-warning-foreground dark:text-warning"><Unplug className="h-4 w-4"/>{t("campaign.disconnected")}</div>
+ <Tabs value={tab} onValueChange={setTab}><TabsList className="h-auto flex-wrap justify-start"><TabsTrigger value="stats">Statistics</TabsTrigger><TabsTrigger value="edit">Edit</TabsTrigger><TabsTrigger value="preview">Preview</TabsTrigger><TabsTrigger value="log">Execution log</TabsTrigger><TabsTrigger value="conversions">Conversions</TabsTrigger><TabsTrigger value="delivery">Servers & queue</TabsTrigger></TabsList>
+ <TabsContent value="stats">{me?.can("campaigns","view_statistics")?<><div className="grid grid-cols-2 gap-y-5 border-y py-5 sm:grid-cols-4 lg:grid-cols-6">{metrics.map(([l,v])=><div key={l} className="border-l px-4 first:border-l-0"><p className="text-[11px] uppercase text-muted-foreground">{l}</p><p className="mt-1 text-xl font-semibold">{v}</p></div>)}</div><div className="my-6 grid gap-5 sm:grid-cols-5">{[["Open rate",rates.open],["CTR",rates.ctr],["Bounce rate",rates.bounce],["Unsubscribe rate",rates.unsubscribe],["Conversion rate",rates.conversion]].map(([label,value])=><div key={String(label)}><p className="text-xs text-muted-foreground">{label}</p><p className="mt-1 text-lg font-semibold">{fmtPct(Number(value))}</p></div>)}</div><p className="text-xs text-muted-foreground">Scheduled · {fmtDate(c.scheduled_at)} · Started · {fmtDate(c.started_at)} · Ended · {fmtDate(c.ended_at)}</p><h2 className="mb-2 mt-8 text-sm font-semibold">Data insights</h2><div className="flex flex-wrap gap-2 border-y py-3 text-xs text-muted-foreground">{["Hourly","Daily","Servers","Interfaces","Geographies","Devices","Browsers","Operating systems","Languages","Timezones","Email domains","Last activity"].map(label=><span key={label} className="border-r pr-3">{label}</span>)}</div><p className="py-4 text-sm text-muted-foreground">No delivery events collected. Detailed breakdowns are unavailable until the sending service reports events.</p>{me?.can("campaigns","export")&&<Button variant="outline" size="sm" onClick={()=>download(`${c.name}-statistics.csv`,toCsv([{...c,...rates}],["id","name","sent","delivered","opens","clicks","bounces","unsubscribes","complaints","conversions","revenue","cost","open","ctr","bounce","unsubscribe","conversion"]))}><Download className="h-4 w-4"/>Export statistics</Button>}</>:<p className="text-muted-foreground">Statistics permission required.</p>}</TabsContent>
+ <TabsContent value="edit">{!canEditCampaign(c.status as CampaignStatus)?<p className="py-6 text-sm text-muted-foreground">{t("campaign.locked")}. Clone this campaign to create a new draft.</p>:me?.can("campaigns","edit")?<CampaignForm key={c.updated_at} defaultValues={values} submitLabel="Save changes" onSubmit={async v=>{const {error}=await supabase.from("campaigns").update(toRow(v)).eq("id",id);if(error){toast.error(error.message);throw new Error(error.message);}toast.success("Saved");refresh();}}/>:<p className="text-muted-foreground">Editing permission required.</p>}</TabsContent>
+ <TabsContent value="preview">{me?.can("campaigns","preview")?<><div className="mb-4 flex flex-wrap justify-between gap-2"><div className="text-sm"><p>{c.from_name} &lt;{c.from_email}&gt;</p><p className="font-semibold">{c.subject}</p><p className="text-xs text-muted-foreground">Bounce · {settings.bounce_email||"Not configured"}</p></div><div className="flex gap-2"><Button size="sm" variant={device==="desktop"?"secondary":"outline"} onClick={()=>setDevice("desktop")}>Desktop</Button><Button size="sm" variant={device==="mobile"?"secondary":"outline"} onClick={()=>setDevice("mobile")}>Mobile</Button><Button size="icon" variant="outline" aria-label="Download campaign preview" onClick={()=>download(`${c.name}-preview.html`,renderCampaignPreview(c.html_content))}><Download className="h-4 w-4"/></Button></div></div><div className="flex justify-center bg-muted p-3"><iframe title="Full campaign preview" sandbox="" srcDoc={renderCampaignPreview(c.html_content,{from_name:c.from_name??"",from_email:c.from_email??"",subject:c.subject})} className={`h-[600px] max-w-full border bg-card ${device==="desktop"?"w-full":"w-[375px]"}`}/></div><details className="mt-4"><summary className="cursor-pointer text-sm">Headers & text version</summary><pre className="mt-3 whitespace-pre-wrap break-words text-xs">{settings.headers}{"\n\n"}{c.text_content}</pre></details></>:<p>Preview permission required.</p>}</TabsContent>
+ <TabsContent value="log">{me?.can("campaigns","view_logs")?<><div className="mb-3 flex gap-2"><Input placeholder="Filter logs…" aria-label="Filter campaign logs" value={logSearch} onChange={e=>setLogSearch(e.target.value)}/>{me?.can("campaigns","export")&&<Button variant="outline" aria-label="Export campaign logs" onClick={()=>download("campaign-logs.csv",toCsv((logs.data??[]).map(l=>({...l,message:maskEmails(l.message)})),["created_at","level","message","actor_id","action","from_status","to_status"]))}><Download className="h-4 w-4"/></Button>}</div>{logs.isError&&<p className="text-destructive">Logs could not be loaded.</p>}<ul className="divide-y border-y font-mono text-xs">{!logs.data?.length&&<li className="py-4 text-muted-foreground">No log entries.</li>}{logs.data?.filter(l=>`${l.level} ${l.message} ${l.action??""}`.toLowerCase().includes(logSearch.toLowerCase())).map(l=><li key={l.id} className="flex flex-wrap gap-3 py-3"><span className="text-muted-foreground">{fmtDate(l.created_at)}</span><span className="uppercase text-primary">{l.level}</span><span>{maskEmails(l.message)}{l.from_status&&` · ${l.from_status} → ${l.to_status}`}</span><span className="text-muted-foreground">{l.actor_id?`User ${l.actor_id.slice(0,8)}`:"Legacy entry · author unavailable"}</span></li>)}</ul></>:<p>Log permission required.</p>}</TabsContent>
+ <TabsContent value="conversions">{!me?.can("offers","view")?<p className="text-muted-foreground">Offer permission required.</p>:conversions.isError?<p className="text-destructive">Conversions could not be loaded.</p>:<><div className="mb-4 flex justify-between"><h2 className="text-sm font-semibold">{conversions.data?.length??0} linked conversions</h2><Button variant="outline" size="sm" onClick={()=>conversions.refetch()}><RefreshCw className="h-3 w-3"/>Refresh</Button></div><ul className="divide-y border-y">{!conversions.data?.length&&<li className="py-5 text-sm text-muted-foreground">No conversion references this campaign.</li>}{conversions.data?.map(x=><li key={x.id} className="flex justify-between gap-3 py-3 text-sm"><span>{x.offer_name??"Offer"}<span className="ml-3 text-xs text-muted-foreground">{fmtDate(x.converted_at)}</span></span><span>{fmtMoney(Number(x.payout))}</span></li>)}</ul></>}</TabsContent>
+ <TabsContent value="delivery"><h2 className="mb-3 text-sm font-semibold">Delivery servers & interfaces</h2><p className="border-y py-5 text-sm text-muted-foreground">No sending servers connected. Requested pool: {c.server_pool??"—"}.</p><h2 className="mb-3 mt-6 text-sm font-semibold">Queue monitoring</h2><p className="border-y py-5 text-sm text-muted-foreground">No delivery queue connected. Pending, retry and blocked counts are unavailable.</p>{me?.can("campaigns","clean_queue")&&<Button className="mt-4" variant="destructive" disabled>Clean Queue</Button>}</TabsContent>
+ </Tabs>
+ <Dialog open={testOpen} onOpenChange={setTestOpen}><DialogContent><DialogHeader><DialogTitle>Send a test email</DialogTitle></DialogHeader><label className="space-y-1 text-xs">Test recipients<Textarea value={emails} onChange={e=>setEmails(e.target.value)} placeholder="One email per line"/></label><label className="space-y-1 text-xs">Test subject<Input value={testSubject} onChange={e=>setTestSubject(e.target.value)} placeholder={c.subject}/></label><p className="text-sm text-warning-foreground dark:text-warning">No sending service connected. No test will be queued or delivered.</p><DialogFooter><Button variant="secondary" onClick={()=>setTestOpen(false)}>Cancel</Button><Button disabled><Send className="h-4 w-4"/>Send test</Button></DialogFooter></DialogContent></Dialog>
+ </div>;
 }

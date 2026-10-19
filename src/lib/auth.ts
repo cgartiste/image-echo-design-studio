@@ -11,6 +11,7 @@ export type Action =
   | "execute"
   | "settings"
   | "manage_users";
+export type CampaignPermission = "clone" | "preview" | "send_test" | "publish" | "start" | "pause" | "resume" | "stop" | "cancel" | "archive" | "clean_queue" | "view_logs" | "view_statistics" | "manage_tracking" | "manage_realtime_config";
 
 export const ROLE_LABELS: Record<string, string> = {
   super_admin: "Super Admin",
@@ -41,7 +42,7 @@ export const meQuery = queryOptions({
       user,
       profile,
       roles: roleList,
-      can: (m: Module, a: Action) => isSuper || set.has(`${m}:${a}`),
+      can: (m: Module, a: Action | CampaignPermission) => isSuper || set.has(`${m}:${a}`),
     };
   },
   staleTime: 60_000,

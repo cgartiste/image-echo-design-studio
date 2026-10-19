@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { CheckCircle2, Clock, FileText, FlaskConical, Loader2, Pause, Play, ShieldCheck, Square, Archive, XCircle, AlertTriangle } from "lucide-react";
 
 export function PageHeader({ title, subtitle, actions }: { title: string; subtitle?: string; actions?: ReactNode }) {
   return (
@@ -22,6 +23,12 @@ const statusStyles: Record<string, string> = {
   failed: "bg-destructive/15 text-destructive",
   cancelled: "bg-destructive/10 text-destructive",
   archived: "bg-muted text-muted-foreground",
+  ready: "bg-success/15 text-success",
+  publishing: "bg-info/15 text-info",
+  stopping: "bg-warning/20 text-warning-foreground dark:text-warning",
+  stopped: "bg-muted text-muted-foreground",
+  test: "bg-info/15 text-info",
+  waiting_approval: "bg-warning/20 text-warning-foreground dark:text-warning",
   active: "bg-success/15 text-success",
   inactive: "bg-muted text-muted-foreground",
   unsubscribed: "bg-warning/20 text-warning-foreground dark:text-warning",
@@ -29,6 +36,8 @@ const statusStyles: Record<string, string> = {
 };
 
 export function StatusBadge({ status, className }: { status: string; className?: string }) {
+  const icons: Record<string, typeof Clock> = { draft:FileText,ready:ShieldCheck,scheduled:Clock,publishing:Loader2,running:Play,paused:Pause,stopping:Loader2,stopped:Square,completed:CheckCircle2,failed:AlertTriangle,cancelled:XCircle,archived:Archive,test:FlaskConical,waiting_approval:Clock };
+  const Icon = icons[status];
   return (
     <span
       className={cn(
@@ -37,8 +46,8 @@ export function StatusBadge({ status, className }: { status: string; className?:
         className,
       )}
     >
-      {status === "running" && <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-current" />}
-      {status}
+      {Icon && <Icon className="h-3 w-3" />}
+      {status.replaceAll("_", " ")}
     </span>
   );
 }
