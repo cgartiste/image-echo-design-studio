@@ -1,7 +1,7 @@
 // Client-safe description of every provider and the credential fields it needs.
 export type ProviderKind = "dns" | "rdns";
 export const PROVIDERS: Record<string, { label: string; kind: ProviderKind; fields: { id: string; label: string; secret?: boolean; placeholder?: string }[]; note?: string }> = {
-  cloudflare: { label: "Cloudflare", kind: "dns", fields: [{ id: "api_token", label: "API token", secret: true, placeholder: "Zone:Read + DNS:Edit" }] },
+  cloudflare: { label: "Cloudflare", kind: "dns", fields: [{ id: "api_token", label: "API token or Global API Key", secret: true, placeholder: "Zone:Read + DNS:Edit" }, { id: "email", label: "Account email (only for Global API Key)", placeholder: "Leave empty for an API token" }], note: "Recommended: API Token with Zone:Read and DNS:Edit. Using the Global API Key requires your Cloudflare email." },
   godaddy: { label: "GoDaddy", kind: "dns", fields: [{ id: "api_key", label: "API key" }, { id: "api_secret", label: "API secret", secret: true }], note: "Production key from developer.godaddy.com." },
   sav: { label: "Sav.com", kind: "dns", fields: [{ id: "api_key", label: "API key", secret: true }], note: "Sav's API can import domains and change nameservers, but not edit DNS records." },
   hetzner: { label: "Hetzner Cloud", kind: "rdns", fields: [{ id: "api_token", label: "Project API token", secret: true }] },

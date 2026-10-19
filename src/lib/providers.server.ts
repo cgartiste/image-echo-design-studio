@@ -53,9 +53,22 @@ export interface DnsAdapter {
 
 function cloudflare(c: Creds): DnsAdapter {
   const base = "https://api.cloudflare.com/client/v4";
-  const h = { Authorization: `Bearer ${c["api_token"]}`, "Content-Type": "application/json" };
+  const token = (c["api_token"] ?? "").trim();
+  const email = (c["email"] ?? "").trim();
+  // Global API Key (with account email) uses X-Auth headers; scoped API tokens use Bearer.
+  const h: Record<string, string> = email
+    ? { "X-Auth-Email": email, "X-Auth-Key": token, "Content-Type": "application/json" }
+    : { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
   const cf = async (path: string, init: RequestInit = {}) => {
-    const r = await call(base + path, { ...init, headers: h, label: "Cloudflare" });
+    let r;
+    try { r = await call(base + path, { ...init, headers: h, label: "Cloudflare" }); }
+    catch (e) {
+      const m = e instanceof Error ? e.message : String(e);
+      if (/\b(9109|6003|6111|10000)\b/.test(m)) throw new Error(email
+        ? "Cloudflare refused the Global API Key: check the account email and key."
+        : "Cloudflare refused this token. Create an API Token (My Profile → API Tokens) with Zone:Read and DNS:Edit on your zones, or enter your account email to use the Global API Key.");
+      throw e;
+    }
     if (!r.success) throw new Error(`Cloudflare: ${r.errors?.[0]?.message ?? "error"}`);
     return r;
   };
