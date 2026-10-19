@@ -60,7 +60,7 @@ function ServerPage() {
   async function remove() {
     if (!confirm(`Delete ${srv.name}? The agent will stop working.`)) return;
     const { error } = await supabase.from("mta_servers").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     qc.invalidateQueries({ queryKey: ["mta_servers"] }); navigate({ to: "/servers" });
   }
   const probes: [string, string][] = [["outbound_25_gmail", "Outbound 25 → Gmail"], ["outbound_25_outlook", "Outbound 25 → Outlook"], ["outbound_587_ses", "Outbound 587 → SES"], ["outbound_465_ses", "Outbound 465 → SES"]];

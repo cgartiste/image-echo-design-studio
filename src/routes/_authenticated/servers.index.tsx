@@ -65,13 +65,13 @@ function ServerList({ canCreate, canExec, isSuper }: { canCreate: boolean; canEx
   const online = (servers.data ?? []).filter((s) => serverState(s).label === "Online").length;
 
   async function run(kind: CommandKind, payload: Record<string, string | number> = {}) {
-    if (!sel.length) return toast.error("Select at least one server");
+    if (!sel.length) { toast.error("Select at least one server"); return; }
     if (COMMANDS[kind].danger && !confirm(`${COMMANDS[kind].label} on ${sel.length} server(s)?`)) return;
     try { const r = await queueFn({ data: { ids: sel, kind, payload } }); toast.success(`${r.queued} command(s) queued — agents run them within 10 seconds`); qc.invalidateQueries({ queryKey: ["server_commands"] }); }
     catch (e) { toast.error((e as Error).message); }
   }
   async function showInstall() {
-    if (!sel.length) return toast.error("Select at least one server");
+    if (!sel.length) { toast.error("Select at least one server"); return; }
     try { setCmds(await installFn({ data: { ids: sel } })); } catch (e) { toast.error((e as Error).message); }
   }
 
@@ -143,7 +143,7 @@ function AddDialog({ open, onOpenChange, onDone }: { open: boolean; onOpenChange
   const parsed = parseBulkServers(bulk);
   async function submit() {
     const list = mode === "single" ? [{ name: name || ip, ip, pool, hostname }] : parsed.filter((p) => p.valid).map((p) => ({ name: p.name, ip: p.ip, pool: p.pool }));
-    if (!list.length || list.some((s) => !s.ip)) return toast.error("Enter at least one valid IP");
+    if (!list.length || list.some((s) => !s.ip)) { toast.error("Enter at least one valid IP"); return; }
     setBusy(true);
     try { const r = await addFn({ data: { servers: list, install } }); onOpenChange(false); onDone(r); setBulk(""); setIp(""); setName(""); }
     catch (e) { toast.error((e as Error).message); } finally { setBusy(false); }
