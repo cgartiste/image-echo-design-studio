@@ -13,6 +13,7 @@
 - Data access uses the browser client with RLS gated by `has_permission(module, action)`; why: role matrix lives in `role_permissions`, so UI and DB share one source of truth.
 - Signed-in pages live under `src/routes/_authenticated/`; why: the layout gates auth and renders the app shell.
 - Campaign status changes go through `src/lib/campaign-status.ts`; why: one tested transition table.
+- Sponsor networks: API adapters in `src/lib/sponsors.server.ts`, platform/login-driver metadata in `src/lib/sponsor-platforms.ts`; credentials only via `src/lib/sponsors.functions.ts`; auto-login uses single-use 2-minute tokens served by `/api/public/sponsor-login/$token`; why: passwords never in URLs, lists or browser state.
 - External senders (SMTP/SSH/PowerMTA) are not wired yet; campaign actions run in labelled demo mode.
 - UI strings go through `src/lib/i18n.ts`; why: French will be added as a second dictionary.
 - Provider credentials (DNS + rDNS hosts) live encrypted in `provider_accounts`, readable only by server functions in `src/lib/dns.functions.ts`; why: keys must never reach the browser.

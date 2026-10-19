@@ -24,6 +24,9 @@ import { Route as AuthenticatedDomainsIdRouteImport } from './routes/_authentica
 import { Route as AuthenticatedListsIndexRouteImport } from './routes/_authenticated/lists.index'
 import { Route as AuthenticatedListsIdRouteImport } from './routes/_authenticated/lists.$id'
 import { Route as AuthenticatedSoonModuleRouteImport } from './routes/_authenticated/soon.$module'
+import { Route as AuthenticatedSponsorsIndexRouteImport } from './routes/_authenticated/sponsors.index'
+import { Route as AuthenticatedSponsorsIdRouteImport } from './routes/_authenticated/sponsors.$id'
+import { Route as ApiPublicSponsorLoginTokenRouteImport } from './routes/api/public/sponsor-login.$token'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -103,6 +106,23 @@ const AuthenticatedSoonModuleRoute = AuthenticatedSoonModuleRouteImport.update({
   path: '/soon/$module',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedSponsorsIndexRoute =
+  AuthenticatedSponsorsIndexRouteImport.update({
+    id: '/sponsors/',
+    path: '/sponsors/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSponsorsIdRoute = AuthenticatedSponsorsIdRouteImport.update({
+  id: '/sponsors/$id',
+  path: '/sponsors/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const ApiPublicSponsorLoginTokenRoute =
+  ApiPublicSponsorLoginTokenRouteImport.update({
+    id: '/api/public/sponsor-login/$token',
+    path: '/api/public/sponsor-login/$token',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -116,9 +136,12 @@ export interface FileRoutesByFullPath {
   '/domains/$id': typeof AuthenticatedDomainsIdRoute
   '/lists/$id': typeof AuthenticatedListsIdRoute
   '/soon/$module': typeof AuthenticatedSoonModuleRoute
+  '/sponsors/$id': typeof AuthenticatedSponsorsIdRoute
   '/campaigns/': typeof AuthenticatedCampaignsIndexRoute
   '/domains/': typeof AuthenticatedDomainsIndexRoute
   '/lists/': typeof AuthenticatedListsIndexRoute
+  '/sponsors/': typeof AuthenticatedSponsorsIndexRoute
+  '/api/public/sponsor-login/$token': typeof ApiPublicSponsorLoginTokenRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -132,9 +155,12 @@ export interface FileRoutesByTo {
   '/domains/$id': typeof AuthenticatedDomainsIdRoute
   '/lists/$id': typeof AuthenticatedListsIdRoute
   '/soon/$module': typeof AuthenticatedSoonModuleRoute
+  '/sponsors/$id': typeof AuthenticatedSponsorsIdRoute
   '/campaigns': typeof AuthenticatedCampaignsIndexRoute
   '/domains': typeof AuthenticatedDomainsIndexRoute
   '/lists': typeof AuthenticatedListsIndexRoute
+  '/sponsors': typeof AuthenticatedSponsorsIndexRoute
+  '/api/public/sponsor-login/$token': typeof ApiPublicSponsorLoginTokenRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -150,9 +176,12 @@ export interface FileRoutesById {
   '/_authenticated/domains/$id': typeof AuthenticatedDomainsIdRoute
   '/_authenticated/lists/$id': typeof AuthenticatedListsIdRoute
   '/_authenticated/soon/$module': typeof AuthenticatedSoonModuleRoute
+  '/_authenticated/sponsors/$id': typeof AuthenticatedSponsorsIdRoute
   '/_authenticated/campaigns/': typeof AuthenticatedCampaignsIndexRoute
   '/_authenticated/domains/': typeof AuthenticatedDomainsIndexRoute
   '/_authenticated/lists/': typeof AuthenticatedListsIndexRoute
+  '/_authenticated/sponsors/': typeof AuthenticatedSponsorsIndexRoute
+  '/api/public/sponsor-login/$token': typeof ApiPublicSponsorLoginTokenRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -168,9 +197,12 @@ export interface FileRouteTypes {
     | '/domains/$id'
     | '/lists/$id'
     | '/soon/$module'
+    | '/sponsors/$id'
     | '/campaigns/'
     | '/domains/'
     | '/lists/'
+    | '/sponsors/'
+    | '/api/public/sponsor-login/$token'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -184,9 +216,12 @@ export interface FileRouteTypes {
     | '/domains/$id'
     | '/lists/$id'
     | '/soon/$module'
+    | '/sponsors/$id'
     | '/campaigns'
     | '/domains'
     | '/lists'
+    | '/sponsors'
+    | '/api/public/sponsor-login/$token'
   id:
     | '__root__'
     | '/'
@@ -201,9 +236,12 @@ export interface FileRouteTypes {
     | '/_authenticated/domains/$id'
     | '/_authenticated/lists/$id'
     | '/_authenticated/soon/$module'
+    | '/_authenticated/sponsors/$id'
     | '/_authenticated/campaigns/'
     | '/_authenticated/domains/'
     | '/_authenticated/lists/'
+    | '/_authenticated/sponsors/'
+    | '/api/public/sponsor-login/$token'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -211,6 +249,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ApiPublicSponsorLoginTokenRoute: typeof ApiPublicSponsorLoginTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -320,6 +359,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSoonModuleRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/sponsors/': {
+      id: '/_authenticated/sponsors/'
+      path: '/sponsors'
+      fullPath: '/sponsors/'
+      preLoaderRoute: typeof AuthenticatedSponsorsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sponsors/$id': {
+      id: '/_authenticated/sponsors/$id'
+      path: '/sponsors/$id'
+      fullPath: '/sponsors/$id'
+      preLoaderRoute: typeof AuthenticatedSponsorsIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/api/public/sponsor-login/$token': {
+      id: '/api/public/sponsor-login/$token'
+      path: '/api/public/sponsor-login/$token'
+      fullPath: '/api/public/sponsor-login/$token'
+      preLoaderRoute: typeof ApiPublicSponsorLoginTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -332,9 +392,11 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDomainsIdRoute: typeof AuthenticatedDomainsIdRoute
   AuthenticatedListsIdRoute: typeof AuthenticatedListsIdRoute
   AuthenticatedSoonModuleRoute: typeof AuthenticatedSoonModuleRoute
+  AuthenticatedSponsorsIdRoute: typeof AuthenticatedSponsorsIdRoute
   AuthenticatedCampaignsIndexRoute: typeof AuthenticatedCampaignsIndexRoute
   AuthenticatedDomainsIndexRoute: typeof AuthenticatedDomainsIndexRoute
   AuthenticatedListsIndexRoute: typeof AuthenticatedListsIndexRoute
+  AuthenticatedSponsorsIndexRoute: typeof AuthenticatedSponsorsIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -346,9 +408,11 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDomainsIdRoute: AuthenticatedDomainsIdRoute,
   AuthenticatedListsIdRoute: AuthenticatedListsIdRoute,
   AuthenticatedSoonModuleRoute: AuthenticatedSoonModuleRoute,
+  AuthenticatedSponsorsIdRoute: AuthenticatedSponsorsIdRoute,
   AuthenticatedCampaignsIndexRoute: AuthenticatedCampaignsIndexRoute,
   AuthenticatedDomainsIndexRoute: AuthenticatedDomainsIndexRoute,
   AuthenticatedListsIndexRoute: AuthenticatedListsIndexRoute,
+  AuthenticatedSponsorsIndexRoute: AuthenticatedSponsorsIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -359,6 +423,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  ApiPublicSponsorLoginTokenRoute: ApiPublicSponsorLoginTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

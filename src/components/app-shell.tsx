@@ -21,13 +21,13 @@ const live: { to: string; key: TKey; icon: typeof Mail }[] = [
   { to: "/campaigns", key: "nav.campaigns", icon: Mail },
   { to: "/lists", key: "nav.lists", icon: Users },
   { to: "/domains", key: "nav.domains", icon: Globe },
+  { to: "/sponsors", key: "nav.offers", icon: Handshake },
   { to: "/activity", key: "nav.activity", icon: Activity },
 ];
 const soon: { slug: string; key: TKey; icon: typeof Mail }[] = [
   { slug: "segments", key: "nav.segments", icon: ListChecks },
   { slug: "ab-tests", key: "nav.abtests", icon: FlaskConical },
   { slug: "taxonomy", key: "nav.taxonomy", icon: Tags },
-  { slug: "offers", key: "nav.offers", icon: Handshake },
   { slug: "suppression", key: "nav.suppression", icon: ShieldBan },
   { slug: "servers", key: "nav.servers", icon: Server },
   { slug: "powermta", key: "nav.powermta", icon: Terminal },
