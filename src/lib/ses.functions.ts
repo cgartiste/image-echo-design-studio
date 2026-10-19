@@ -136,9 +136,13 @@ export const publishSesDkim = createServerFn({ method: "POST" }).middleware([req
     if (!d?.account_id) throw new Error("Add this domain to Domains & DNS with a provider account first");
     const { data: acc } = await db.from("provider_accounts").select("provider,credentials_encrypted").eq("id", d.account_id).single();
     const { decryptCreds, dnsAdapter } = await import("./providers.server");
-    const adapter = dnsAdapter(acc!.provider, await decryptCreds(acc!.credentials_encrypted));
+    const adapter = dnsAdapter(acc!.provider as Parameters<typeof dnsAdapter>[0], await decryptCreds(acc!.credentials_encrypted));
     const zone = { name: d.name, ref: d.zone_ref ?? d.name, nameservers: d.nameservers };
-    for (const t of tokens) await adapter.upsert(zone, { type: "CNAME", name: `${t}._domainkey`, content: `${t}.dkim.amazonses.com`, ttl: 3600 } as never);
+    const existing = await adapter.listRecords(zone);
+    for (const t of tokens) {
+      const rec = { type: "CNAME", name: `${t}._domainkey`, content: `${t}.dkim.amazonses.com`, ttl: 3600 };
+      await adapter.upsert(zone, rec, existing.find((e) => e.type === "CNAME" && e.name === rec.name));
+    }
     await audit(db, context as Ctx, "ses_publish_dkim", data.domain);
     return { published: tokens.length };
   });
