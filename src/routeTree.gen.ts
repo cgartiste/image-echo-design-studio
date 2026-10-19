@@ -13,11 +13,14 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedActivityRouteImport } from './routes/_authenticated/activity'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedCampaignsIndexRouteImport } from './routes/_authenticated/campaigns.index'
 import { Route as AuthenticatedCampaignsIdRouteImport } from './routes/_authenticated/campaigns.$id'
 import { Route as AuthenticatedCampaignsNewRouteImport } from './routes/_authenticated/campaigns.new'
 import { Route as AuthenticatedListsIndexRouteImport } from './routes/_authenticated/lists.index'
+import { Route as AuthenticatedListsIdRouteImport } from './routes/_authenticated/lists.$id'
 import { Route as AuthenticatedSoonModuleRouteImport } from './routes/_authenticated/soon.$module'
 
 const IndexRoute = IndexRouteImport.update({
@@ -39,9 +42,19 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedActivityRoute = AuthenticatedActivityRouteImport.update({
+  id: '/activity',
+  path: '/activity',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedCampaignsIndexRoute =
@@ -67,6 +80,11 @@ const AuthenticatedListsIndexRoute = AuthenticatedListsIndexRouteImport.update({
   path: '/lists/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedListsIdRoute = AuthenticatedListsIdRouteImport.update({
+  id: '/lists/$id',
+  path: '/lists/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSoonModuleRoute = AuthenticatedSoonModuleRouteImport.update({
   id: '/soon/$module',
   path: '/soon/$module',
@@ -77,9 +95,12 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/activity': typeof AuthenticatedActivityRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
   '/campaigns/new': typeof AuthenticatedCampaignsNewRoute
+  '/lists/$id': typeof AuthenticatedListsIdRoute
   '/soon/$module': typeof AuthenticatedSoonModuleRoute
   '/campaigns/': typeof AuthenticatedCampaignsIndexRoute
   '/lists/': typeof AuthenticatedListsIndexRoute
@@ -88,9 +109,12 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/activity': typeof AuthenticatedActivityRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
   '/campaigns/new': typeof AuthenticatedCampaignsNewRoute
+  '/lists/$id': typeof AuthenticatedListsIdRoute
   '/soon/$module': typeof AuthenticatedSoonModuleRoute
   '/campaigns': typeof AuthenticatedCampaignsIndexRoute
   '/lists': typeof AuthenticatedListsIndexRoute
@@ -101,9 +125,12 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/activity': typeof AuthenticatedActivityRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
   '/_authenticated/campaigns/new': typeof AuthenticatedCampaignsNewRoute
+  '/_authenticated/lists/$id': typeof AuthenticatedListsIdRoute
   '/_authenticated/soon/$module': typeof AuthenticatedSoonModuleRoute
   '/_authenticated/campaigns/': typeof AuthenticatedCampaignsIndexRoute
   '/_authenticated/lists/': typeof AuthenticatedListsIndexRoute
@@ -114,9 +141,12 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/reset-password'
+    | '/activity'
     | '/dashboard'
+    | '/profile'
     | '/campaigns/$id'
     | '/campaigns/new'
+    | '/lists/$id'
     | '/soon/$module'
     | '/campaigns/'
     | '/lists/'
@@ -125,9 +155,12 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/reset-password'
+    | '/activity'
     | '/dashboard'
+    | '/profile'
     | '/campaigns/$id'
     | '/campaigns/new'
+    | '/lists/$id'
     | '/soon/$module'
     | '/campaigns'
     | '/lists'
@@ -137,9 +170,12 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/reset-password'
+    | '/_authenticated/activity'
     | '/_authenticated/dashboard'
+    | '/_authenticated/profile'
     | '/_authenticated/campaigns/$id'
     | '/_authenticated/campaigns/new'
+    | '/_authenticated/lists/$id'
     | '/_authenticated/soon/$module'
     | '/_authenticated/campaigns/'
     | '/_authenticated/lists/'
@@ -182,11 +218,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/activity': {
+      id: '/_authenticated/activity'
+      path: '/activity'
+      fullPath: '/activity'
+      preLoaderRoute: typeof AuthenticatedActivityRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/campaigns/': {
@@ -217,6 +267,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedListsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/lists/$id': {
+      id: '/_authenticated/lists/$id'
+      path: '/lists/$id'
+      fullPath: '/lists/$id'
+      preLoaderRoute: typeof AuthenticatedListsIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/soon/$module': {
       id: '/_authenticated/soon/$module'
       path: '/soon/$module'
@@ -228,18 +285,24 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedActivityRoute: typeof AuthenticatedActivityRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedCampaignsIdRoute: typeof AuthenticatedCampaignsIdRoute
   AuthenticatedCampaignsNewRoute: typeof AuthenticatedCampaignsNewRoute
+  AuthenticatedListsIdRoute: typeof AuthenticatedListsIdRoute
   AuthenticatedSoonModuleRoute: typeof AuthenticatedSoonModuleRoute
   AuthenticatedCampaignsIndexRoute: typeof AuthenticatedCampaignsIndexRoute
   AuthenticatedListsIndexRoute: typeof AuthenticatedListsIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedActivityRoute: AuthenticatedActivityRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedCampaignsIdRoute: AuthenticatedCampaignsIdRoute,
   AuthenticatedCampaignsNewRoute: AuthenticatedCampaignsNewRoute,
+  AuthenticatedListsIdRoute: AuthenticatedListsIdRoute,
   AuthenticatedSoonModuleRoute: AuthenticatedSoonModuleRoute,
   AuthenticatedCampaignsIndexRoute: AuthenticatedCampaignsIndexRoute,
   AuthenticatedListsIndexRoute: AuthenticatedListsIndexRoute,

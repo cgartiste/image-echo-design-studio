@@ -1,7 +1,7 @@
 import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  Activity, BarChart3, Bell, FlaskConical, Globe, Handshake, LayoutDashboard, ListChecks, LogOut, Mail,
+  Activity, Bell, FlaskConical, Globe, Handshake, LayoutDashboard, ListChecks, LogOut, Mail,
   Moon, Server, ShieldBan, Sun, Tags, Terminal, User, Users,
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -188,4 +188,3 @@ function Notifications({ userId }: { userId?: string }) {
   );
 }
 
-export { BarChart3 };
