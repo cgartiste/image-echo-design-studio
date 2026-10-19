@@ -49,9 +49,9 @@
   --color-warning-foreground: var(--warning-foreground);
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
-  --font-display: var(--font-display);
-  --font-sans: var(--font-body);
-  --font-mono: var(--font-code);
+  --font-display: var(--ff-display);
+  --font-sans: var(--ff-body);
+  --font-mono: var(--ff-code);
   --shadow-card: var(--shadow-card);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -111,9 +111,9 @@
   --sidebar-accent-foreground: oklch(0.97 0.005 220);
   --sidebar-border: oklch(0.3 0.012 240);
   --sidebar-ring: oklch(0.72 0.13 190);
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-code: "IBM Plex Mono", ui-monospace, monospace;
+  --ff-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --ff-body: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --ff-code: "IBM Plex Mono", ui-monospace, monospace;
   --shadow-card: 0 1px 2px oklch(0.2 0.015 240 / 6%), 0 4px 16px -8px oklch(0.2 0.015 240 / 10%);
   --gradient-brand: linear-gradient(135deg, oklch(0.72 0.13 190), oklch(0.55 0.14 230));
 }
@@ -162,11 +162,11 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
-    font-family: var(--font-body);
+    font-family: var(--ff-body);
     font-feature-settings: "tnum" 1;
   }
   h1, h2, h3, h4 {
-    font-family: var(--font-display);
+    font-family: var(--ff-display);
     letter-spacing: -0.02em;
   }
 }
@@ -175,7 +175,7 @@
   background-image: var(--gradient-brand);
 }
 @utility kpi-value {
-  font-family: var(--font-display);
+  font-family: var(--ff-display);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.03em;
 }
