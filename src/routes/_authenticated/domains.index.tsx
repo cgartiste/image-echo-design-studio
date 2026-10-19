@@ -146,7 +146,7 @@ function DomainsTab() {
             </SelectContent>
           </Select>
           <div className="ml-auto flex flex-wrap gap-2">
-            {me?.can("lists", "view") && <Button size="sm" variant="outline" onClick={() => setBulkAdd(true)}><Plus className="h-3.5 w-3.5" /> Add domains</Button>}
+            {me?.can("domains", "create") && <Button size="sm" variant="outline" onClick={() => setBulkAdd(true)}><Plus className="h-3.5 w-3.5" /> Add domains</Button>}
             <Button size="sm" variant="outline" disabled={progress !== null} onClick={() => runChecks(filtered.map((d) => d.id))}><ShieldCheck className="h-3.5 w-3.5" /> Check {filtered.length === data.length ? "all" : "filtered"} ({fmtNum(filtered.length)})</Button>
           </div>
         </div>
