@@ -3,6 +3,7 @@ const en = {
   "nav.dashboard": "Dashboard",
   "nav.campaigns": "Campaigns",
   "nav.calendar": "Calendar",
+  "nav.templates": "Templates",
   "nav.placement": "Placement reports",
   "nav.lists": "Email Lists",
   "nav.activity": "Activity Log",
