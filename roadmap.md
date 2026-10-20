@@ -17,4 +17,5 @@
 - [x] A/B tests page (per-variant stats, 95% confidence winner) and Tags & categories.
 - [x] Phase 3 (part): saved placement reports with history, per-sender trends.
 - [ ] Outlook test inboxes: needs a Microsoft connection.
-- [ ] Phases 4–6 of the brief.
+- [x] Phase 4 (part): campaign calendar.
+- [ ] Phase 4 rest (follow-ups, template library), Phases 5–6.
