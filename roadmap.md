@@ -20,4 +20,5 @@
 - [x] Phase 4 (part): campaign calendar, template library.
 - [x] Phase 4: follow-up planning (actual sending blocked until a sender is connected).
 - [x] Phase 5: AI insights page (campaigns, placement, alerts).
-- [ ] Phase 6 (incident center, backups, management reports).
+- [x] Phase 6 (part): incident center with timeline, root cause and resolution time.
+- [ ] Phase 6 rest: management reports, backups.

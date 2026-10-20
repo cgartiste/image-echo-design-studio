@@ -6,6 +6,7 @@ const en = {
   "nav.templates": "Templates",
   "nav.followups": "Follow-ups",
   "nav.insights": "AI insights",
+  "nav.incidents": "Incidents",
   "nav.placement": "Placement reports",
   "nav.lists": "Email Lists",
   "nav.activity": "Activity Log",

@@ -585,6 +585,86 @@ export type Database = {
         }
         Relationships: []
       }
+      incident_notes: {
+        Row: {
+          author_email: string | null
+          body: string
+          created_at: string
+          created_by: string | null
+          id: string
+          incident_id: string
+        }
+        Insert: {
+          author_email?: string | null
+          body: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          incident_id: string
+        }
+        Update: {
+          author_email?: string | null
+          body?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          incident_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "incident_notes_incident_id_fkey"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "incidents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      incidents: {
+        Row: {
+          area: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          resolution: string | null
+          resolved_at: string | null
+          root_cause: string | null
+          severity: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          area?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          resolution?: string | null
+          resolved_at?: string | null
+          root_cause?: string | null
+          severity?: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          area?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          resolution?: string | null
+          resolved_at?: string | null
+          root_cause?: string | null
+          severity?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       mta_servers: {
         Row: {
           agent_token_enc: string
