@@ -25,6 +25,7 @@ import { Route as AuthenticatedSegmentsRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedSuppressionRouteImport } from './routes/_authenticated/suppression'
 import { Route as AuthenticatedTaxonomyRouteImport } from './routes/_authenticated/taxonomy'
 import { Route as AuthenticatedTeamRouteImport } from './routes/_authenticated/team'
+import { Route as AuthenticatedTemplatesRouteImport } from './routes/_authenticated/templates'
 import { Route as AuthenticatedVipRouteImport } from './routes/_authenticated/vip'
 import { Route as AuthenticatedCampaignsIndexRouteImport } from './routes/_authenticated/campaigns.index'
 import { Route as AuthenticatedCampaignsIdRouteImport } from './routes/_authenticated/campaigns.$id'
@@ -132,6 +133,11 @@ const AuthenticatedTaxonomyRoute = AuthenticatedTaxonomyRouteImport.update({
 const AuthenticatedTeamRoute = AuthenticatedTeamRouteImport.update({
   id: '/team',
   path: '/team',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedTemplatesRoute = AuthenticatedTemplatesRouteImport.update({
+  id: '/templates',
+  path: '/templates',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedVipRoute = AuthenticatedVipRouteImport.update({
@@ -295,6 +301,7 @@ export interface FileRoutesByFullPath {
   '/suppression': typeof AuthenticatedSuppressionRoute
   '/taxonomy': typeof AuthenticatedTaxonomyRoute
   '/team': typeof AuthenticatedTeamRoute
+  '/templates': typeof AuthenticatedTemplatesRoute
   '/vip': typeof AuthenticatedVipRoute
   '/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
   '/campaigns/new': typeof AuthenticatedCampaignsNewRoute
@@ -339,6 +346,7 @@ export interface FileRoutesByTo {
   '/suppression': typeof AuthenticatedSuppressionRoute
   '/taxonomy': typeof AuthenticatedTaxonomyRoute
   '/team': typeof AuthenticatedTeamRoute
+  '/templates': typeof AuthenticatedTemplatesRoute
   '/vip': typeof AuthenticatedVipRoute
   '/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
   '/campaigns/new': typeof AuthenticatedCampaignsNewRoute
@@ -385,6 +393,7 @@ export interface FileRoutesById {
   '/_authenticated/suppression': typeof AuthenticatedSuppressionRoute
   '/_authenticated/taxonomy': typeof AuthenticatedTaxonomyRoute
   '/_authenticated/team': typeof AuthenticatedTeamRoute
+  '/_authenticated/templates': typeof AuthenticatedTemplatesRoute
   '/_authenticated/vip': typeof AuthenticatedVipRoute
   '/_authenticated/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
   '/_authenticated/campaigns/new': typeof AuthenticatedCampaignsNewRoute
@@ -431,6 +440,7 @@ export interface FileRouteTypes {
     | '/suppression'
     | '/taxonomy'
     | '/team'
+    | '/templates'
     | '/vip'
     | '/campaigns/$id'
     | '/campaigns/new'
@@ -475,6 +485,7 @@ export interface FileRouteTypes {
     | '/suppression'
     | '/taxonomy'
     | '/team'
+    | '/templates'
     | '/vip'
     | '/campaigns/$id'
     | '/campaigns/new'
@@ -520,6 +531,7 @@ export interface FileRouteTypes {
     | '/_authenticated/suppression'
     | '/_authenticated/taxonomy'
     | '/_authenticated/team'
+    | '/_authenticated/templates'
     | '/_authenticated/vip'
     | '/_authenticated/campaigns/$id'
     | '/_authenticated/campaigns/new'
@@ -682,6 +694,13 @@ declare module '@tanstack/react-router' {
       path: '/team'
       fullPath: '/team'
       preLoaderRoute: typeof AuthenticatedTeamRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/templates': {
+      id: '/_authenticated/templates'
+      path: '/templates'
+      fullPath: '/templates'
+      preLoaderRoute: typeof AuthenticatedTemplatesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/vip': {
@@ -889,6 +908,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSuppressionRoute: typeof AuthenticatedSuppressionRoute
   AuthenticatedTaxonomyRoute: typeof AuthenticatedTaxonomyRoute
   AuthenticatedTeamRoute: typeof AuthenticatedTeamRoute
+  AuthenticatedTemplatesRoute: typeof AuthenticatedTemplatesRoute
   AuthenticatedVipRoute: typeof AuthenticatedVipRoute
   AuthenticatedCampaignsIdRoute: typeof AuthenticatedCampaignsIdRoute
   AuthenticatedCampaignsNewRoute: typeof AuthenticatedCampaignsNewRoute
@@ -917,6 +937,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSuppressionRoute: AuthenticatedSuppressionRoute,
   AuthenticatedTaxonomyRoute: AuthenticatedTaxonomyRoute,
   AuthenticatedTeamRoute: AuthenticatedTeamRoute,
+  AuthenticatedTemplatesRoute: AuthenticatedTemplatesRoute,
   AuthenticatedVipRoute: AuthenticatedVipRoute,
   AuthenticatedCampaignsIdRoute: AuthenticatedCampaignsIdRoute,
   AuthenticatedCampaignsNewRoute: AuthenticatedCampaignsNewRoute,
