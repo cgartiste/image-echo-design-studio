@@ -14,4 +14,5 @@
 - [x] Segments: rule-based audiences, live count, usable in campaigns and enforced in the queue.
 - [x] Phase 2: SES routing priority/quotas/health limits, route simulator, alerts, emergency stop, SES health sync + suppression import.
 - [ ] CloudWatch bounce/complaint rates auto-sync (rates are entered manually for now), automatic failover during real sending (needs SES sending worker), Google Postmaster.
+- [x] A/B tests page (per-variant stats, 95% confidence winner) and Tags & categories.
 - [ ] Phases 3–6 of the brief.
