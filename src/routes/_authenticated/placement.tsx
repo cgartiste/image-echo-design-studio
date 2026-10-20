@@ -70,7 +70,7 @@ function PlacementPage() {
           ["Inbox rate", `${pct(totals.inbox, totals.seeds)}%`],
           ["Spam rate", `${pct(totals.spam, totals.seeds)}%`],
           ["Not found", `${pct(totals.missing, totals.seeds)}%`],
-        ].map(([l, v]) => (
+        ].map(([l, v]) => [l ?? "", v ?? ""] as const).map(([l, v]) => (
           <Panel key={l} title={l}><div className="text-2xl font-semibold tabular-nums">{v}</div></Panel>
         ))}
       </div>
