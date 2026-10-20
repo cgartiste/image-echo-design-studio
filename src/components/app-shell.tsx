@@ -1,7 +1,7 @@
 import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  Activity, Repeat, CalendarDays, FileText, Inbox, Bell, FlaskConical, Globe, Handshake, LayoutDashboard, ListChecks, LogOut, Mail,
+  Activity, Sparkles, Repeat, CalendarDays, FileText, Inbox, Bell, FlaskConical, Globe, Handshake, LayoutDashboard, ListChecks, LogOut, Mail,
   Crown, Gauge, Moon, Server, ShieldBan, Sun, Tags, Terminal, User, UserCog, Users,
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -18,6 +18,7 @@ import { fmtDate } from "@/lib/format";
 
 const live: { to: string; key: TKey; icon: typeof Mail }[] = [
   { to: "/dashboard", key: "nav.dashboard", icon: LayoutDashboard },
+  { to: "/insights", key: "nav.insights", icon: Sparkles },
   { to: "/campaigns", key: "nav.campaigns", icon: Mail },
   { to: "/calendar", key: "nav.calendar", icon: CalendarDays },
   { to: "/templates", key: "nav.templates", icon: FileText },
