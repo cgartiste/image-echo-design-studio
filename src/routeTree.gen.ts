@@ -18,6 +18,7 @@ import { Route as AuthenticatedActivityRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedCalendarRouteImport } from './routes/_authenticated/calendar'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDeliverabilityRouteImport } from './routes/_authenticated/deliverability'
+import { Route as AuthenticatedFollowupsRouteImport } from './routes/_authenticated/followups'
 import { Route as AuthenticatedPlacementRouteImport } from './routes/_authenticated/placement'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedSeedsRouteImport } from './routes/_authenticated/seeds'
@@ -99,6 +100,11 @@ const AuthenticatedDeliverabilityRoute =
     path: '/deliverability',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedFollowupsRoute = AuthenticatedFollowupsRouteImport.update({
+  id: '/followups',
+  path: '/followups',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedPlacementRoute = AuthenticatedPlacementRouteImport.update({
   id: '/placement',
   path: '/placement',
@@ -294,6 +300,7 @@ export interface FileRoutesByFullPath {
   '/calendar': typeof AuthenticatedCalendarRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deliverability': typeof AuthenticatedDeliverabilityRoute
+  '/followups': typeof AuthenticatedFollowupsRoute
   '/placement': typeof AuthenticatedPlacementRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/seeds': typeof AuthenticatedSeedsRoute
@@ -339,6 +346,7 @@ export interface FileRoutesByTo {
   '/calendar': typeof AuthenticatedCalendarRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deliverability': typeof AuthenticatedDeliverabilityRoute
+  '/followups': typeof AuthenticatedFollowupsRoute
   '/placement': typeof AuthenticatedPlacementRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/seeds': typeof AuthenticatedSeedsRoute
@@ -386,6 +394,7 @@ export interface FileRoutesById {
   '/_authenticated/calendar': typeof AuthenticatedCalendarRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/deliverability': typeof AuthenticatedDeliverabilityRoute
+  '/_authenticated/followups': typeof AuthenticatedFollowupsRoute
   '/_authenticated/placement': typeof AuthenticatedPlacementRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/seeds': typeof AuthenticatedSeedsRoute
@@ -433,6 +442,7 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/dashboard'
     | '/deliverability'
+    | '/followups'
     | '/placement'
     | '/profile'
     | '/seeds'
@@ -478,6 +488,7 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/dashboard'
     | '/deliverability'
+    | '/followups'
     | '/placement'
     | '/profile'
     | '/seeds'
@@ -524,6 +535,7 @@ export interface FileRouteTypes {
     | '/_authenticated/calendar'
     | '/_authenticated/dashboard'
     | '/_authenticated/deliverability'
+    | '/_authenticated/followups'
     | '/_authenticated/placement'
     | '/_authenticated/profile'
     | '/_authenticated/seeds'
@@ -645,6 +657,13 @@ declare module '@tanstack/react-router' {
       path: '/deliverability'
       fullPath: '/deliverability'
       preLoaderRoute: typeof AuthenticatedDeliverabilityRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/followups': {
+      id: '/_authenticated/followups'
+      path: '/followups'
+      fullPath: '/followups'
+      preLoaderRoute: typeof AuthenticatedFollowupsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/placement': {
@@ -901,6 +920,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCalendarRoute: typeof AuthenticatedCalendarRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDeliverabilityRoute: typeof AuthenticatedDeliverabilityRoute
+  AuthenticatedFollowupsRoute: typeof AuthenticatedFollowupsRoute
   AuthenticatedPlacementRoute: typeof AuthenticatedPlacementRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedSeedsRoute: typeof AuthenticatedSeedsRoute
@@ -930,6 +950,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCalendarRoute: AuthenticatedCalendarRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDeliverabilityRoute: AuthenticatedDeliverabilityRoute,
+  AuthenticatedFollowupsRoute: AuthenticatedFollowupsRoute,
   AuthenticatedPlacementRoute: AuthenticatedPlacementRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedSeedsRoute: AuthenticatedSeedsRoute,
