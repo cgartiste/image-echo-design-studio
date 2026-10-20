@@ -14,6 +14,44 @@ export type Database = {
   }
   public: {
     Tables: {
+      ab_results: {
+        Row: {
+          auto: boolean
+          campaign_id: string
+          confidence: number | null
+          decided_at: string
+          decided_by: string | null
+          metric: string
+          winner: string
+        }
+        Insert: {
+          auto?: boolean
+          campaign_id: string
+          confidence?: number | null
+          decided_at?: string
+          decided_by?: string | null
+          metric: string
+          winner: string
+        }
+        Update: {
+          auto?: boolean
+          campaign_id?: string
+          confidence?: number | null
+          decided_at?: string
+          decided_by?: string | null
+          metric?: string
+          winner?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ab_results_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: true
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       activity_logs: {
         Row: {
           action: string
@@ -1462,6 +1500,65 @@ export type Database = {
         }
         Relationships: []
       }
+      taggings: {
+        Row: {
+          created_at: string
+          entity_id: string
+          entity_type: string
+          tag_id: string
+        }
+        Insert: {
+          created_at?: string
+          entity_id: string
+          entity_type: string
+          tag_id: string
+        }
+        Update: {
+          created_at?: string
+          entity_id?: string
+          entity_type?: string
+          tag_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "taggings_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tags: {
+        Row: {
+          color: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          kind: string
+          name: string
+        }
+        Insert: {
+          color?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          kind?: string
+          name: string
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          kind?: string
+          name?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -1551,6 +1648,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      ab_variant_stats: {
+        Args: { cid: string }
+        Returns: {
+          clicked: number
+          opened: number
+          sent: number
+          variant: string
+        }[]
+      }
       bump_campaign_stat: {
         Args: { _cid: string; _field: string; _n: number }
         Returns: undefined

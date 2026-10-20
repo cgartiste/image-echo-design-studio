@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedAbTestsRouteImport } from './routes/_authenticated/ab-tests'
 import { Route as AuthenticatedActivityRouteImport } from './routes/_authenticated/activity'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDeliverabilityRouteImport } from './routes/_authenticated/deliverability'
@@ -20,6 +21,7 @@ import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedSeedsRouteImport } from './routes/_authenticated/seeds'
 import { Route as AuthenticatedSegmentsRouteImport } from './routes/_authenticated/segments'
 import { Route as AuthenticatedSuppressionRouteImport } from './routes/_authenticated/suppression'
+import { Route as AuthenticatedTaxonomyRouteImport } from './routes/_authenticated/taxonomy'
 import { Route as AuthenticatedTeamRouteImport } from './routes/_authenticated/team'
 import { Route as AuthenticatedVipRouteImport } from './routes/_authenticated/vip'
 import { Route as AuthenticatedCampaignsIndexRouteImport } from './routes/_authenticated/campaigns.index'
@@ -68,6 +70,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAbTestsRoute = AuthenticatedAbTestsRouteImport.update({
+  id: '/ab-tests',
+  path: '/ab-tests',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedActivityRoute = AuthenticatedActivityRouteImport.update({
   id: '/activity',
   path: '/activity',
@@ -105,6 +112,11 @@ const AuthenticatedSuppressionRoute =
     path: '/suppression',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedTaxonomyRoute = AuthenticatedTaxonomyRouteImport.update({
+  id: '/taxonomy',
+  path: '/taxonomy',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedTeamRoute = AuthenticatedTeamRouteImport.update({
   id: '/team',
   path: '/team',
@@ -259,6 +271,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/ab-tests': typeof AuthenticatedAbTestsRoute
   '/activity': typeof AuthenticatedActivityRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deliverability': typeof AuthenticatedDeliverabilityRoute
@@ -266,6 +279,7 @@ export interface FileRoutesByFullPath {
   '/seeds': typeof AuthenticatedSeedsRoute
   '/segments': typeof AuthenticatedSegmentsRoute
   '/suppression': typeof AuthenticatedSuppressionRoute
+  '/taxonomy': typeof AuthenticatedTaxonomyRoute
   '/team': typeof AuthenticatedTeamRoute
   '/vip': typeof AuthenticatedVipRoute
   '/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
@@ -299,6 +313,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/ab-tests': typeof AuthenticatedAbTestsRoute
   '/activity': typeof AuthenticatedActivityRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deliverability': typeof AuthenticatedDeliverabilityRoute
@@ -306,6 +321,7 @@ export interface FileRoutesByTo {
   '/seeds': typeof AuthenticatedSeedsRoute
   '/segments': typeof AuthenticatedSegmentsRoute
   '/suppression': typeof AuthenticatedSuppressionRoute
+  '/taxonomy': typeof AuthenticatedTaxonomyRoute
   '/team': typeof AuthenticatedTeamRoute
   '/vip': typeof AuthenticatedVipRoute
   '/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
@@ -341,6 +357,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/ab-tests': typeof AuthenticatedAbTestsRoute
   '/_authenticated/activity': typeof AuthenticatedActivityRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/deliverability': typeof AuthenticatedDeliverabilityRoute
@@ -348,6 +365,7 @@ export interface FileRoutesById {
   '/_authenticated/seeds': typeof AuthenticatedSeedsRoute
   '/_authenticated/segments': typeof AuthenticatedSegmentsRoute
   '/_authenticated/suppression': typeof AuthenticatedSuppressionRoute
+  '/_authenticated/taxonomy': typeof AuthenticatedTaxonomyRoute
   '/_authenticated/team': typeof AuthenticatedTeamRoute
   '/_authenticated/vip': typeof AuthenticatedVipRoute
   '/_authenticated/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
@@ -383,6 +401,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/reset-password'
+    | '/ab-tests'
     | '/activity'
     | '/dashboard'
     | '/deliverability'
@@ -390,6 +409,7 @@ export interface FileRouteTypes {
     | '/seeds'
     | '/segments'
     | '/suppression'
+    | '/taxonomy'
     | '/team'
     | '/vip'
     | '/campaigns/$id'
@@ -423,6 +443,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/reset-password'
+    | '/ab-tests'
     | '/activity'
     | '/dashboard'
     | '/deliverability'
@@ -430,6 +451,7 @@ export interface FileRouteTypes {
     | '/seeds'
     | '/segments'
     | '/suppression'
+    | '/taxonomy'
     | '/team'
     | '/vip'
     | '/campaigns/$id'
@@ -464,6 +486,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/reset-password'
+    | '/_authenticated/ab-tests'
     | '/_authenticated/activity'
     | '/_authenticated/dashboard'
     | '/_authenticated/deliverability'
@@ -471,6 +494,7 @@ export interface FileRouteTypes {
     | '/_authenticated/seeds'
     | '/_authenticated/segments'
     | '/_authenticated/suppression'
+    | '/_authenticated/taxonomy'
     | '/_authenticated/team'
     | '/_authenticated/vip'
     | '/_authenticated/campaigns/$id'
@@ -552,6 +576,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/ab-tests': {
+      id: '/_authenticated/ab-tests'
+      path: '/ab-tests'
+      fullPath: '/ab-tests'
+      preLoaderRoute: typeof AuthenticatedAbTestsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/activity': {
       id: '/_authenticated/activity'
       path: '/activity'
@@ -599,6 +630,13 @@ declare module '@tanstack/react-router' {
       path: '/suppression'
       fullPath: '/suppression'
       preLoaderRoute: typeof AuthenticatedSuppressionRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/taxonomy': {
+      id: '/_authenticated/taxonomy'
+      path: '/taxonomy'
+      fullPath: '/taxonomy'
+      preLoaderRoute: typeof AuthenticatedTaxonomyRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/team': {
@@ -801,6 +839,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAbTestsRoute: typeof AuthenticatedAbTestsRoute
   AuthenticatedActivityRoute: typeof AuthenticatedActivityRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDeliverabilityRoute: typeof AuthenticatedDeliverabilityRoute
@@ -808,6 +847,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSeedsRoute: typeof AuthenticatedSeedsRoute
   AuthenticatedSegmentsRoute: typeof AuthenticatedSegmentsRoute
   AuthenticatedSuppressionRoute: typeof AuthenticatedSuppressionRoute
+  AuthenticatedTaxonomyRoute: typeof AuthenticatedTaxonomyRoute
   AuthenticatedTeamRoute: typeof AuthenticatedTeamRoute
   AuthenticatedVipRoute: typeof AuthenticatedVipRoute
   AuthenticatedCampaignsIdRoute: typeof AuthenticatedCampaignsIdRoute
@@ -825,6 +865,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAbTestsRoute: AuthenticatedAbTestsRoute,
   AuthenticatedActivityRoute: AuthenticatedActivityRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDeliverabilityRoute: AuthenticatedDeliverabilityRoute,
@@ -832,6 +873,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSeedsRoute: AuthenticatedSeedsRoute,
   AuthenticatedSegmentsRoute: AuthenticatedSegmentsRoute,
   AuthenticatedSuppressionRoute: AuthenticatedSuppressionRoute,
+  AuthenticatedTaxonomyRoute: AuthenticatedTaxonomyRoute,
   AuthenticatedTeamRoute: AuthenticatedTeamRoute,
   AuthenticatedVipRoute: AuthenticatedVipRoute,
   AuthenticatedCampaignsIdRoute: AuthenticatedCampaignsIdRoute,
