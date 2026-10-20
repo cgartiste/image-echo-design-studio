@@ -1,0 +1,16 @@
+CREATE TABLE public.seed_accounts (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  label text NOT NULL DEFAULT 'Gmail seed',
+  email text,
+  provider text NOT NULL DEFAULT 'gmail',
+  status text NOT NULL DEFAULT 'pending',
+  connection_key_ciphertext text,
+  reconnect_required boolean NOT NULL DEFAULT false,
+  last_error text,
+  last_checked_at timestamptz,
+  created_by uuid,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+GRANT ALL ON public.seed_accounts TO service_role;
+ALTER TABLE public.seed_accounts ENABLE ROW LEVEL SECURITY;

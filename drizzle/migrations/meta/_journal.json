@@ -64,6 +64,13 @@
       "when": 1792416983429,
       "tag": "0008_campaign_stat_bump",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1792455222816,
+      "tag": "0009_migration",
+      "breakpoints": true
     }
   ]
 }

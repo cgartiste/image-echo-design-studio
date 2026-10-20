@@ -16,6 +16,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedActivityRouteImport } from './routes/_authenticated/activity'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedSeedsRouteImport } from './routes/_authenticated/seeds'
 import { Route as AuthenticatedCampaignsIndexRouteImport } from './routes/_authenticated/campaigns.index'
 import { Route as AuthenticatedCampaignsIdRouteImport } from './routes/_authenticated/campaigns.$id'
 import { Route as AuthenticatedCampaignsNewRouteImport } from './routes/_authenticated/campaigns.new'
@@ -28,6 +29,7 @@ import { Route as AuthenticatedServersIdRouteImport } from './routes/_authentica
 import { Route as AuthenticatedSoonModuleRouteImport } from './routes/_authenticated/soon.$module'
 import { Route as AuthenticatedSponsorsIndexRouteImport } from './routes/_authenticated/sponsors.index'
 import { Route as AuthenticatedSponsorsIdRouteImport } from './routes/_authenticated/sponsors.$id'
+import { Route as ApiOauthGoogleReturnRouteImport } from './routes/api/oauth/google/return'
 import { Route as ApiPublicAgentConfigRouteImport } from './routes/api/public/agent/config'
 import { Route as ApiPublicAgentEventsRouteImport } from './routes/api/public/agent/events'
 import { Route as ApiPublicAgentInstallRouteImport } from './routes/api/public/agent/install'
@@ -74,6 +76,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSeedsRoute = AuthenticatedSeedsRouteImport.update({
+  id: '/seeds',
+  path: '/seeds',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedCampaignsIndexRoute =
@@ -141,6 +148,11 @@ const AuthenticatedSponsorsIdRoute = AuthenticatedSponsorsIdRouteImport.update({
   id: '/sponsors/$id',
   path: '/sponsors/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const ApiOauthGoogleReturnRoute = ApiOauthGoogleReturnRouteImport.update({
+  id: '/api/oauth/google/return',
+  path: '/api/oauth/google/return',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicAgentConfigRoute = ApiPublicAgentConfigRouteImport.update({
   id: '/api/public/agent/config',
@@ -218,6 +230,7 @@ export interface FileRoutesByFullPath {
   '/activity': typeof AuthenticatedActivityRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/seeds': typeof AuthenticatedSeedsRoute
   '/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
   '/campaigns/new': typeof AuthenticatedCampaignsNewRoute
   '/domains/$id': typeof AuthenticatedDomainsIdRoute
@@ -230,6 +243,7 @@ export interface FileRoutesByFullPath {
   '/lists/': typeof AuthenticatedListsIndexRoute
   '/servers/': typeof AuthenticatedServersIndexRoute
   '/sponsors/': typeof AuthenticatedSponsorsIndexRoute
+  '/api/oauth/google/return': typeof ApiOauthGoogleReturnRoute
   '/api/public/agent/config': typeof ApiPublicAgentConfigRoute
   '/api/public/agent/events': typeof ApiPublicAgentEventsRoute
   '/api/public/agent/install': typeof ApiPublicAgentInstallRoute
@@ -251,6 +265,7 @@ export interface FileRoutesByTo {
   '/activity': typeof AuthenticatedActivityRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/seeds': typeof AuthenticatedSeedsRoute
   '/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
   '/campaigns/new': typeof AuthenticatedCampaignsNewRoute
   '/domains/$id': typeof AuthenticatedDomainsIdRoute
@@ -263,6 +278,7 @@ export interface FileRoutesByTo {
   '/lists': typeof AuthenticatedListsIndexRoute
   '/servers': typeof AuthenticatedServersIndexRoute
   '/sponsors': typeof AuthenticatedSponsorsIndexRoute
+  '/api/oauth/google/return': typeof ApiOauthGoogleReturnRoute
   '/api/public/agent/config': typeof ApiPublicAgentConfigRoute
   '/api/public/agent/events': typeof ApiPublicAgentEventsRoute
   '/api/public/agent/install': typeof ApiPublicAgentInstallRoute
@@ -286,6 +302,7 @@ export interface FileRoutesById {
   '/_authenticated/activity': typeof AuthenticatedActivityRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/seeds': typeof AuthenticatedSeedsRoute
   '/_authenticated/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
   '/_authenticated/campaigns/new': typeof AuthenticatedCampaignsNewRoute
   '/_authenticated/domains/$id': typeof AuthenticatedDomainsIdRoute
@@ -298,6 +315,7 @@ export interface FileRoutesById {
   '/_authenticated/lists/': typeof AuthenticatedListsIndexRoute
   '/_authenticated/servers/': typeof AuthenticatedServersIndexRoute
   '/_authenticated/sponsors/': typeof AuthenticatedSponsorsIndexRoute
+  '/api/oauth/google/return': typeof ApiOauthGoogleReturnRoute
   '/api/public/agent/config': typeof ApiPublicAgentConfigRoute
   '/api/public/agent/events': typeof ApiPublicAgentEventsRoute
   '/api/public/agent/install': typeof ApiPublicAgentInstallRoute
@@ -321,6 +339,7 @@ export interface FileRouteTypes {
     | '/activity'
     | '/dashboard'
     | '/profile'
+    | '/seeds'
     | '/campaigns/$id'
     | '/campaigns/new'
     | '/domains/$id'
@@ -333,6 +352,7 @@ export interface FileRouteTypes {
     | '/lists/'
     | '/servers/'
     | '/sponsors/'
+    | '/api/oauth/google/return'
     | '/api/public/agent/config'
     | '/api/public/agent/events'
     | '/api/public/agent/install'
@@ -354,6 +374,7 @@ export interface FileRouteTypes {
     | '/activity'
     | '/dashboard'
     | '/profile'
+    | '/seeds'
     | '/campaigns/$id'
     | '/campaigns/new'
     | '/domains/$id'
@@ -366,6 +387,7 @@ export interface FileRouteTypes {
     | '/lists'
     | '/servers'
     | '/sponsors'
+    | '/api/oauth/google/return'
     | '/api/public/agent/config'
     | '/api/public/agent/events'
     | '/api/public/agent/install'
@@ -388,6 +410,7 @@ export interface FileRouteTypes {
     | '/_authenticated/activity'
     | '/_authenticated/dashboard'
     | '/_authenticated/profile'
+    | '/_authenticated/seeds'
     | '/_authenticated/campaigns/$id'
     | '/_authenticated/campaigns/new'
     | '/_authenticated/domains/$id'
@@ -400,6 +423,7 @@ export interface FileRouteTypes {
     | '/_authenticated/lists/'
     | '/_authenticated/servers/'
     | '/_authenticated/sponsors/'
+    | '/api/oauth/google/return'
     | '/api/public/agent/config'
     | '/api/public/agent/events'
     | '/api/public/agent/install'
@@ -420,6 +444,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ApiOauthGoogleReturnRoute: typeof ApiOauthGoogleReturnRoute
   ApiPublicAgentConfigRoute: typeof ApiPublicAgentConfigRoute
   ApiPublicAgentEventsRoute: typeof ApiPublicAgentEventsRoute
   ApiPublicAgentInstallRoute: typeof ApiPublicAgentInstallRoute
@@ -484,6 +509,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/seeds': {
+      id: '/_authenticated/seeds'
+      path: '/seeds'
+      fullPath: '/seeds'
+      preLoaderRoute: typeof AuthenticatedSeedsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/campaigns/': {
@@ -569,6 +601,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/sponsors/$id'
       preLoaderRoute: typeof AuthenticatedSponsorsIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/api/oauth/google/return': {
+      id: '/api/oauth/google/return'
+      path: '/api/oauth/google/return'
+      fullPath: '/api/oauth/google/return'
+      preLoaderRoute: typeof ApiOauthGoogleReturnRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/public/agent/config': {
       id: '/api/public/agent/config'
@@ -668,6 +707,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedActivityRoute: typeof AuthenticatedActivityRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedSeedsRoute: typeof AuthenticatedSeedsRoute
   AuthenticatedCampaignsIdRoute: typeof AuthenticatedCampaignsIdRoute
   AuthenticatedCampaignsNewRoute: typeof AuthenticatedCampaignsNewRoute
   AuthenticatedDomainsIdRoute: typeof AuthenticatedDomainsIdRoute
@@ -686,6 +726,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedActivityRoute: AuthenticatedActivityRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedSeedsRoute: AuthenticatedSeedsRoute,
   AuthenticatedCampaignsIdRoute: AuthenticatedCampaignsIdRoute,
   AuthenticatedCampaignsNewRoute: AuthenticatedCampaignsNewRoute,
   AuthenticatedDomainsIdRoute: AuthenticatedDomainsIdRoute,
@@ -708,6 +749,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  ApiOauthGoogleReturnRoute: ApiOauthGoogleReturnRoute,
   ApiPublicAgentConfigRoute: ApiPublicAgentConfigRoute,
   ApiPublicAgentEventsRoute: ApiPublicAgentEventsRoute,
   ApiPublicAgentInstallRoute: ApiPublicAgentInstallRoute,
