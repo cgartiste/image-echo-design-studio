@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAbTestsRouteImport } from './routes/_authenticated/ab-tests'
 import { Route as AuthenticatedActivityRouteImport } from './routes/_authenticated/activity'
+import { Route as AuthenticatedCalendarRouteImport } from './routes/_authenticated/calendar'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDeliverabilityRouteImport } from './routes/_authenticated/deliverability'
 import { Route as AuthenticatedPlacementRouteImport } from './routes/_authenticated/placement'
@@ -79,6 +80,11 @@ const AuthenticatedAbTestsRoute = AuthenticatedAbTestsRouteImport.update({
 const AuthenticatedActivityRoute = AuthenticatedActivityRouteImport.update({
   id: '/activity',
   path: '/activity',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCalendarRoute = AuthenticatedCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
@@ -279,6 +285,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/ab-tests': typeof AuthenticatedAbTestsRoute
   '/activity': typeof AuthenticatedActivityRoute
+  '/calendar': typeof AuthenticatedCalendarRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deliverability': typeof AuthenticatedDeliverabilityRoute
   '/placement': typeof AuthenticatedPlacementRoute
@@ -322,6 +329,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/ab-tests': typeof AuthenticatedAbTestsRoute
   '/activity': typeof AuthenticatedActivityRoute
+  '/calendar': typeof AuthenticatedCalendarRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deliverability': typeof AuthenticatedDeliverabilityRoute
   '/placement': typeof AuthenticatedPlacementRoute
@@ -367,6 +375,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/ab-tests': typeof AuthenticatedAbTestsRoute
   '/_authenticated/activity': typeof AuthenticatedActivityRoute
+  '/_authenticated/calendar': typeof AuthenticatedCalendarRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/deliverability': typeof AuthenticatedDeliverabilityRoute
   '/_authenticated/placement': typeof AuthenticatedPlacementRoute
@@ -412,6 +421,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/ab-tests'
     | '/activity'
+    | '/calendar'
     | '/dashboard'
     | '/deliverability'
     | '/placement'
@@ -455,6 +465,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/ab-tests'
     | '/activity'
+    | '/calendar'
     | '/dashboard'
     | '/deliverability'
     | '/placement'
@@ -499,6 +510,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_authenticated/ab-tests'
     | '/_authenticated/activity'
+    | '/_authenticated/calendar'
     | '/_authenticated/dashboard'
     | '/_authenticated/deliverability'
     | '/_authenticated/placement'
@@ -600,6 +612,13 @@ declare module '@tanstack/react-router' {
       path: '/activity'
       fullPath: '/activity'
       preLoaderRoute: typeof AuthenticatedActivityRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/calendar': {
+      id: '/_authenticated/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof AuthenticatedCalendarRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard': {
@@ -860,6 +879,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAbTestsRoute: typeof AuthenticatedAbTestsRoute
   AuthenticatedActivityRoute: typeof AuthenticatedActivityRoute
+  AuthenticatedCalendarRoute: typeof AuthenticatedCalendarRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDeliverabilityRoute: typeof AuthenticatedDeliverabilityRoute
   AuthenticatedPlacementRoute: typeof AuthenticatedPlacementRoute
@@ -887,6 +907,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAbTestsRoute: AuthenticatedAbTestsRoute,
   AuthenticatedActivityRoute: AuthenticatedActivityRoute,
+  AuthenticatedCalendarRoute: AuthenticatedCalendarRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDeliverabilityRoute: AuthenticatedDeliverabilityRoute,
   AuthenticatedPlacementRoute: AuthenticatedPlacementRoute,
