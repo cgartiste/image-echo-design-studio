@@ -11,4 +11,7 @@
 - [x] Permission matrix restored in the remixed database.
 - [ ] Amazon SES event intake (bounces/complaints via SNS): needs a published URL and SNS signature verification.
 - [ ] 2FA enforcement, SSO, IP allow-list, session history: not started.
-- [ ] Phases 2–6 of the brief.
+- [x] Segments: rule-based audiences, live count, usable in campaigns and enforced in the queue.
+- [x] Phase 2: SES routing priority/quotas/health limits, route simulator, alerts, emergency stop, SES health sync + suppression import.
+- [ ] CloudWatch bounce/complaint rates auto-sync (rates are entered manually for now), automatic failover during real sending (needs SES sending worker), Google Postmaster.
+- [ ] Phases 3–6 of the brief.
