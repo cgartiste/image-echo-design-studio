@@ -1,6 +1,8 @@
 # Advanced campaigns
 - [ ] Collect clicked/purchased recipients automatically in VIP list, preserving SES assignments separately.
 - [ ] Deliver a clean ZIP of all current project source changes, excluding secrets and generated files.
+- [ ] Add Gmail OAuth warming monitoring before ZIP; use placement checks, not fabricated engagement.
+- [ ] Review manual Gmail read/star actions; do not automate spam rescue or engagement for reputation manipulation.
 - [x] Lifecycle, audit, permissions, immutable running/completed content and safe cloning.
 - [x] Three-zone builder, recipient exclusions/counts, imported offers, saved configs, preview and publication checklist.
 - [x] Campaign table filters/export, aggregate metrics, logs, conversions and explicit disconnected operational views.
