@@ -1,6 +1,6 @@
 # Advanced campaigns
 - [x] Collect clicked/converted recipients automatically in VIP list, preserving SES assignments separately; populated tracking flow awaits real sending data.
-- [ ] Deliver a clean ZIP of all current project source changes, excluding secrets and generated files.
+- [x] Deliver a clean ZIP of all current project source changes, excluding secrets and generated files.
 - [x] Add Gmail OAuth warming monitoring before ZIP; use placement checks, not fabricated engagement.
 - [x] Review manual Gmail read/star actions; no automated spam rescue or engagement for reputation manipulation.
 - [x] Automate Gmail placement checks while monitoring page is open; no automated read/star/spam rescue.
