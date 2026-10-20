@@ -46,7 +46,7 @@ function IncidentsPage() {
     onSuccess: (id) => { inv(); setForm(null); setSel(id); toast.success("Incident opened"); }, onError: err,
   });
   const update = useMutation({
-    mutationFn: async (patch: Record<string, unknown>) => { const { error } = await supabase.from("incidents").update(patch).eq("id", sel!); if (error) throw error; },
+    mutationFn: async (patch: { status?: string; severity?: string; resolved_at?: string | null; updated_at?: string; root_cause?: string | null; resolution?: string | null }) => { const { error } = await supabase.from("incidents").update(patch).eq("id", sel!); if (error) throw error; },
     onSuccess: inv, onError: err,
   });
   const addNote = useMutation({
