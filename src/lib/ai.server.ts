@@ -3,7 +3,7 @@ import { streamText } from "ai";
 
 /** One-shot Lovable AI call; streams upstream and returns the final text. */
 export async function askAI(instructions: string, prompt: string, signal?: AbortSignal): Promise<string> {
-  const apiKey = process.env.LOVABLE_API_KEY;
+  const apiKey = process.env["LOVABLE_API_KEY"];
   if (!apiKey) throw new Error("AI is not configured");
   const provider = createOpenAI({
     baseURL: "https://ai.gateway.lovable.dev/v1",
