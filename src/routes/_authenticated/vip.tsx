@@ -51,7 +51,7 @@ function VipPage() {
   const [editing, setEditing] = useState<Client | null>(null);
   const refresh = () => { qc.invalidateQueries({ queryKey: ["vip-clients"] }); qc.invalidateQueries({ queryKey: ["ses-pool"] }); };
   const poolM = useMutation({
-    mutationFn: (d: Parameters<typeof savePool>[0]["data"]) => savePool({ data: d }),
+    mutationFn: (d: { id: string; is_vip: boolean; pool_status: (typeof POOL_STATUSES)[number]; region: string | null; daily_quota: number | null }) => savePool({ data: d }),
     onSuccess: () => { toast.success("Account updated"); refresh(); },
     onError: (e) => toast.error((e as Error).message),
   });
