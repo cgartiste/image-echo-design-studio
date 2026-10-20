@@ -78,6 +78,13 @@
       "when": 1792491276709,
       "tag": "0010_phase1_vip_suppression_team",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1792491303123,
+      "tag": "0011_invite_only_new_users",
+      "breakpoints": true
     }
   ]
 }
