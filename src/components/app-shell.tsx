@@ -1,7 +1,7 @@
 import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  Activity, Bell, FlaskConical, Globe, Handshake, LayoutDashboard, ListChecks, LogOut, Mail,
+  Activity, Inbox, Bell, FlaskConical, Globe, Handshake, LayoutDashboard, ListChecks, LogOut, Mail,
   Crown, Gauge, Moon, Server, ShieldBan, Sun, Tags, Terminal, User, UserCog, Users,
 } from "lucide-react";
 import { useEffect, useState } from "react";
