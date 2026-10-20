@@ -85,6 +85,13 @@
       "when": 1792491303123,
       "tag": "0011_invite_only_new_users",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1792491597647,
+      "tag": "0012_restore_new_user_trigger",
+      "breakpoints": true
     }
   ]
 }
