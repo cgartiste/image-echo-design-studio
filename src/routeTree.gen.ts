@@ -19,6 +19,7 @@ import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedSeedsRouteImport } from './routes/_authenticated/seeds'
 import { Route as AuthenticatedSuppressionRouteImport } from './routes/_authenticated/suppression'
 import { Route as AuthenticatedTeamRouteImport } from './routes/_authenticated/team'
+import { Route as AuthenticatedVipRouteImport } from './routes/_authenticated/vip'
 import { Route as AuthenticatedCampaignsIndexRouteImport } from './routes/_authenticated/campaigns.index'
 import { Route as AuthenticatedCampaignsIdRouteImport } from './routes/_authenticated/campaigns.$id'
 import { Route as AuthenticatedCampaignsNewRouteImport } from './routes/_authenticated/campaigns.new'
@@ -94,6 +95,11 @@ const AuthenticatedSuppressionRoute =
 const AuthenticatedTeamRoute = AuthenticatedTeamRouteImport.update({
   id: '/team',
   path: '/team',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedVipRoute = AuthenticatedVipRouteImport.update({
+  id: '/vip',
+  path: '/vip',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedCampaignsIndexRoute =
@@ -246,6 +252,7 @@ export interface FileRoutesByFullPath {
   '/seeds': typeof AuthenticatedSeedsRoute
   '/suppression': typeof AuthenticatedSuppressionRoute
   '/team': typeof AuthenticatedTeamRoute
+  '/vip': typeof AuthenticatedVipRoute
   '/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
   '/campaigns/new': typeof AuthenticatedCampaignsNewRoute
   '/domains/$id': typeof AuthenticatedDomainsIdRoute
@@ -283,6 +290,7 @@ export interface FileRoutesByTo {
   '/seeds': typeof AuthenticatedSeedsRoute
   '/suppression': typeof AuthenticatedSuppressionRoute
   '/team': typeof AuthenticatedTeamRoute
+  '/vip': typeof AuthenticatedVipRoute
   '/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
   '/campaigns/new': typeof AuthenticatedCampaignsNewRoute
   '/domains/$id': typeof AuthenticatedDomainsIdRoute
@@ -322,6 +330,7 @@ export interface FileRoutesById {
   '/_authenticated/seeds': typeof AuthenticatedSeedsRoute
   '/_authenticated/suppression': typeof AuthenticatedSuppressionRoute
   '/_authenticated/team': typeof AuthenticatedTeamRoute
+  '/_authenticated/vip': typeof AuthenticatedVipRoute
   '/_authenticated/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
   '/_authenticated/campaigns/new': typeof AuthenticatedCampaignsNewRoute
   '/_authenticated/domains/$id': typeof AuthenticatedDomainsIdRoute
@@ -361,6 +370,7 @@ export interface FileRouteTypes {
     | '/seeds'
     | '/suppression'
     | '/team'
+    | '/vip'
     | '/campaigns/$id'
     | '/campaigns/new'
     | '/domains/$id'
@@ -398,6 +408,7 @@ export interface FileRouteTypes {
     | '/seeds'
     | '/suppression'
     | '/team'
+    | '/vip'
     | '/campaigns/$id'
     | '/campaigns/new'
     | '/domains/$id'
@@ -436,6 +447,7 @@ export interface FileRouteTypes {
     | '/_authenticated/seeds'
     | '/_authenticated/suppression'
     | '/_authenticated/team'
+    | '/_authenticated/vip'
     | '/_authenticated/campaigns/$id'
     | '/_authenticated/campaigns/new'
     | '/_authenticated/domains/$id'
@@ -555,6 +567,13 @@ declare module '@tanstack/react-router' {
       path: '/team'
       fullPath: '/team'
       preLoaderRoute: typeof AuthenticatedTeamRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/vip': {
+      id: '/_authenticated/vip'
+      path: '/vip'
+      fullPath: '/vip'
+      preLoaderRoute: typeof AuthenticatedVipRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/campaigns/': {
@@ -749,6 +768,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSeedsRoute: typeof AuthenticatedSeedsRoute
   AuthenticatedSuppressionRoute: typeof AuthenticatedSuppressionRoute
   AuthenticatedTeamRoute: typeof AuthenticatedTeamRoute
+  AuthenticatedVipRoute: typeof AuthenticatedVipRoute
   AuthenticatedCampaignsIdRoute: typeof AuthenticatedCampaignsIdRoute
   AuthenticatedCampaignsNewRoute: typeof AuthenticatedCampaignsNewRoute
   AuthenticatedDomainsIdRoute: typeof AuthenticatedDomainsIdRoute
@@ -770,6 +790,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSeedsRoute: AuthenticatedSeedsRoute,
   AuthenticatedSuppressionRoute: AuthenticatedSuppressionRoute,
   AuthenticatedTeamRoute: AuthenticatedTeamRoute,
+  AuthenticatedVipRoute: AuthenticatedVipRoute,
   AuthenticatedCampaignsIdRoute: AuthenticatedCampaignsIdRoute,
   AuthenticatedCampaignsNewRoute: AuthenticatedCampaignsNewRoute,
   AuthenticatedDomainsIdRoute: AuthenticatedDomainsIdRoute,

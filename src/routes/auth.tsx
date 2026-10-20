@@ -31,6 +31,12 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
+  const [signupOpen, setSignupOpen] = useState(false);
+
+  useEffect(() => {
+    // Accounts are invitation-only; self sign-up exists solely to create the first administrator.
+    supabase.rpc("signup_open").then(({ data }) => setSignupOpen(!!data));
+  }, []);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -146,7 +152,9 @@ function AuthPage() {
           )}
           <p className="mt-6 text-center text-sm text-muted-foreground">
             {mode === "signin" ? (
-              <>No account? <button className="text-primary" onClick={() => setMode("signup")}>Sign up</button></>
+              signupOpen
+                ? <>First setup? <button className="text-primary" onClick={() => setMode("signup")}>Create the administrator account</button></>
+                : <>Access is by invitation only. Ask your administrator.</>
             ) : (
               <button className="text-primary" onClick={() => setMode("signin")}>Back to sign in</button>
             )}
