@@ -1,7 +1,7 @@
 import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  Activity, Sparkles, Repeat, CalendarDays, FileText, Inbox, Bell, FlaskConical, Globe, Handshake, LayoutDashboard, ListChecks, LogOut, Mail,
+  Activity, Siren, Sparkles, Repeat, CalendarDays, FileText, Inbox, Bell, FlaskConical, Globe, Handshake, LayoutDashboard, ListChecks, LogOut, Mail,
   Crown, Gauge, Moon, Server, ShieldBan, Sun, Tags, Terminal, User, UserCog, Users,
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -32,6 +32,7 @@ const live: { to: string; key: TKey; icon: typeof Mail }[] = [
   { to: "/taxonomy", key: "nav.taxonomy", icon: Tags },
   { to: "/deliverability", key: "nav.deliverability", icon: Gauge },
   { to: "/placement", key: "nav.placement", icon: Inbox },
+  { to: "/incidents", key: "nav.incidents", icon: Siren },
   { to: "/vip", key: "nav.vip", icon: Crown },
   { to: "/suppression", key: "nav.suppression", icon: ShieldBan },
   { to: "/team", key: "nav.team", icon: UserCog },
