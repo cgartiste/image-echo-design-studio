@@ -27,6 +27,7 @@ const live: { to: string; key: TKey; icon: typeof Mail }[] = [
   { to: "/ab-tests", key: "nav.abtests", icon: FlaskConical },
   { to: "/taxonomy", key: "nav.taxonomy", icon: Tags },
   { to: "/deliverability", key: "nav.deliverability", icon: Gauge },
+  { to: "/placement", key: "nav.placement", icon: Inbox },
   { to: "/vip", key: "nav.vip", icon: Crown },
   { to: "/suppression", key: "nav.suppression", icon: ShieldBan },
   { to: "/team", key: "nav.team", icon: UserCog },

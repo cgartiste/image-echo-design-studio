@@ -41,3 +41,20 @@ export function actionLabels(action: SeedAction): { add: string[]; remove: strin
     case "trash": return "trash";
   }
 }
+
+export type PlacementSummary = { seeds: number; found: number; inbox: number; promotions: number; spam: number; other: number; missing: number };
+
+/** Summarise one check: each seed counts once, using its most recent matching message. */
+export function summarizePlacement(results: { messages: { placement: Placement }[]; error: string | null }[]): PlacementSummary {
+  const s: PlacementSummary = { seeds: results.length, found: 0, inbox: 0, promotions: 0, spam: 0, other: 0, missing: 0 };
+  for (const r of results) {
+    const p = r.messages[0]?.placement;
+    if (!p) { s.missing++; continue; }
+    s.found++;
+    if (p === "inbox") s.inbox++;
+    else if (p === "promotions") s.promotions++;
+    else if (p === "spam") s.spam++;
+    else s.other++;
+  }
+  return s;
+}
