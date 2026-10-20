@@ -10,6 +10,7 @@ export const settingsSchema = z.object({
   excluded_lists: z.array(z.string().uuid()).default([]),
   country: z.string().max(100).default(""),
   engagement_min: z.coerce.number().min(0).max(100).default(0),
+  segment_id: z.string().default(""),
   bounce_email: z.string().default(""),
   tracking_domain: z.string().default(""),
   offer_id: z.string().default(""),
