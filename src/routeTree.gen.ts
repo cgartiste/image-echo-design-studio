@@ -23,6 +23,7 @@ import { Route as AuthenticatedIncidentsRouteImport } from './routes/_authentica
 import { Route as AuthenticatedInsightsRouteImport } from './routes/_authenticated/insights'
 import { Route as AuthenticatedPlacementRouteImport } from './routes/_authenticated/placement'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
 import { Route as AuthenticatedSeedsRouteImport } from './routes/_authenticated/seeds'
 import { Route as AuthenticatedSegmentsRouteImport } from './routes/_authenticated/segments'
 import { Route as AuthenticatedSuppressionRouteImport } from './routes/_authenticated/suppression'
@@ -125,6 +126,11 @@ const AuthenticatedPlacementRoute = AuthenticatedPlacementRouteImport.update({
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedReportsRoute = AuthenticatedReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedSeedsRoute = AuthenticatedSeedsRouteImport.update({
@@ -317,6 +323,7 @@ export interface FileRoutesByFullPath {
   '/insights': typeof AuthenticatedInsightsRoute
   '/placement': typeof AuthenticatedPlacementRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/reports': typeof AuthenticatedReportsRoute
   '/seeds': typeof AuthenticatedSeedsRoute
   '/segments': typeof AuthenticatedSegmentsRoute
   '/suppression': typeof AuthenticatedSuppressionRoute
@@ -365,6 +372,7 @@ export interface FileRoutesByTo {
   '/insights': typeof AuthenticatedInsightsRoute
   '/placement': typeof AuthenticatedPlacementRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/reports': typeof AuthenticatedReportsRoute
   '/seeds': typeof AuthenticatedSeedsRoute
   '/segments': typeof AuthenticatedSegmentsRoute
   '/suppression': typeof AuthenticatedSuppressionRoute
@@ -415,6 +423,7 @@ export interface FileRoutesById {
   '/_authenticated/insights': typeof AuthenticatedInsightsRoute
   '/_authenticated/placement': typeof AuthenticatedPlacementRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/reports': typeof AuthenticatedReportsRoute
   '/_authenticated/seeds': typeof AuthenticatedSeedsRoute
   '/_authenticated/segments': typeof AuthenticatedSegmentsRoute
   '/_authenticated/suppression': typeof AuthenticatedSuppressionRoute
@@ -465,6 +474,7 @@ export interface FileRouteTypes {
     | '/insights'
     | '/placement'
     | '/profile'
+    | '/reports'
     | '/seeds'
     | '/segments'
     | '/suppression'
@@ -513,6 +523,7 @@ export interface FileRouteTypes {
     | '/insights'
     | '/placement'
     | '/profile'
+    | '/reports'
     | '/seeds'
     | '/segments'
     | '/suppression'
@@ -562,6 +573,7 @@ export interface FileRouteTypes {
     | '/_authenticated/insights'
     | '/_authenticated/placement'
     | '/_authenticated/profile'
+    | '/_authenticated/reports'
     | '/_authenticated/seeds'
     | '/_authenticated/segments'
     | '/_authenticated/suppression'
@@ -716,6 +728,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/reports': {
+      id: '/_authenticated/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof AuthenticatedReportsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/seeds': {
@@ -963,6 +982,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedInsightsRoute: typeof AuthenticatedInsightsRoute
   AuthenticatedPlacementRoute: typeof AuthenticatedPlacementRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
   AuthenticatedSeedsRoute: typeof AuthenticatedSeedsRoute
   AuthenticatedSegmentsRoute: typeof AuthenticatedSegmentsRoute
   AuthenticatedSuppressionRoute: typeof AuthenticatedSuppressionRoute
@@ -995,6 +1015,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedInsightsRoute: AuthenticatedInsightsRoute,
   AuthenticatedPlacementRoute: AuthenticatedPlacementRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedReportsRoute: AuthenticatedReportsRoute,
   AuthenticatedSeedsRoute: AuthenticatedSeedsRoute,
   AuthenticatedSegmentsRoute: AuthenticatedSegmentsRoute,
   AuthenticatedSuppressionRoute: AuthenticatedSuppressionRoute,
