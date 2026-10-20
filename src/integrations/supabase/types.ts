@@ -495,6 +495,42 @@ export type Database = {
         }
         Relationships: []
       }
+      email_templates: {
+        Row: {
+          category: string
+          created_at: string
+          created_by: string | null
+          html_content: string
+          id: string
+          name: string
+          preheader: string | null
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          html_content?: string
+          id?: string
+          name: string
+          preheader?: string | null
+          subject?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          html_content?: string
+          id?: string
+          name?: string
+          preheader?: string | null
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       mta_servers: {
         Row: {
           agent_token_enc: string
