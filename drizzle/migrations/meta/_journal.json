@@ -71,6 +71,13 @@
       "when": 1792455222816,
       "tag": "0009_migration",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1792491276709,
+      "tag": "0010_phase1_vip_suppression_team",
+      "breakpoints": true
     }
   ]
 }
