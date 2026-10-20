@@ -7,6 +7,7 @@ const en = {
   "nav.followups": "Follow-ups",
   "nav.insights": "AI insights",
   "nav.incidents": "Incidents",
+  "nav.reports": "Reports",
   "nav.placement": "Placement reports",
   "nav.lists": "Email Lists",
   "nav.activity": "Activity Log",

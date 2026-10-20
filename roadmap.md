@@ -21,4 +21,5 @@
 - [x] Phase 4: follow-up planning (actual sending blocked until a sender is connected).
 - [x] Phase 5: AI insights page (campaigns, placement, alerts).
 - [x] Phase 6 (part): incident center with timeline, root cause and resolution time.
-- [ ] Phase 6 rest: management reports, backups.
+- [x] Phase 6: management report (CSV, print/PDF).
+- [ ] Backups: data exports/restore not built.
