@@ -4,6 +4,7 @@ const en = {
   "nav.campaigns": "Campaigns",
   "nav.calendar": "Calendar",
   "nav.templates": "Templates",
+  "nav.followups": "Follow-ups",
   "nav.placement": "Placement reports",
   "nav.lists": "Email Lists",
   "nav.activity": "Activity Log",
