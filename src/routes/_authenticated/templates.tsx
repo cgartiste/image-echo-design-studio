@@ -34,7 +34,7 @@ function TemplatesPage() {
       if (!t.name.trim()) throw new Error("Name is required");
       const row = { name: t.name.trim(), category: t.category.trim() || "general", subject: t.subject, preheader: t.preheader || null, html_content: t.html_content, updated_at: new Date().toISOString() };
       const res = t.id ? await supabase.from("email_templates").update(row).eq("id", t.id).select().single()
-        : await supabase.from("email_templates").insert({ ...row, created_by: me?.id ?? null }).select().single();
+        : await supabase.from("email_templates").insert({ ...row, created_by: me?.user.id ?? null }).select().single();
       if (res.error) throw res.error;
       return res.data as Tpl;
     },
