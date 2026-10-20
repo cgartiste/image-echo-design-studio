@@ -18,4 +18,5 @@
 - [x] Phase 3 (part): saved placement reports with history, per-sender trends.
 - [ ] Outlook test inboxes: needs a Microsoft connection.
 - [x] Phase 4 (part): campaign calendar, template library.
-- [ ] Phase 4 rest (follow-ups), Phases 5–6.
+- [x] Phase 4: follow-up planning (actual sending blocked until a sender is connected).
+- [ ] Phases 5–6.

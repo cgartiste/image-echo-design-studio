@@ -115,6 +115,60 @@ export type Database = {
         }
         Relationships: []
       }
+      campaign_followups: {
+        Row: {
+          active: boolean
+          audience: string
+          created_at: string
+          created_by: string | null
+          delay_hours: number
+          id: string
+          name: string
+          parent_campaign_id: string
+          subject: string
+          template_id: string | null
+        }
+        Insert: {
+          active?: boolean
+          audience: string
+          created_at?: string
+          created_by?: string | null
+          delay_hours?: number
+          id?: string
+          name: string
+          parent_campaign_id: string
+          subject?: string
+          template_id?: string | null
+        }
+        Update: {
+          active?: boolean
+          audience?: string
+          created_at?: string
+          created_by?: string | null
+          delay_hours?: number
+          id?: string
+          name?: string
+          parent_campaign_id?: string
+          subject?: string
+          template_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_followups_parent_campaign_id_fkey"
+            columns: ["parent_campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_followups_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "email_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       campaign_logs: {
         Row: {
           action: string | null
