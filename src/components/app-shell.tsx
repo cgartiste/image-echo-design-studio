@@ -2,7 +2,7 @@ import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-route
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Activity, Bell, FlaskConical, Globe, Handshake, LayoutDashboard, ListChecks, LogOut, Mail,
-  Crown, Moon, Server, ShieldBan, Sun, Tags, Terminal, User, UserCog, Users,
+  Crown, Gauge, Moon, Server, ShieldBan, Sun, Tags, Terminal, User, UserCog, Users,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
@@ -23,13 +23,14 @@ const live: { to: string; key: TKey; icon: typeof Mail }[] = [
   { to: "/domains", key: "nav.domains", icon: Globe },
   { to: "/sponsors", key: "nav.offers", icon: Handshake },
   { to: "/servers", key: "nav.servers", icon: Server },
+  { to: "/segments", key: "nav.segments", icon: ListChecks },
+  { to: "/deliverability", key: "nav.deliverability", icon: Gauge },
   { to: "/vip", key: "nav.vip", icon: Crown },
   { to: "/suppression", key: "nav.suppression", icon: ShieldBan },
   { to: "/team", key: "nav.team", icon: UserCog },
   { to: "/activity", key: "nav.activity", icon: Activity },
 ];
 const soon: { slug: string; key: TKey; icon: typeof Mail }[] = [
-  { slug: "segments", key: "nav.segments", icon: ListChecks },
   { slug: "ab-tests", key: "nav.abtests", icon: FlaskConical },
   { slug: "taxonomy", key: "nav.taxonomy", icon: Tags },
 ];

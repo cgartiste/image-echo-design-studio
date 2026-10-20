@@ -14,6 +14,7 @@ const en = {
   "nav.taxonomy": "Tags & Categories",
   "nav.suppression": "Suppression",
   "nav.vip": "VIP Clients",
+  "nav.deliverability": "Deliverability",
   "nav.team": "Team",
   "common.soon": "Soon",
   "common.demo": "Demo mode",

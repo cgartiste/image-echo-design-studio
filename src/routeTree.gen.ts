@@ -15,8 +15,10 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedActivityRouteImport } from './routes/_authenticated/activity'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedDeliverabilityRouteImport } from './routes/_authenticated/deliverability'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedSeedsRouteImport } from './routes/_authenticated/seeds'
+import { Route as AuthenticatedSegmentsRouteImport } from './routes/_authenticated/segments'
 import { Route as AuthenticatedSuppressionRouteImport } from './routes/_authenticated/suppression'
 import { Route as AuthenticatedTeamRouteImport } from './routes/_authenticated/team'
 import { Route as AuthenticatedVipRouteImport } from './routes/_authenticated/vip'
@@ -76,6 +78,12 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDeliverabilityRoute =
+  AuthenticatedDeliverabilityRouteImport.update({
+    id: '/deliverability',
+    path: '/deliverability',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -84,6 +92,11 @@ const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
 const AuthenticatedSeedsRoute = AuthenticatedSeedsRouteImport.update({
   id: '/seeds',
   path: '/seeds',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSegmentsRoute = AuthenticatedSegmentsRouteImport.update({
+  id: '/segments',
+  path: '/segments',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedSuppressionRoute =
@@ -248,8 +261,10 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/activity': typeof AuthenticatedActivityRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/deliverability': typeof AuthenticatedDeliverabilityRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/seeds': typeof AuthenticatedSeedsRoute
+  '/segments': typeof AuthenticatedSegmentsRoute
   '/suppression': typeof AuthenticatedSuppressionRoute
   '/team': typeof AuthenticatedTeamRoute
   '/vip': typeof AuthenticatedVipRoute
@@ -286,8 +301,10 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/activity': typeof AuthenticatedActivityRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/deliverability': typeof AuthenticatedDeliverabilityRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/seeds': typeof AuthenticatedSeedsRoute
+  '/segments': typeof AuthenticatedSegmentsRoute
   '/suppression': typeof AuthenticatedSuppressionRoute
   '/team': typeof AuthenticatedTeamRoute
   '/vip': typeof AuthenticatedVipRoute
@@ -326,8 +343,10 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/activity': typeof AuthenticatedActivityRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/deliverability': typeof AuthenticatedDeliverabilityRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/seeds': typeof AuthenticatedSeedsRoute
+  '/_authenticated/segments': typeof AuthenticatedSegmentsRoute
   '/_authenticated/suppression': typeof AuthenticatedSuppressionRoute
   '/_authenticated/team': typeof AuthenticatedTeamRoute
   '/_authenticated/vip': typeof AuthenticatedVipRoute
@@ -366,8 +385,10 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/activity'
     | '/dashboard'
+    | '/deliverability'
     | '/profile'
     | '/seeds'
+    | '/segments'
     | '/suppression'
     | '/team'
     | '/vip'
@@ -404,8 +425,10 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/activity'
     | '/dashboard'
+    | '/deliverability'
     | '/profile'
     | '/seeds'
+    | '/segments'
     | '/suppression'
     | '/team'
     | '/vip'
@@ -443,8 +466,10 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_authenticated/activity'
     | '/_authenticated/dashboard'
+    | '/_authenticated/deliverability'
     | '/_authenticated/profile'
     | '/_authenticated/seeds'
+    | '/_authenticated/segments'
     | '/_authenticated/suppression'
     | '/_authenticated/team'
     | '/_authenticated/vip'
@@ -541,6 +566,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/deliverability': {
+      id: '/_authenticated/deliverability'
+      path: '/deliverability'
+      fullPath: '/deliverability'
+      preLoaderRoute: typeof AuthenticatedDeliverabilityRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/profile': {
       id: '/_authenticated/profile'
       path: '/profile'
@@ -553,6 +585,13 @@ declare module '@tanstack/react-router' {
       path: '/seeds'
       fullPath: '/seeds'
       preLoaderRoute: typeof AuthenticatedSeedsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/segments': {
+      id: '/_authenticated/segments'
+      path: '/segments'
+      fullPath: '/segments'
+      preLoaderRoute: typeof AuthenticatedSegmentsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/suppression': {
@@ -764,8 +803,10 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedActivityRoute: typeof AuthenticatedActivityRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedDeliverabilityRoute: typeof AuthenticatedDeliverabilityRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedSeedsRoute: typeof AuthenticatedSeedsRoute
+  AuthenticatedSegmentsRoute: typeof AuthenticatedSegmentsRoute
   AuthenticatedSuppressionRoute: typeof AuthenticatedSuppressionRoute
   AuthenticatedTeamRoute: typeof AuthenticatedTeamRoute
   AuthenticatedVipRoute: typeof AuthenticatedVipRoute
@@ -786,8 +827,10 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedActivityRoute: AuthenticatedActivityRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedDeliverabilityRoute: AuthenticatedDeliverabilityRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedSeedsRoute: AuthenticatedSeedsRoute,
+  AuthenticatedSegmentsRoute: AuthenticatedSegmentsRoute,
   AuthenticatedSuppressionRoute: AuthenticatedSuppressionRoute,
   AuthenticatedTeamRoute: AuthenticatedTeamRoute,
   AuthenticatedVipRoute: AuthenticatedVipRoute,

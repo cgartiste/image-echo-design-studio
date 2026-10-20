@@ -80,7 +80,6 @@ export const syncSesHealth = createServerFn({ method: "POST" })
   .handler(async ({ context }) => {
     const db = await perm(context as Ctx, "execute");
     const { data: accounts } = await db.from("provider_accounts").select("id,name,credentials_encrypted").eq("provider", "aws_ses");
-    const { data: controls } = await db.from("system_controls").select("bounce_threshold,complaint_threshold").single();
     const { decryptCreds } = await import("./providers.server");
     const { sesClient } = await import("./ses.server");
     const results: { name: string; ok: boolean; message: string }[] = [];
@@ -116,7 +115,6 @@ export const syncSesHealth = createServerFn({ method: "POST" })
         results.push({ name: a.name, ok: false, message: msg });
       }
     }
-    void controls;
     await audit(db, context as Ctx, "ses_health_sync", `${results.length} accounts · ${imported} suppressions imported`);
     return { results, imported };
   });
