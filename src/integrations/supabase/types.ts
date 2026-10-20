@@ -710,6 +710,51 @@ export type Database = {
         }
         Relationships: []
       }
+      seed_accounts: {
+        Row: {
+          connection_key_ciphertext: string | null
+          created_at: string
+          created_by: string | null
+          email: string | null
+          id: string
+          label: string
+          last_checked_at: string | null
+          last_error: string | null
+          provider: string
+          reconnect_required: boolean
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          connection_key_ciphertext?: string | null
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          id?: string
+          label?: string
+          last_checked_at?: string | null
+          last_error?: string | null
+          provider?: string
+          reconnect_required?: boolean
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          connection_key_ciphertext?: string | null
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          id?: string
+          label?: string
+          last_checked_at?: string | null
+          last_error?: string | null
+          provider?: string
+          reconnect_required?: boolean
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       send_events: {
         Row: {
           campaign_id: string | null
