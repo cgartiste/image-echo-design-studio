@@ -32,6 +32,7 @@ const live: { to: string; key: TKey; icon: typeof Mail }[] = [
   { to: "/taxonomy", key: "nav.taxonomy", icon: Tags },
   { to: "/deliverability", key: "nav.deliverability", icon: Gauge },
   { to: "/placement", key: "nav.placement", icon: Inbox },
+  { to: "/seeds", key: "nav.seeds", icon: Inbox },
   { to: "/reports", key: "nav.reports", icon: FileBarChart },
   { to: "/incidents", key: "nav.incidents", icon: Siren },
   { to: "/vip", key: "nav.vip", icon: Crown },

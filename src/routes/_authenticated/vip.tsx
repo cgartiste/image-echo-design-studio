@@ -18,8 +18,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { deleteVipClient, listSesPool, listStaff, POOL_STATUSES, saveVipClient, updatePoolAccount, VIP_STATUSES } from "@/lib/vip.functions";
 import { useMe } from "@/lib/auth";
 import { fmtDate } from "@/lib/format";
+import { VipRecipients } from "@/components/vip-recipients";
+import { t } from "@/lib/i18n";
 
-const meta = "VIP clients and the 10 reserved Amazon SES accounts.";
+const meta = "Tracked VIP recipients from campaign clicks and attributed conversions, with separate SES assignments.";
 export const Route = createFileRoute("/_authenticated/vip")({
   head: () => ({ meta: [{ title: "VIP clients — Cortex" }, { name: "description", content: meta }, { property: "og:title", content: "VIP clients — Cortex" }, { property: "og:description", content: meta }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
   component: VipPage,
@@ -65,8 +67,9 @@ function VipPage() {
     <div>
       <PageHeader title="VIP clients" subtitle={`${vipAccounts.length} / 10 reserved Amazon SES accounts in the VIP pool.`}
         actions={me?.can("vip", "create") && <Button onClick={() => setEditing({ ...blank })}>Add VIP client</Button>} />
-      <Tabs defaultValue="clients">
-        <TabsList><TabsTrigger value="clients">Clients</TabsTrigger><TabsTrigger value="pool">SES account pool</TabsTrigger></TabsList>
+      <Tabs defaultValue="tracked">
+        <TabsList className="flex h-auto flex-wrap justify-start"><TabsTrigger value="tracked">{t("vip.tracked")}</TabsTrigger><TabsTrigger value="clients">{t("vip.assignments")}</TabsTrigger><TabsTrigger value="pool">SES account pool</TabsTrigger></TabsList>
+        <TabsContent value="tracked"><VipRecipients enabled={!!canView} /></TabsContent>
         <TabsContent value="clients">
           <Panel>
             <div className="overflow-x-auto">

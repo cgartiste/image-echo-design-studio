@@ -23,5 +23,7 @@
 - Campaign lifecycle, immutable content, administrator delivery changes and audit entries are enforced by database triggers; why: browser permissions alone are not a security boundary.
 - Accounts are invitation-only: `handle_new_user` grants a role only to the first account or invited users; team admin lives in `src/lib/team.functions.ts`; why: Cortex is a private internal tool.
 - VIP pool rules (max 10 VIP SES accounts, VIP-only primary, one client per account) are DB triggers; assignments go through `src/lib/vip.functions.ts`; why: guarantees hold regardless of UI.
+- Tracked VIP recipients are derived by the permission-gated `vip_recipients` view from non-test clicks and attributed sponsor conversions; SES business assignments remain separate, because engagement does not allocate infrastructure or grant sending consent.
+- Gmail warming monitoring runs placement reads only while its page is open; manual mailbox actions stay user-triggered, because automated engagement is not a deliverability measurement.
 - The global `suppressions` table is checked inside `enqueue_campaign`; why: no queue path can bypass it.
 - Segment rules are evaluated only by SQL `segment_match` (used by `segment_count` and `enqueue_campaign`); SES routing decisions live in `src/lib/routing.ts`; the `system_controls.emergency_stop` flag is checked inside `enqueue_campaign` and `claim_send_jobs`; why: one evaluator per rule, no bypass.

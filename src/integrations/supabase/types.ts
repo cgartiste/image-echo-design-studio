@@ -1866,7 +1866,18 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      vip_recipients: {
+        Row: {
+          campaigns: string[] | null
+          clicked_messages: number | null
+          conversions: number | null
+          email: string | null
+          first_activity_at: string | null
+          last_activity_at: string | null
+          revenue: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       ab_variant_stats: {
