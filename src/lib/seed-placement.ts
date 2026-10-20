@@ -20,7 +20,7 @@ export function inboxRate(placements: Placement[]): number | null {
 }
 
 /** Gmail search query for a placement check. Quotes are stripped from user input. */
-export function buildSeedQuery(opts: { subject?: string; from?: string; days: number }): string {
+export function buildSeedQuery(opts: { subject?: string | undefined; from?: string | undefined; days: number }): string {
   const clean = (s: string) => s.replace(/["\\]/g, "").trim();
   const parts = ["in:anywhere", `newer_than:${Math.max(1, Math.min(30, Math.round(opts.days)))}d`];
   if (opts.subject && clean(opts.subject)) parts.push(`subject:"${clean(opts.subject)}"`);

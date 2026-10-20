@@ -68,7 +68,7 @@ function SeedsPage() {
 
   async function connect(seedId?: string) {
     const popup = window.open("", "cortex-gmail", "width=600,height=720");
-    if (!popup) return toast.error("Popup blocked. Allow popups and try again.");
+    if (!popup) { toast.error("Popup blocked. Allow popups and try again."); return; }
     setBusy(seedId ?? "new");
     try {
       const r = await start({ data: { seedId, label: label || undefined } });
