@@ -5,6 +5,7 @@ const en = {
   "nav.calendar": "Calendar",
   "nav.templates": "Templates",
   "nav.followups": "Follow-ups",
+  "nav.insights": "AI insights",
   "nav.placement": "Placement reports",
   "nav.lists": "Email Lists",
   "nav.activity": "Activity Log",

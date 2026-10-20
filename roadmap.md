@@ -19,4 +19,5 @@
 - [ ] Outlook test inboxes: needs a Microsoft connection.
 - [x] Phase 4 (part): campaign calendar, template library.
 - [x] Phase 4: follow-up planning (actual sending blocked until a sender is connected).
-- [ ] Phases 5–6.
+- [x] Phase 5: AI insights page (campaigns, placement, alerts).
+- [ ] Phase 6 (incident center, backups, management reports).
