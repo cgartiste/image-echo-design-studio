@@ -1,0 +1,9 @@
+-- The content of this migration cannot be applied: its schema already exists in this remixed project's database.
+-- CREATE OR REPLACE FUNCTION public.bump_campaign_stat(_cid uuid, _field text, _n integer) RETURNS void
+-- LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+-- BEGIN
+--  IF _field NOT IN ('sent','delivered','opens','clicks','bounces','unsubscribes','complaints') THEN RAISE EXCEPTION 'Invalid field'; END IF;
+--  EXECUTE format('UPDATE public.campaigns SET %I = %I + $1 WHERE id = $2', _field, _field) USING _n, _cid;
+-- END $$;
+-- REVOKE ALL ON FUNCTION public.bump_campaign_stat(uuid,text,integer) FROM public, anon, authenticated;
+-- GRANT EXECUTE ON FUNCTION public.bump_campaign_stat(uuid,text,integer) TO service_role;

@@ -21,3 +21,6 @@
 - A DB trigger blocks scheduling/starting campaigns whose sender domain is not verified or that lack an unsubscribe link; why: compliance must hold regardless of UI.
 - Campaign settings and validation live in `src/lib/campaign-model.ts`, with guarded commands and recipient/clone RPC wrappers in `src/lib/campaigns.functions.ts`; why: client previews and backend safety share one contract.
 - Campaign lifecycle, immutable content, administrator delivery changes and audit entries are enforced by database triggers; why: browser permissions alone are not a security boundary.
+- Accounts are invitation-only: `handle_new_user` grants a role only to the first account or invited users; team admin lives in `src/lib/team.functions.ts`; why: Cortex is a private internal tool.
+- VIP pool rules (max 10 VIP SES accounts, VIP-only primary, one client per account) are DB triggers; assignments go through `src/lib/vip.functions.ts`; why: guarantees hold regardless of UI.
+- The global `suppressions` table is checked inside `enqueue_campaign`; why: no queue path can bypass it.

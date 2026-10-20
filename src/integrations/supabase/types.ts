@@ -605,25 +605,31 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string
+          department: string | null
           email: string | null
           full_name: string | null
           id: string
+          suspended: boolean
           timezone: string
           updated_at: string
         }
         Insert: {
           created_at?: string
+          department?: string | null
           email?: string | null
           full_name?: string | null
           id: string
+          suspended?: boolean
           timezone?: string
           updated_at?: string
         }
         Update: {
           created_at?: string
+          department?: string | null
           email?: string | null
           full_name?: string | null
           id?: string
+          suspended?: boolean
           timezone?: string
           updated_at?: string
         }
@@ -634,33 +640,45 @@ export type Database = {
           created_at: string
           created_by: string | null
           credentials_encrypted: string
+          daily_quota: number | null
           id: string
+          is_vip: boolean
           last_error: string | null
           last_sync_at: string | null
           name: string
+          pool_status: string
           provider: string
+          region: string | null
           status: string
         }
         Insert: {
           created_at?: string
           created_by?: string | null
           credentials_encrypted: string
+          daily_quota?: number | null
           id?: string
+          is_vip?: boolean
           last_error?: string | null
           last_sync_at?: string | null
           name: string
+          pool_status?: string
           provider: string
+          region?: string | null
           status?: string
         }
         Update: {
           created_at?: string
           created_by?: string | null
           credentials_encrypted?: string
+          daily_quota?: number | null
           id?: string
+          is_vip?: boolean
           last_error?: string | null
           last_sync_at?: string | null
           name?: string
+          pool_status?: string
           provider?: string
+          region?: string | null
           status?: string
         }
         Relationships: []
@@ -1270,6 +1288,36 @@ export type Database = {
           },
         ]
       }
+      suppressions: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          email: string
+          id: string
+          note: string | null
+          reason: string
+          source: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          email: string
+          id?: string
+          note?: string | null
+          reason?: string
+          source?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          email?: string
+          id?: string
+          note?: string | null
+          reason?: string
+          source?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -1287,6 +1335,72 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      vip_clients: {
+        Row: {
+          allowed_domains: string[]
+          backup_account_id: string | null
+          company: string
+          contact_email: string | null
+          contact_name: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          internal_quota: number | null
+          notes: string | null
+          owner_id: string | null
+          ses_account_id: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          allowed_domains?: string[]
+          backup_account_id?: string | null
+          company: string
+          contact_email?: string | null
+          contact_name?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          internal_quota?: number | null
+          notes?: string | null
+          owner_id?: string | null
+          ses_account_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          allowed_domains?: string[]
+          backup_account_id?: string | null
+          company?: string
+          contact_email?: string | null
+          contact_name?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          internal_quota?: number | null
+          notes?: string | null
+          owner_id?: string | null
+          ses_account_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vip_clients_backup_account_id_fkey"
+            columns: ["backup_account_id"]
+            isOneToOne: false
+            referencedRelation: "provider_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vip_clients_ses_account_id_fkey"
+            columns: ["ses_account_id"]
+            isOneToOne: false
+            referencedRelation: "provider_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -1346,6 +1460,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      signup_open: { Args: never; Returns: boolean }
     }
     Enums: {
       app_role:

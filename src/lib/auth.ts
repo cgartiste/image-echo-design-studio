@@ -1,7 +1,7 @@
 import { useQuery, queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
-export type Module = "dashboard" | "campaigns" | "lists" | "activity" | "users" | "domains" | "offers" | "servers";
+export type Module = "dashboard" | "campaigns" | "lists" | "activity" | "users" | "domains" | "offers" | "servers" | "vip" | "suppression";
 export type Action =
   | "view"
   | "create"
@@ -10,7 +10,8 @@ export type Action =
   | "export"
   | "execute"
   | "settings"
-  | "manage_users";
+  | "manage_users"
+  | "assign";
 export type CampaignPermission = "clone" | "preview" | "send_test" | "publish" | "start" | "pause" | "resume" | "stop" | "cancel" | "archive" | "clean_queue" | "view_logs" | "view_statistics" | "manage_tracking" | "manage_realtime_config";
 
 export const ROLE_LABELS: Record<string, string> = {

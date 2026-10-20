@@ -13,6 +13,8 @@ const en = {
   "nav.powermta": "PowerMTA",
   "nav.taxonomy": "Tags & Categories",
   "nav.suppression": "Suppression",
+  "nav.vip": "VIP Clients",
+  "nav.team": "Team",
   "common.soon": "Soon",
   "common.demo": "Demo mode",
   "campaign.general": "General & audience",
