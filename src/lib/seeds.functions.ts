@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { actionLabels, buildSeedQuery, classifyPlacement, SEED_ACTIONS, type Placement } from "./seed-placement";
+import { actionLabels, buildSeedQuery, classifyPlacement, SEED_ACTIONS, summarizePlacement, type Placement } from "./seed-placement";
 
 type Ctx = { supabase: any; userId: string; claims: any }; // eslint-disable-line @typescript-eslint/no-explicit-any
 const GATEWAY = "https://connector-gateway.lovable.dev";
@@ -198,8 +198,15 @@ export const checkPlacement = createServerFn({ method: "POST" })
       }
       await admin.from("seed_accounts").update({ last_checked_at: new Date().toISOString() }).eq("id", s.id);
     }
+    const sum = summarizePlacement(results);
+    await admin.from("placement_reports").insert({
+      query: q, subject: data.subject?.trim() || null, sender: data.from?.trim() || null,
+      seeds_checked: sum.seeds, found: sum.found, inbox: sum.inbox, promotions: sum.promotions, spam: sum.spam, other: sum.other, missing: sum.missing,
+      details: results.map((r) => ({ email: r.email, placement: r.messages[0]?.placement ?? null, error: r.error })),
+      created_by: context.userId,
+    });
     await audit(admin, context as Ctx, "placement_check", `${q} · ${seeds.length} inboxes`);
-    return { query: q, results };
+    return { query: q, results, summary: sum };
   });
 
 export const seedAction = createServerFn({ method: "POST" })

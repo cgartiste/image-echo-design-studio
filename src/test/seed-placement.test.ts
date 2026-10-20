@@ -10,3 +10,16 @@ describe("seed placement", () => {
   it("query limits days to 30 and strips quotes", () => expect(buildSeedQuery({ subject: 'Hi "there"', days: 90 })).toBe('in:anywhere newer_than:30d subject:"Hi there"'));
   it("rescue removes spam and adds inbox", () => expect(actionLabels("rescue")).toEqual({ add: ["INBOX", "IMPORTANT"], remove: ["SPAM", "CATEGORY_PROMOTIONS"] }));
 });
+
+import { summarizePlacement as sumP } from "@/lib/seed-placement";
+describe("summarizePlacement", () => {
+  it("counts each seed once by its latest message and tracks missing seeds", () => {
+    const s = sumP([
+      { messages: [{ placement: "spam" }, { placement: "inbox" }], error: null },
+      { messages: [{ placement: "inbox" }], error: null },
+      { messages: [{ placement: "promotions" }], error: null },
+      { messages: [], error: "Access expired" },
+    ]);
+    expect(s).toEqual({ seeds: 4, found: 3, inbox: 1, promotions: 1, spam: 1, other: 0, missing: 1 });
+  });
+});

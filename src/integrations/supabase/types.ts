@@ -673,6 +673,57 @@ export type Database = {
           },
         ]
       }
+      placement_reports: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          details: Json
+          found: number
+          id: string
+          inbox: number
+          missing: number
+          other: number
+          promotions: number
+          query: string
+          seeds_checked: number
+          sender: string | null
+          spam: number
+          subject: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          details?: Json
+          found?: number
+          id?: string
+          inbox?: number
+          missing?: number
+          other?: number
+          promotions?: number
+          query: string
+          seeds_checked?: number
+          sender?: string | null
+          spam?: number
+          subject?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          details?: Json
+          found?: number
+          id?: string
+          inbox?: number
+          missing?: number
+          other?: number
+          promotions?: number
+          query?: string
+          seeds_checked?: number
+          sender?: string | null
+          spam?: number
+          subject?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string

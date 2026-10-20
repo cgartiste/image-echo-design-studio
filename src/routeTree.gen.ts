@@ -17,6 +17,7 @@ import { Route as AuthenticatedAbTestsRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedActivityRouteImport } from './routes/_authenticated/activity'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDeliverabilityRouteImport } from './routes/_authenticated/deliverability'
+import { Route as AuthenticatedPlacementRouteImport } from './routes/_authenticated/placement'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedSeedsRouteImport } from './routes/_authenticated/seeds'
 import { Route as AuthenticatedSegmentsRouteImport } from './routes/_authenticated/segments'
@@ -91,6 +92,11 @@ const AuthenticatedDeliverabilityRoute =
     path: '/deliverability',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedPlacementRoute = AuthenticatedPlacementRouteImport.update({
+  id: '/placement',
+  path: '/placement',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -275,6 +281,7 @@ export interface FileRoutesByFullPath {
   '/activity': typeof AuthenticatedActivityRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deliverability': typeof AuthenticatedDeliverabilityRoute
+  '/placement': typeof AuthenticatedPlacementRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/seeds': typeof AuthenticatedSeedsRoute
   '/segments': typeof AuthenticatedSegmentsRoute
@@ -317,6 +324,7 @@ export interface FileRoutesByTo {
   '/activity': typeof AuthenticatedActivityRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deliverability': typeof AuthenticatedDeliverabilityRoute
+  '/placement': typeof AuthenticatedPlacementRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/seeds': typeof AuthenticatedSeedsRoute
   '/segments': typeof AuthenticatedSegmentsRoute
@@ -361,6 +369,7 @@ export interface FileRoutesById {
   '/_authenticated/activity': typeof AuthenticatedActivityRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/deliverability': typeof AuthenticatedDeliverabilityRoute
+  '/_authenticated/placement': typeof AuthenticatedPlacementRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/seeds': typeof AuthenticatedSeedsRoute
   '/_authenticated/segments': typeof AuthenticatedSegmentsRoute
@@ -405,6 +414,7 @@ export interface FileRouteTypes {
     | '/activity'
     | '/dashboard'
     | '/deliverability'
+    | '/placement'
     | '/profile'
     | '/seeds'
     | '/segments'
@@ -447,6 +457,7 @@ export interface FileRouteTypes {
     | '/activity'
     | '/dashboard'
     | '/deliverability'
+    | '/placement'
     | '/profile'
     | '/seeds'
     | '/segments'
@@ -490,6 +501,7 @@ export interface FileRouteTypes {
     | '/_authenticated/activity'
     | '/_authenticated/dashboard'
     | '/_authenticated/deliverability'
+    | '/_authenticated/placement'
     | '/_authenticated/profile'
     | '/_authenticated/seeds'
     | '/_authenticated/segments'
@@ -602,6 +614,13 @@ declare module '@tanstack/react-router' {
       path: '/deliverability'
       fullPath: '/deliverability'
       preLoaderRoute: typeof AuthenticatedDeliverabilityRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/placement': {
+      id: '/_authenticated/placement'
+      path: '/placement'
+      fullPath: '/placement'
+      preLoaderRoute: typeof AuthenticatedPlacementRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/profile': {
@@ -843,6 +862,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedActivityRoute: typeof AuthenticatedActivityRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDeliverabilityRoute: typeof AuthenticatedDeliverabilityRoute
+  AuthenticatedPlacementRoute: typeof AuthenticatedPlacementRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedSeedsRoute: typeof AuthenticatedSeedsRoute
   AuthenticatedSegmentsRoute: typeof AuthenticatedSegmentsRoute
@@ -869,6 +889,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedActivityRoute: AuthenticatedActivityRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDeliverabilityRoute: AuthenticatedDeliverabilityRoute,
+  AuthenticatedPlacementRoute: AuthenticatedPlacementRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedSeedsRoute: AuthenticatedSeedsRoute,
   AuthenticatedSegmentsRoute: AuthenticatedSegmentsRoute,
