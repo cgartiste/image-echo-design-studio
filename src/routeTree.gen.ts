@@ -17,6 +17,8 @@ import { Route as AuthenticatedActivityRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedSeedsRouteImport } from './routes/_authenticated/seeds'
+import { Route as AuthenticatedSuppressionRouteImport } from './routes/_authenticated/suppression'
+import { Route as AuthenticatedTeamRouteImport } from './routes/_authenticated/team'
 import { Route as AuthenticatedCampaignsIndexRouteImport } from './routes/_authenticated/campaigns.index'
 import { Route as AuthenticatedCampaignsIdRouteImport } from './routes/_authenticated/campaigns.$id'
 import { Route as AuthenticatedCampaignsNewRouteImport } from './routes/_authenticated/campaigns.new'
@@ -81,6 +83,17 @@ const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
 const AuthenticatedSeedsRoute = AuthenticatedSeedsRouteImport.update({
   id: '/seeds',
   path: '/seeds',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSuppressionRoute =
+  AuthenticatedSuppressionRouteImport.update({
+    id: '/suppression',
+    path: '/suppression',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedTeamRoute = AuthenticatedTeamRouteImport.update({
+  id: '/team',
+  path: '/team',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedCampaignsIndexRoute =
@@ -231,6 +244,8 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/seeds': typeof AuthenticatedSeedsRoute
+  '/suppression': typeof AuthenticatedSuppressionRoute
+  '/team': typeof AuthenticatedTeamRoute
   '/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
   '/campaigns/new': typeof AuthenticatedCampaignsNewRoute
   '/domains/$id': typeof AuthenticatedDomainsIdRoute
@@ -266,6 +281,8 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/seeds': typeof AuthenticatedSeedsRoute
+  '/suppression': typeof AuthenticatedSuppressionRoute
+  '/team': typeof AuthenticatedTeamRoute
   '/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
   '/campaigns/new': typeof AuthenticatedCampaignsNewRoute
   '/domains/$id': typeof AuthenticatedDomainsIdRoute
@@ -303,6 +320,8 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/seeds': typeof AuthenticatedSeedsRoute
+  '/_authenticated/suppression': typeof AuthenticatedSuppressionRoute
+  '/_authenticated/team': typeof AuthenticatedTeamRoute
   '/_authenticated/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
   '/_authenticated/campaigns/new': typeof AuthenticatedCampaignsNewRoute
   '/_authenticated/domains/$id': typeof AuthenticatedDomainsIdRoute
@@ -340,6 +359,8 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/profile'
     | '/seeds'
+    | '/suppression'
+    | '/team'
     | '/campaigns/$id'
     | '/campaigns/new'
     | '/domains/$id'
@@ -375,6 +396,8 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/profile'
     | '/seeds'
+    | '/suppression'
+    | '/team'
     | '/campaigns/$id'
     | '/campaigns/new'
     | '/domains/$id'
@@ -411,6 +434,8 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/profile'
     | '/_authenticated/seeds'
+    | '/_authenticated/suppression'
+    | '/_authenticated/team'
     | '/_authenticated/campaigns/$id'
     | '/_authenticated/campaigns/new'
     | '/_authenticated/domains/$id'
@@ -516,6 +541,20 @@ declare module '@tanstack/react-router' {
       path: '/seeds'
       fullPath: '/seeds'
       preLoaderRoute: typeof AuthenticatedSeedsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/suppression': {
+      id: '/_authenticated/suppression'
+      path: '/suppression'
+      fullPath: '/suppression'
+      preLoaderRoute: typeof AuthenticatedSuppressionRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/team': {
+      id: '/_authenticated/team'
+      path: '/team'
+      fullPath: '/team'
+      preLoaderRoute: typeof AuthenticatedTeamRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/campaigns/': {
@@ -708,6 +747,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedSeedsRoute: typeof AuthenticatedSeedsRoute
+  AuthenticatedSuppressionRoute: typeof AuthenticatedSuppressionRoute
+  AuthenticatedTeamRoute: typeof AuthenticatedTeamRoute
   AuthenticatedCampaignsIdRoute: typeof AuthenticatedCampaignsIdRoute
   AuthenticatedCampaignsNewRoute: typeof AuthenticatedCampaignsNewRoute
   AuthenticatedDomainsIdRoute: typeof AuthenticatedDomainsIdRoute
@@ -727,6 +768,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedSeedsRoute: AuthenticatedSeedsRoute,
+  AuthenticatedSuppressionRoute: AuthenticatedSuppressionRoute,
+  AuthenticatedTeamRoute: AuthenticatedTeamRoute,
   AuthenticatedCampaignsIdRoute: AuthenticatedCampaignsIdRoute,
   AuthenticatedCampaignsNewRoute: AuthenticatedCampaignsNewRoute,
   AuthenticatedDomainsIdRoute: AuthenticatedDomainsIdRoute,
