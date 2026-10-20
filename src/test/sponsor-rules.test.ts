@@ -14,6 +14,10 @@ describe("sponsor rules", () => {
   it("flags templates missing required variables", () => {
     expect(validateTrackingTemplate("?sub1=[user]")).toContain("Missing [email]");
   });
+  it("preserves UUID campaign/list/interface refs and hyphenated email attribution", () => {
+    const id = "12345678-1234-1234-1234-123456789012";
+    expect(parseSubs("u", `offer-${id}`, `${id}-first-last@example.com-${id}`)).toEqual({ user: "u", offer: "offer", campaign: id, list: id, email: "first-last@example.com", interface: id });
+  });
   it("detects suppression sources and converts Google Sheets to CSV", () => {
     expect(detectSuppressionSource("https://mailer.optizmo.net/x")).toBe("optizmo");
     expect(suppressionDownloadUrl("https://docs.google.com/spreadsheets/d/AbC_1/edit")).toBe("https://docs.google.com/spreadsheets/d/AbC_1/export?format=csv");

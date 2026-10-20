@@ -76,8 +76,18 @@ export function validateTrackingTemplate(template: string) {
 
 /** Parse sub values (sub1=user, sub2=offer-campaign, sub3=list-email-interface) back into references. */
 export function parseSubs(sub1?: string | null, sub2?: string | null, sub3?: string | null) {
-  const [offer, campaign] = (sub2 ?? "").split("-");
-  const [list, email, iface] = (sub3 ?? "").split("-");
+  const uuid = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
+  const s2 = sub2 ?? "";
+  const campaignMatch = new RegExp(`-(${uuid})$`, "i").exec(s2);
+  const [offer, campaign] = campaignMatch ? [s2.slice(0, campaignMatch.index), campaignMatch[1]] : s2.split("-");
+  const s3 = sub3 ?? "";
+  const listMatch = new RegExp(`^(${uuid})-`, "i").exec(s3);
+  const list = listMatch?.[1] ?? s3.split("-")[0];
+  const rest = listMatch ? s3.slice(listMatch[0].length) : s3.slice((list?.length ?? 0) + 1);
+  const ifaceMatch = new RegExp(`-(${uuid})$`, "i").exec(rest);
+  const split = ifaceMatch?.index ?? rest.lastIndexOf("-");
+  const email = split < 0 ? rest : rest.slice(0, split);
+  const iface = split < 0 ? null : rest.slice(split + 1);
   return { user: sub1 || null, offer: offer || null, campaign: campaign || null, list: list || null, email: email || null, interface: iface || null };
 }
 

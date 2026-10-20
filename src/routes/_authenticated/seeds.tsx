@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Inbox, Loader2, MailOpen, Plus, RefreshCw, Search, ShieldAlert, Star, Trash2, Undo2 } from "lucide-react";
 import { PageHeader, Panel } from "@/components/page";
@@ -9,6 +9,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { t } from "@/lib/i18n";
+import { gmailMonitorSchema } from "@/lib/gmail-monitor";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useMe } from "@/lib/auth";
@@ -17,7 +21,7 @@ import { inboxRate, type Placement, type SeedAction } from "@/lib/seed-placement
 import { checkPlacement, completeSeedConnect, deleteSeed, listSeeds, readSeedMessage, seedAction, seedMessages, startSeedConnect } from "@/lib/seeds.functions";
 
 export const Route = createFileRoute("/_authenticated/seeds")({
-  head: () => ({ meta: [{ title: "Seed inboxes — Cortex" }, { name: "description", content: "Gmail test inboxes: inbox placement, reading and spam rescue." }, { property: "og:title", content: "Seed inboxes — Cortex" }, { property: "og:description", content: "Gmail test inboxes: inbox placement, reading and spam rescue." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
+  head: () => ({ meta: [{ title: "Gmail placement monitoring — Cortex" }, { name: "description", content: "Connected Gmail test inboxes and warming placement monitoring." }, { property: "og:title", content: "Gmail placement monitoring — Cortex" }, { property: "og:description", content: "Connected Gmail test inboxes and warming placement monitoring." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
   component: SeedsPage,
 });
 
@@ -64,6 +68,8 @@ function SeedsPage() {
   const [subject, setSubject] = useState("");
   const [from, setFrom] = useState("");
   const [days, setDays] = useState(2);
+  const [monitoring, setMonitoring] = useState(false);
+  const [minutes, setMinutes] = useState(5);
   const [open, setOpen] = useState<{ id: string; email: string | null } | null>(null);
 
   async function connect(seedId?: string) {
@@ -91,6 +97,15 @@ function SeedsPage() {
     mutationFn: () => check({ data: { subject, from, days } }),
     onError: (e) => toast.error((e as Error).message),
   });
+  const monitorRef = useRef(placement);
+  monitorRef.current = placement;
+  useEffect(() => {
+    if (!monitoring) return;
+    const timer = window.setInterval(() => {
+      if (!monitorRef.current.isPending) monitorRef.current.mutate();
+    }, minutes * 60_000);
+    return () => window.clearInterval(timer);
+  }, [monitoring, minutes]);
   const action = useMutation({
     mutationFn: (v: { action: SeedAction; items: { seedId: string; messageId: string }[] }) => act({ data: v }),
     onSuccess: (r) => { toast.success(`${r.done} messages updated`); r.errors.forEach((e) => toast.error(e)); placement.data && placement.mutate(); qc.invalidateQueries({ queryKey: ["seed-msgs"] }); },
@@ -104,7 +119,7 @@ function SeedsPage() {
 
   return (
     <div>
-      <PageHeader title="Seed inboxes" subtitle="Connect your Gmail test accounts, see where your emails land, and move them out of spam." />
+      <PageHeader title="Seed inboxes" />
 
       <Panel className="mb-6">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b p-4">
@@ -149,12 +164,29 @@ function SeedsPage() {
           <h2 className="font-semibold">Inbox placement check</h2>
           <p className="text-sm text-muted-foreground">Search every connected inbox for a campaign and see if it reached Inbox, Promotions or Spam.</p>
           <form className="mt-3 flex flex-wrap gap-2" onSubmit={(e) => { e.preventDefault(); placement.mutate(); }}>
-            <Input placeholder="Subject contains…" value={subject} onChange={(e) => setSubject(e.target.value)} className="h-9 w-full sm:w-64" />
-            <Input placeholder="Sender (email or domain)" value={from} onChange={(e) => setFrom(e.target.value)} className="h-9 w-full sm:w-56" />
-            <Input type="number" min={1} max={30} value={days} onChange={(e) => setDays(Number(e.target.value) || 1)} className="h-9 w-20" aria-label="Days" />
+            <Input disabled={monitoring} maxLength={200} placeholder="Subject contains…" value={subject} onChange={(e) => setSubject(e.target.value)} className="h-9 w-full sm:w-64" />
+            <Input disabled={monitoring} maxLength={200} placeholder="Sender (email or domain)" value={from} onChange={(e) => setFrom(e.target.value)} className="h-9 w-full sm:w-56" />
+            <Input disabled={monitoring} type="number" min={1} max={30} value={days} onChange={(e) => setDays(Number(e.target.value) || 1)} className="h-9 w-20" aria-label="Days" />
             <span className="self-center text-sm text-muted-foreground">days</span>
             <Button type="submit" disabled={placement.isPending || connected === 0}>{placement.isPending ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : <Search className="mr-1 h-4 w-4" />}Check</Button>
           </form>
+          <div className="mt-4 border-t pt-4 space-y-2">
+            <h3 className="font-medium">{t("gmail.monitor")}</h3>
+            <div className="flex flex-wrap items-center gap-3">
+              <Switch id="gmail-monitor" checked={monitoring} disabled={connected === 0} onCheckedChange={(v) => {
+                if (v) {
+                  const validation = gmailMonitorSchema.safeParse({ subject, from, minutes });
+                  if (!validation.success) { toast.error(validation.error.issues[0]?.message ?? "Invalid monitor settings"); return; }
+                  if (!placement.isPending) placement.mutate();
+                }
+                setMonitoring(v);
+              }} />
+              <Label htmlFor="gmail-monitor">{t("gmail.auto")}</Label>
+              <Label htmlFor="gmail-minutes">{t("gmail.interval")}</Label>
+              <Input id="gmail-minutes" className="w-20" type="number" min={5} max={60} value={minutes} disabled={monitoring} onChange={(e) => setMinutes(Number(e.target.value))} />
+              <Badge variant={monitoring ? "default" : "secondary"}>{monitoring ? t("gmail.active") : t("gmail.stopped")}</Badge>
+            </div>
+          </div>
         </div>
         {placement.data && (
           <div className="p-4">
@@ -205,7 +237,7 @@ function InboxDialog({ seed, canExec, onClose, onAction }: { seed: { id: string;
   const [search, setSearch] = useState("");
   const [sel, setSel] = useState<string | null>(null);
   const msgs = useQuery({ queryKey: ["seed-msgs", seed.id, folder, search], queryFn: () => fetchMsgs({ data: { seedId: seed.id, folder, search } }) as Promise<Msg[]> });
-  const detail = useQuery({ queryKey: ["seed-msg", seed.id, sel], enabled: !!sel, queryFn: () => read({ data: { seedId: seed.id, messageId: sel! } }) });
+  const detail = useQuery({ queryKey: ["seed-msg", seed.id, sel], enabled: !!sel, queryFn: () => { if (!sel) throw new Error("Choose a message"); return read({ data: { seedId: seed.id, messageId: sel } }); } });
   const [checked, setChecked] = useState<string[]>([]);
   return (
     <Dialog open onOpenChange={(o) => !o && onClose()}>
