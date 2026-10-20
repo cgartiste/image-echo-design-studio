@@ -44,6 +44,39 @@ export type Database = {
         }
         Relationships: []
       }
+      alerts: {
+        Row: {
+          created_at: string
+          id: string
+          level: string
+          message: string
+          ref_id: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          source: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          level?: string
+          message: string
+          ref_id?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          source: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          level?: string
+          message?: string
+          ref_id?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          source?: string
+        }
+        Relationships: []
+      }
       campaign_logs: {
         Row: {
           action: string | null
@@ -637,6 +670,8 @@ export type Database = {
       }
       provider_accounts: {
         Row: {
+          bounce_rate: number | null
+          complaint_rate: number | null
           created_at: string
           created_by: string | null
           credentials_encrypted: string
@@ -645,13 +680,19 @@ export type Database = {
           is_vip: boolean
           last_error: string | null
           last_sync_at: string | null
+          max_send_rate: number | null
           name: string
           pool_status: string
+          production_access: boolean | null
           provider: string
           region: string | null
+          routing_priority: number
+          sent_today: number
           status: string
         }
         Insert: {
+          bounce_rate?: number | null
+          complaint_rate?: number | null
           created_at?: string
           created_by?: string | null
           credentials_encrypted: string
@@ -660,13 +701,19 @@ export type Database = {
           is_vip?: boolean
           last_error?: string | null
           last_sync_at?: string | null
+          max_send_rate?: number | null
           name: string
           pool_status?: string
+          production_access?: boolean | null
           provider: string
           region?: string | null
+          routing_priority?: number
+          sent_today?: number
           status?: string
         }
         Update: {
+          bounce_rate?: number | null
+          complaint_rate?: number | null
           created_at?: string
           created_by?: string | null
           credentials_encrypted?: string
@@ -675,10 +722,14 @@ export type Database = {
           is_vip?: boolean
           last_error?: string | null
           last_sync_at?: string | null
+          max_send_rate?: number | null
           name?: string
           pool_status?: string
+          production_access?: boolean | null
           provider?: string
           region?: string | null
+          routing_priority?: number
+          sent_today?: number
           status?: string
         }
         Relationships: []
@@ -698,6 +749,33 @@ export type Database = {
           action?: string
           module?: string
           role?: Database["public"]["Enums"]["app_role"]
+        }
+        Relationships: []
+      }
+      routing_events: {
+        Row: {
+          campaign_id: string | null
+          created_at: string
+          from_account: string | null
+          id: string
+          reason: string
+          to_account: string | null
+        }
+        Insert: {
+          campaign_id?: string | null
+          created_at?: string
+          from_account?: string | null
+          id?: string
+          reason: string
+          to_account?: string | null
+        }
+        Update: {
+          campaign_id?: string | null
+          created_at?: string
+          from_account?: string | null
+          id?: string
+          reason?: string
+          to_account?: string | null
         }
         Relationships: []
       }
@@ -769,6 +847,42 @@ export type Database = {
           provider?: string
           reconnect_required?: boolean
           status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      segments: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          last_count: number | null
+          last_counted_at: string | null
+          name: string
+          rules: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          last_count?: number | null
+          last_counted_at?: string | null
+          name: string
+          rules?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          last_count?: number | null
+          last_counted_at?: string | null
+          name?: string
+          rules?: Json
           updated_at?: string
         }
         Relationships: []
@@ -1318,6 +1432,36 @@ export type Database = {
         }
         Relationships: []
       }
+      system_controls: {
+        Row: {
+          bounce_threshold: number
+          changed_at: string | null
+          changed_by: string | null
+          complaint_threshold: number
+          emergency_stop: boolean
+          id: boolean
+          reason: string | null
+        }
+        Insert: {
+          bounce_threshold?: number
+          changed_at?: string | null
+          changed_by?: string | null
+          complaint_threshold?: number
+          emergency_stop?: boolean
+          id?: boolean
+          reason?: string | null
+        }
+        Update: {
+          bounce_threshold?: number
+          changed_at?: string | null
+          changed_by?: string | null
+          complaint_threshold?: number
+          emergency_stop?: boolean
+          id?: boolean
+          reason?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -1458,6 +1602,11 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      segment_count: { Args: { rules: Json }; Returns: number }
+      segment_match: {
+        Args: { r: Json; s: Database["public"]["Tables"]["subscribers"]["Row"] }
         Returns: boolean
       }
       signup_open: { Args: never; Returns: boolean }

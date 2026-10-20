@@ -116,6 +116,7 @@ export function CampaignForm({defaultValues,onSubmit,submitLabel}:{defaultValues
           {lists.isError&&<p className="text-xs text-destructive">Lists could not be loaded.</p>}
           <h3 className="pt-2 text-xs font-semibold">{t("campaign.exclude")}</h3><div className="max-h-28 space-y-2 overflow-y-auto">{(lists.data??[]).map(l=><label key={l.id} className="flex items-center gap-2 text-xs"><Checkbox checked={settings.excluded_lists.includes(l.id)} onCheckedChange={x=>changeList(l.id,true,x===true)}/>{l.name}</label>)}</div>
           <div className="grid grid-cols-2 gap-3">{sf("country","Country")}{sf("engagement_min","Minimum engagement",{type:"number",min:0,max:100})}</div>
+          <SegmentPicker value={settings.segment_id??""} onChange={v=>setValue("settings.segment_id",v,{shouldDirty:true})}/>
           <div className="border-t pt-3"><div className="mb-2 flex items-center justify-between"><h3 className="text-xs font-semibold">{t("campaign.recipients")}</h3><Button type="button" size="icon" variant="ghost" aria-label="Recount recipients" className="h-6 w-6" onClick={()=>summary.refetch()}><RefreshCw className="h-3 w-3"/></Button></div>{summary.isError?<p className="text-xs text-destructive">{t("campaign.countUnavailable")}</p>:<dl className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">{["raw","duplicates","unsubscribed","bounces","complaints","blocked","invalid","excluded","final"].map(key=><div key={key} className={`flex justify-between gap-2 ${key==="final"?"col-span-2 mt-2 border-t pt-2 font-semibold text-primary":"text-muted-foreground"}`}><dt className="capitalize">{key==="final"?"Sendable":key}</dt><dd>{summary.isFetching?"…":summary.data?.[key as keyof RecipientSummary]??0}</dd></div>)}</dl>}</div>
         </Section>
         <Section title={t("campaign.offer")}>
@@ -222,4 +223,13 @@ export function CampaignForm({defaultValues,onSubmit,submitLabel}:{defaultValues
 }
 export function toRow(v:CampaignValues) {
   return {...v,settings:JSON.parse(JSON.stringify(v.settings)),preheader:v.preheader||null,reply_to:v.reply_to||null,offer:v.offer||null,text_content:v.text_content||null,server_pool:v.server_pool||null,daily_limit:v.daily_limit||null,scheduled_at:v.scheduled_at?new Date(v.scheduled_at).toISOString():null};
+}
+
+function SegmentPicker({value,onChange}:{value:string;onChange:(v:string)=>void}) {
+  const segs=useQuery({queryKey:["segments"],queryFn:async()=>(await supabase.from("segments").select("id,name,last_count").order("name")).data??[]});
+  return <label className="block space-y-1 text-xs"><span className="font-semibold">Segment (optional)</span>
+    <select className="h-9 w-full rounded-md border bg-background px-2 text-sm" value={value} onChange={e=>onChange(e.target.value)}>
+      <option value="">No segment — whole lists</option>
+      {(segs.data??[]).map(s=><option key={s.id} value={s.id}>{s.name}{s.last_count!=null?` (${s.last_count})`:""}</option>)}
+    </select></label>;
 }
