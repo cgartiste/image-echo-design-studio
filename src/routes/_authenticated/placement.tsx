@@ -63,7 +63,7 @@ function PlacementPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Placement reports" description="Every check run from Seed inboxes is saved here so you can follow inbox placement over time." />
+      <PageHeader title="Placement reports" subtitle="Every check run from Seed inboxes is saved here so you can follow inbox placement over time." />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
           ["Checks", String(shown.length)],
