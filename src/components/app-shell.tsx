@@ -24,6 +24,8 @@ const live: { to: string; key: TKey; icon: typeof Mail }[] = [
   { to: "/sponsors", key: "nav.offers", icon: Handshake },
   { to: "/servers", key: "nav.servers", icon: Server },
   { to: "/segments", key: "nav.segments", icon: ListChecks },
+  { to: "/ab-tests", key: "nav.abtests", icon: FlaskConical },
+  { to: "/taxonomy", key: "nav.taxonomy", icon: Tags },
   { to: "/deliverability", key: "nav.deliverability", icon: Gauge },
   { to: "/vip", key: "nav.vip", icon: Crown },
   { to: "/suppression", key: "nav.suppression", icon: ShieldBan },
@@ -31,8 +33,6 @@ const live: { to: string; key: TKey; icon: typeof Mail }[] = [
   { to: "/activity", key: "nav.activity", icon: Activity },
 ];
 const soon: { slug: string; key: TKey; icon: typeof Mail }[] = [
-  { slug: "ab-tests", key: "nav.abtests", icon: FlaskConical },
-  { slug: "taxonomy", key: "nav.taxonomy", icon: Tags },
 ];
 
 export function AppShell() {
